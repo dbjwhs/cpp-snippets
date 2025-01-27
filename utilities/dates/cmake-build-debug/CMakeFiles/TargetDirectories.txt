@@ -1,0 +1,3 @@
+/Users/dbjones/ng/github/cpp-snippets/utilities/dates/cmake-build-debug/CMakeFiles/dates.dir
+/Users/dbjones/ng/github/cpp-snippets/utilities/dates/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/dbjones/ng/github/cpp-snippets/utilities/dates/cmake-build-debug/CMakeFiles/rebuild_cache.dir
