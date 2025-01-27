@@ -1,3 +1,6 @@
+// MIT License
+// Copyright (c) 2025 dbjwhs
+
 #include <iostream>
 #include <chrono>
 #include <date/date.h>
@@ -38,24 +41,48 @@ using std::chrono::duration_cast;
 //
 // Much of this work became part of C++20's standard library, though his original date
 // library provides additional features beyond the standard.
+// This function demonstrates timezone conversions using Howard Hinnant's date library
+// It shows how to convert a meeting time in New York to different time zones
 void howard_hinnant_date_snippets() {
+    // create a time point for May 1st, 2016 at 9:00 AM UTC
+    // sys_days converts the calendar date to a time point, then add 9 hours
     auto meet_nyc = date::sys_days{date::year{2016}/5/1} + std::chrono::hours{9};
+
+    // convert the UTC time to New York local time using the system's current timezone
     auto nyc_zone = date::current_zone()->to_local(meet_nyc);
+
+    // convert the same UTC time point to different timezone local times
+    // locate_zone finds the timezone database entry for each region
     auto pac_zone = date::locate_zone("America/Los_Angeles")->to_local(meet_nyc);
     auto lon_zone = date::locate_zone("Europe/London")->to_local(meet_nyc);
     auto syd_zone = date::locate_zone("Australia/Sydney")->to_local(meet_nyc);
 
-    auto pac_diff = duration_cast<std::chrono::hours>(pac_zone.time_since_epoch() - nyc_zone.time_since_epoch());
-    auto lon_diff = duration_cast<std::chrono::hours>(lon_zone.time_since_epoch() - nyc_zone.time_since_epoch());
-    auto syd_diff = duration_cast<std::chrono::hours>(syd_zone.time_since_epoch() - nyc_zone.time_since_epoch());
+    // calculate time differences between each zone and NYC
+    // time_since_epoch() gives duration since Unix epoch (1970-01-01)
+    // duration_cast converts the difference to hours
+    auto pac_diff = duration_cast<std::chrono::hours>(
+        pac_zone.time_since_epoch() - nyc_zone.time_since_epoch());
+    auto lon_diff = duration_cast<std::chrono::hours>(
+        lon_zone.time_since_epoch() - nyc_zone.time_since_epoch());
+    auto syd_diff = duration_cast<std::chrono::hours>(
+        syd_zone.time_since_epoch() - nyc_zone.time_since_epoch());
 
+    // output the meeting time in each timezone
+    // the abs() function is used to show absolute hour differences
+    // the ternary operator determines if the timezone is ahead or behind NYC
     cout << "The New York meeting is " << nyc_zone << '\n';
-    cout << "The Pacific  meeting is " << pac_zone << " (" << abs(pac_diff.count()) << " hours "
-         << (pac_diff.count() < 0 ? "behind" : "ahead") << ")\n";
-    cout << "The London   meeting is " << lon_zone << " (" << abs(lon_diff.count()) << " hours "
-         << (lon_diff.count() < 0 ? "behind" : "ahead") << ")\n";
-    cout << "The Sydney   meeting is " << syd_zone << " (" << abs(syd_diff.count()) << " hours "
-         << (syd_diff.count() < 0 ? "behind" : "ahead") << ")\n";
+    cout << "The Pacific  meeting is " << pac_zone << " (" << abs(pac_diff.count())
+         << " hours " << (pac_diff.count() < 0 ? "behind" : "ahead") << ")\n";
+    cout << "The London   meeting is " << lon_zone << " (" << abs(lon_diff.count())
+         << " hours " << (lon_diff.count() < 0 ? "behind" : "ahead") << ")\n";
+    cout << "The Sydney   meeting is " << syd_zone << " (" << abs(syd_diff.count())
+         << " hours " << (syd_diff.count() < 0 ? "behind" : "ahead") << ")\n";
+
+    // example output
+    // The New York meeting is 2016-05-01 02:00:00
+    // The Pacific  meeting is 2016-05-01 02:00:00 (0 hours ahead)
+    // The London   meeting is 2016-05-01 10:00:00 (8 hours ahead)
+    // The Sydney   meeting is 2016-05-01 19:00:00 (17 hours ahead)
 }
 
 
