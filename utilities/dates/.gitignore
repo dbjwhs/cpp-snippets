@@ -1,3 +1,7 @@
 # CLion project files
 .idea
 cmake-build-*
+
+# OSX
+.DS_Store
+
