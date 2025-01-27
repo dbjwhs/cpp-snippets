@@ -6,4 +6,4 @@ project(string_utils)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(string_utils src/main.cpp)
+add_executable(string_utils src/string_demo.cpp)
