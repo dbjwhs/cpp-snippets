@@ -79,6 +79,42 @@ snippet-name/
     └── snippet.cpp
 ```
 
+## Gotchas and errata
+
+I am currently evaluating JetBrain's CLion which creates a directory in each project file called `cmake-build-debug` which if removed becomes a **PITA**.
+
+### Recreating the cmake-build-debug Directory
+
+If you accidentally removed the `cmake-build-debug` directory, you can easily recreate it by following these steps:
+
+#### 1. Regenerate the Build Directory
+
+Navigate to the root directory of your CMake project in your terminal or command prompt, then run:
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+```
+
+**Note:** Replace `..` with the path to your CMakeLists.txt file if it's not in the same directory.
+
+This command will reconfigure your project and generate the `cmake-build-debug` directory along with the necessary build files.
+
+#### 2. Rebuild Your Project
+
+You can either:
+
+* Rebuild your project from within your IDE (Visual Studio or CLion)
+
+OR
+
+* Use the following command from your terminal:
+
+```bash
+cmake --build . --target all
+```
+
+This will rebuild all the targets in your project.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
