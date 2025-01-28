@@ -119,10 +119,5 @@ This will rebuild all the targets in your project.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-
-- # List any resources or inspirations
-- # Credit any external code or ideas used
-
 ---
 **Note**: This repository is actively maintained and growing. Check back regularly for new snippets and updates!
