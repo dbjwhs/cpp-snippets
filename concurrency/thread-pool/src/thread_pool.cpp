@@ -48,6 +48,7 @@ public:
                     {
                         // lock the queue mutex
                         std::unique_lock<std::mutex> lock(m_queueMutex);
+
                         // wait for tasks or stop signal
                         m_condition.wait(lock, [this] {
                             return m_stop || !m_tasks.empty();
@@ -82,7 +83,7 @@ public:
         m_condition.notify_all();
 
         // wait for all threads to finish
-        for (std::thread &worker : m_workers) {
+        for (std::thread& worker : m_workers) {
             if (worker.joinable()) {
                 worker.join();
             }
@@ -149,13 +150,14 @@ int main() {
                 // enqueue task that prints thread id and returns square of input
                 results.emplace_back(
                     pool.enqueue([i, &cout_mutex] {
-                        // protect the cout operation inside the task
                         {
+                            // protect the cout operation inside the task
                             std::lock_guard<std::mutex> lock(cout_mutex);
                             std::cout << "Task " << i << " running on thread "
                                      << std::this_thread::get_id() << std::endl;
                         }
 
+                        // do some work
                         std::this_thread::sleep_for(std::chrono::seconds(1));
                         return i * i;
                     })
@@ -166,8 +168,8 @@ int main() {
         // get and print results
         std::mutex cout_mutex;
         for (auto& result : results) {
+            // protect the cout results
             std::lock_guard<std::mutex> lock(cout_mutex);
-
             std::cout << "Result: " << result.get() << std::endl;
         }
     } catch (const std::exception& e) {
