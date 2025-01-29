@@ -54,6 +54,7 @@ make
 - [string-utils/](utilities/string-utils/) - String manipulation utilities
 - [timer/](utilities/timer/) - High-resolution timer class
 - [dates/](utilities/dates/) - Date and time utilities
+- [dir_scanner/](utilities/dir_scanner/) - A platform-agnostic C++ directory scanner that uses an iterative approach
 
 ## Contributing
 
