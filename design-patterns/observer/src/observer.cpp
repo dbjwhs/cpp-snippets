@@ -8,8 +8,16 @@
 #include <memory>
 #include <ranges>
 
-// forward declaration to resolve circular dependency
-class Observer;
+// observer interface that defines how observers receive updates.
+// any class that wants to receive notifications must implement this interface.
+class Observer {
+public:
+    virtual ~Observer() = default;
+    // update method called by the Subject when state changes
+    // @param message Description of the update
+    // @param value New value to be processed
+    virtual void update(const std::string& message, double value) = 0;
+};
 
  // subject interface that defines the core observer pattern methods.
  // any class that wants to notify observers must implement these methods.
