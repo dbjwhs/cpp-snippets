@@ -11,10 +11,8 @@
 // forward declaration to resolve circular dependency
 class Observer;
 
-/**
- * Subject interface that defines the core observer pattern methods.
- * Any class that wants to notify observers must implement these methods.
- */
+ // subject interface that defines the core observer pattern methods.
+ // any class that wants to notify observers must implement these methods.
 class Subject {
 public:
     virtual ~Subject() = default;
@@ -23,25 +21,8 @@ public:
     virtual void notify() = 0;  // notify all observers of state change
 };
 
-/**
- * Observer interface that defines how observers receive updates.
- * Any class that wants to receive notifications must implement this interface.
- */
-class Observer {
-public:
-    virtual ~Observer() = default;
-    /**
-     * Update method called by the Subject when state changes
-     * @param message Description of the update
-     * @param value New value to be processed
-     */
-    virtual void update(const std::string& message, double value) = 0;
-};
-
-/**
- * Helper class that combines setting a value with notifying observers.
- * This eliminates the need to manually call notify() after every state change.
- */
+// helper class that combines setting a value with notifying observers.
+// this eliminates the need to manually call notify() after every state change.
 class WeatherNotifier {
     // define a type for setter methods that modify weather values
     using SetterMethod = void(*)(double& target, double value);
@@ -52,29 +33,24 @@ private:
     Subject& m_subject;      // reference to subject for notifications
 
 public:
-    /**
-     * Constructor that binds together the variable, setter method, and subject
-     * @param target_var Reference to the variable to be modified
-     * @param setter_method Pointer to the method that will modify the variable
-     * @param subject_ref Reference to the subject that will notify observers
-     */
+    // constructor that binds together the variable, setter method, and subject
+    // constructor that binds together the variable, setter method, and subject
+    // @param target_var Reference to the variable to be modified
+    // @param setter_method Pointer to the method that will modify the variable
+    // @param subject_ref Reference to the subject that will notify observers
     WeatherNotifier(double& target_var, SetterMethod setter_method, Subject& subject_ref)
         : m_target(target_var), m_setter(setter_method), m_subject(subject_ref) {}
 
-    /**
-     * Operator that combines setting the value and notifying observers
-     * @param value New value to be set
-     */
+    // operator that combines setting the value and notifying observers
+    // @param value New value to be set
     void operator()(double value) const {
         m_setter(m_target, value);    // set the new value
         m_subject.notify();         // notify all observers
     }
 };
 
-/**
- * Concrete implementation of the Subject interface that monitors weather conditions.
- * Uses WeatherNotifier to automatically notify observers when values change.
- */
+// concrete implementation of the Subject interface that monitors weather conditions.
+// uses WeatherNotifier to automatically notify observers when values change.
 class WeatherStation : public Subject {
 private:
     std::vector<std::shared_ptr<Observer>> m_observers;  // list of registered observers
@@ -93,36 +69,28 @@ private:
     WeatherNotifier pressure_notifier_;
 
 public:
-    /**
-     * Constructor initializes weather values and sets up notifiers
-     */
+    // constructor initializes weather values and sets up notifiers
     WeatherStation()
         : m_temperature(0.0), m_humidity(0.0), m_pressure(0.0),
           temp_notifier_(m_temperature, setTemp, *this),
           humid_notifier_(m_humidity, setHumid, *this),
           pressure_notifier_(m_pressure, setPress, *this) {}
 
-    /**
-     * Register a new observer to receive notifications
-     * @param observer Shared pointer to the observer
-     */
+    // register a new observer to receive notifications
+    // @param observer Shared pointer to the observer
     void attach(const std::shared_ptr<Observer> observer) override {
         m_observers.push_back(observer);
     }
 
-    /**
-     * Remove an observer from the notification list
-     * @param observer Shared pointer to the observer to remove
-     */
+    // remove an observer from the notification list
+    // @param observer Shared pointer to the observer to remove
     void detach(std::shared_ptr<Observer> observer) override {
         std::erase_if(m_observers, [observer](const std::shared_ptr<Observer>& obj) {
             return obj == observer;
         });
     }
 
-    /**
-     * Notify all registered observers of the current temperature
-     */
+    // notify all registered observers of the current temperature
     void notify() override {
         for (const auto& observer : m_observers) {
             observer->update("Weather Update", m_temperature);
@@ -140,9 +108,7 @@ public:
     [[nodiscard]] double getPressure() const { return m_pressure; }
 };
 
-/**
- * Concrete observer that displays weather updates
- */
+// concrete observer that displays weather updates
 class DisplayDevice final : public Observer {
 private:
     std::string m_deviceId;  // unique identifier for this display
@@ -151,26 +117,20 @@ private:
 public:
     explicit DisplayDevice(std::string id) : m_deviceId(std::move(id)), m_lastValue(0.0) {}
 
-    /**
-     * Handle updates from the weather station
-     */
+    // handle updates from the weather station
     void update(const std::string& message, double value) override {
         m_lastValue = value;
         display();
     }
 
-    /**
-     * Display the current weather value
-     */
+    // display the current weather value
     void display() const {
         std::cout << "Device " << m_deviceId << " received update. Value: "
                   << m_lastValue << std::endl;
     }
 };
 
-/**
- * Concrete observer that triggers alerts based on temperature thresholds
- */
+// concrete observer that triggers alerts based on temperature thresholds
 class WeatherAlert final : public Observer {
 private:
     double m_temperatureThreshold;  // Temperature threshold for alerts
@@ -178,9 +138,7 @@ private:
 public:
     explicit WeatherAlert(const double threshold) : m_temperatureThreshold(threshold) {}
 
-    /**
-     * Check if temperature exceeds threshold and trigger alert if needed
-     */
+    // check if temperature exceeds threshold and trigger alert if needed
     void update(const std::string& message, const double value) override {
         if (value > m_temperatureThreshold) {
             std::cout << "ALERT: Temperature exceeded threshold! Current: "
