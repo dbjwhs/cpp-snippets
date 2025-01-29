@@ -52,7 +52,7 @@ public:
     // operator that combines setting the value and notifying observers
     // @param value New value to be set
     void operator()(double value) const {
-        m_setter(m_target, value);    // set the new value
+        m_setter(m_target, value);  // set the new value
         m_subject.notify();         // notify all observers
     }
 };
@@ -72,17 +72,17 @@ private:
     static void setPress(double& target, const double value) { target = value; }
 
     // notifier objects that handle automatic notification
-    WeatherNotifier temp_notifier_;
-    WeatherNotifier humid_notifier_;
-    WeatherNotifier pressure_notifier_;
+    WeatherNotifier m_temp_notifier;
+    WeatherNotifier m_humid_notifier;
+    WeatherNotifier m_pressure_notifier;
 
 public:
     // constructor initializes weather values and sets up notifiers
     WeatherStation()
         : m_temperature(0.0), m_humidity(0.0), m_pressure(0.0),
-          temp_notifier_(m_temperature, setTemp, *this),
-          humid_notifier_(m_humidity, setHumid, *this),
-          pressure_notifier_(m_pressure, setPress, *this) {}
+          m_temp_notifier(m_temperature, setTemp, *this),
+          m_humid_notifier(m_humidity, setHumid, *this),
+          m_pressure_notifier(m_pressure, setPress, *this) {}
 
     // register a new observer to receive notifications
     // @param observer Shared pointer to the observer
@@ -106,9 +106,9 @@ public:
     }
 
     // public methods that use notifiers to automatically update and notify
-    void setTemperature(const double temp) { temp_notifier_(temp); }
-    void setHumidity(const double humid) { humid_notifier_(humid); }
-    void setPressure(const double press) { pressure_notifier_(press); }
+    void setTemperature(const double temp) { m_temp_notifier(temp); }
+    void setHumidity(const double humid) { m_humid_notifier(humid); }
+    void setPressure(const double press) { m_pressure_notifier(press); }
 
     // getter methods for current weather values
     [[nodiscard]] double getTemperature() const { return m_temperature; }
