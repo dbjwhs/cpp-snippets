@@ -49,6 +49,7 @@ make
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation
 - [producer-consumer/](concurrency/producer-consumer/) - Producer-consumer pattern example
+- [readers-writers/](concurrency/readers-writers/) - A thread-safe Readers-Writers synchronization mechanism in C++
 
 ### Utilities
 - [string-utils/](utilities/string-utils/) - String manipulation utilities

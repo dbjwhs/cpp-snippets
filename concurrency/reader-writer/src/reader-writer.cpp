@@ -227,15 +227,15 @@ int main() {
     }
 
     // create writer threads
-    for (int i = 0; i < WRITER_THREAD_CNT; ++i) {
-        threads.emplace_back([&rw, i, &random_rw]() {
-            Logger::getInstance().print("Started writer thread ", i);
+    for (int write_thrd_cnt = 0; write_thrd_cnt < WRITER_THREAD_CNT; ++write_thrd_cnt) {
+        threads.emplace_back([&rw, write_thrd_cnt, &random_rw]() {
+            Logger::getInstance().print("Started writer thread ", write_thrd_cnt);
             int write_cnt = random_rw.getNumber();
             for (int writes = 0; writes < write_cnt; ++writes) {
-                rw.writeResource(i * 10 + writes);
+                rw.writeResource(write_thrd_cnt * 10 + writes);
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
-            Logger::getInstance().print("Finished writer thread ", i);
+            Logger::getInstance().print("Finished writer thread ", write_thrd_cnt);
         });
     }
 
