@@ -9,6 +9,14 @@
 #include <chrono>
 #include <random>
 
+#define DECLARE_NON_COPYABLE(ClassType) \
+    ClassType(const ClassType&) = delete; \
+    ClassType& operator=(const ClassType&) = delete
+
+#define DECLARE_NON_MOVEABLE(ClassType) \
+    ClassType(ClassType&) = delete; \
+    ClassType& operator=(ClassType&) = delete
+
 // simple random generator for int's
 class RandomGenerator {
 private:
@@ -27,10 +35,8 @@ public:
     }
 
     // delete copy and move operations
-    RandomGenerator(const RandomGenerator&) = delete;
-    RandomGenerator& operator=(const RandomGenerator&) = delete;
-    RandomGenerator(RandomGenerator&&) = delete;
-    RandomGenerator& operator=(RandomGenerator&&) = delete;
+    DECLARE_NON_COPYABLE(RandomGenerator);
+    DECLARE_NON_MOVEABLE(RandomGenerator);
 };
 
 // thread-safe singleton logger
@@ -43,10 +49,8 @@ private:
     explicit Logger() : m_stream(std::cout) {}
 
     // delete copy and move operations
-    Logger(const Logger&) = delete;
-    Logger& operator=(const Logger&) = delete;
-    Logger(Logger&&) = delete;
-    Logger& operator=(Logger&&) = delete;
+    DECLARE_NON_COPYABLE(Logger);
+    DECLARE_NON_MOVEABLE(Logger);
 
 public:
     // get singleton instance
@@ -163,8 +167,7 @@ public:
             }
 
             // delete copy operations to prevent multiple releases
-            ReadLock(const ReadLock&) = delete;
-            ReadLock& operator=(const ReadLock&) = delete;
+            DECLARE_NON_COPYABLE(ReadLock);
         } m_readLock(*this);
 
         Logger::getInstance().print("Thread ", std::this_thread::get_id(), " reading resource: ", m_sharedResource);
@@ -186,8 +189,7 @@ public:
             }
 
             // delete copy operations to prevent multiple releases
-            WriteLock(const WriteLock&) = delete;
-            WriteLock& operator=(const WriteLock&) = delete;
+            DECLARE_NON_COPYABLE(WriteLock);
         } m_writeLock(*this);
 
         m_sharedResource = value;
