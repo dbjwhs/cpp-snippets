@@ -50,7 +50,7 @@ public:
 };
 ```
 
-Key features:
+#### Key features:
 - Single instance ensures all logging goes through one mutex
 - Thread-safe output to std::cout
 - Cannot be copied or moved
@@ -70,39 +70,168 @@ The main class implementing the synchronization mechanism:
 - `m_waitingWriters`: Count of writers waiting to acquire access
 - `m_sharedResource`: The protected resource
 
-#### RAII Lock Classes
+### RAII (Resource Acquisition Is Initialization) read write locks
 
-The implementation uses two RAII wrapper classes for automatic resource management:
+Let me explain the `ReadLock` and `WriteLock` RAII wrapper classes in detail.
 
-##### ReadLock
+These classes are examples of the RAII (Resource Acquisition Is Initialization) pattern where the constructor acquires a resource and the destructor releases it automatically. Here's a detailed breakdown:
+
 ```cpp
+// Read Lock RAII Wrapper
 class ReadLock {
-    ReadersWriters& m_rw;
+    ReadersWriters& m_rw;    // reference to the ReadersWriters instance
 public:
-    ReadLock(ReadersWriters& rw) : m_rw(rw) { m_rw.startRead(); }
-    ~ReadLock() { m_rw.endRead(); }
-    // Copy operations deleted
+    // constructor - acquires the read lock
+    ReadLock(ReadersWriters& rw) : m_rw(rw) { 
+        m_rw.startRead(); 
+    }
+    
+    // destructor - releases the read lock
+    ~ReadLock() { 
+        m_rw.endRead(); 
+    }
+    
+    // delete copy operations to prevent multiple releases
+    ReadLock(const ReadLock&) = delete;
+    ReadLock& operator=(const ReadLock&) = delete;
 };
-```
 
-##### WriteLock
-```cpp
+// Write Lock RAII Wrapper
 class WriteLock {
-    ReadersWriters& m_rw;
+    ReadersWriters& m_rw;    // reference to the ReadersWriters instance
 public:
-    WriteLock(ReadersWriters& rw) : m_rw(rw) { m_rw.startWrite(); }
-    ~WriteLock() { m_rw.endWrite(); }
-    // Copy operations deleted
+    // constructor - acquires the write lock
+    WriteLock(ReadersWriters& rw) : m_rw(rw) { 
+        m_rw.startWrite(); 
+    }
+    
+    // destructor - releases the write lock
+    ~WriteLock() { 
+        m_rw.endWrite(); 
+    }
+    
+    // delete copy operations to prevent multiple releases
+    WriteLock(const WriteLock&) = delete;
+    WriteLock& operator=(const WriteLock&) = delete;
 };
 ```
 
-Key benefits of the RAII approach:
-- Automatic resource cleanup
-- Exception safety
-- Prevention of resource leaks
-- Cleaner, more maintainable code
+#### Key aspects of these classes:
 
-## Usage Example (simplified)
+1. **Scope-Based Resource Management**:
+```cpp
+void readResource() {
+    ReadLock readLock(*this);  // lock acquired here
+    // do work...
+}  // lock automatically released here when readLock goes out of scope
+```
+
+2. **Exception Safety**:
+```cpp
+void readResource() {
+    ReadLock readLock(*this);
+    throw std::runtime_error("Something went wrong");  // lock still released
+}
+```
+
+3. **Usage in the Reader-Writers Class**:
+```cpp
+void ReadersWriters::readResource() {
+    ReadLock readLock(*this);  // creates temporary RAII object
+    m_logger.print("Reading...");
+    // lock is automatically released when readLock is destroyed
+}
+```
+
+4. **Prevention of Common Errors**:
+```cpp
+ReadLock lock1(rw);
+ReadLock lock2(lock1);  // Error: copy constructor is deleted
+lock1 = lock2;          // Error: assignment operator is deleted
+```
+
+Benefits of this approach:
+
+1. **Automatic Resource Management**:
+   - No need to manually call `endRead()` or `endWrite()`
+   - Resources are released in the correct order
+   - No resource leaks even if exceptions occur
+
+2. **Exception Safety**:
+```cpp
+void readResource() {
+    ReadLock readLock(*this);
+    // If any code here throws an exception:
+    // - readLock's destructor will still be called
+    // - The read lock will be properly released
+    doSomethingThatMightThrow();
+}
+```
+
+3. **Cleaner Interface**:
+```cpp
+// Without RAII
+void oldWay() {
+    startRead();
+    try {
+        // do work
+        endRead();
+    } catch (...) {
+        endRead();
+        throw;
+    }
+}
+
+// With RAII
+void newWay() {
+    ReadLock lock(*this);
+    // do work
+}  // automatically released
+```
+
+4. **Local Class Definition**:
+   In our implementation, we defined these classes locally within the methods:
+```cpp
+void readResource() {
+    class ReadLock { /*...*/ } readLock(*this);
+    // use the lock
+}
+```
+This limits the scope of the lock classes to only where they're needed, preventing misuse elsewhere in the code.
+
+#### Common Pitfalls to Avoid:
+
+1. **Don't Store RAII Objects in Pointers**:
+```cpp
+// Bad - defeats the purpose of RAII
+ReadLock* lock = new ReadLock(rw);  // Don't do this
+delete lock;  // Manual cleanup required
+
+// Good - automatic cleanup
+ReadLock lock(rw);
+```
+
+2. **Don't Create Temporary Objects Without Names**:
+```cpp
+// Bad - lock is released immediately
+ReadLock(rw);  // temporary object
+doWork();      // no lock held here
+
+// Good - lock held for entire scope
+ReadLock lock(rw);
+doWork();
+```
+
+3. **Don't Allow Copying**:
+   That's why we delete copy operations to prevent multiple releases of the same lock:
+```cpp
+ReadLock(const ReadLock&) = delete;
+ReadLock& operator=(const ReadLock&) = delete;
+```
+
+This RAII pattern is widely used in C++ for resource management, from file handles to memory allocation, and is considered one of the most important idioms in modern C++ programming.
+
+## Usage Example of ReadersWriters class (simplified)
 
 ```cpp
 int main() {
