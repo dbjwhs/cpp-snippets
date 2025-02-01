@@ -1,0 +1,268 @@
+2025-02-01 07:08:22.046 UTC [INFO] [Thread:0x1fccdc240] -----------------------------------
+
+2025-02-01 07:08:22.051 UTC [INFO] [Thread:0x1fccdc240] 
+Demonstrating custom barrier implementation:
+
+2025-02-01 07:08:22.953 UTC [INFO] [Thread:0x16f30f000] CustomBarrierExample Thread 0 completed phase 1
+2025-02-01 07:08:22.958 UTC [INFO] [Thread:0x16f4b3000] CustomBarrierExample Thread 3 completed phase 1
+2025-02-01 07:08:23.037 UTC [INFO] [Thread:0x16f427000] CustomBarrierExample Thread 2 completed phase 1
+2025-02-01 07:08:23.047 UTC [INFO] [Thread:0x16f39b000] CustomBarrierExample Thread 1 completed phase 1
+2025-02-01 07:08:23.047 UTC [INFO] [Thread:0x16f39b000] CustomBarrierExample Thread 1 starting phase 2
+2025-02-01 07:08:23.048 UTC [INFO] [Thread:0x16f427000] CustomBarrierExample Thread 2 starting phase 2
+2025-02-01 07:08:23.048 UTC [INFO] [Thread:0x16f4b3000] CustomBarrierExample Thread 3 starting phase 2
+2025-02-01 07:08:23.048 UTC [INFO] [Thread:0x16f30f000] CustomBarrierExample Thread 0 starting phase 2
+2025-02-01 07:08:23.336 UTC [INFO] [Thread:0x16f30f000] CustomBarrierExample Thread 0 completed phase 2
+2025-02-01 07:08:23.359 UTC [INFO] [Thread:0x16f427000] CustomBarrierExample Thread 2 completed phase 2
+2025-02-01 07:08:23.709 UTC [INFO] [Thread:0x16f4b3000] CustomBarrierExample Thread 3 completed phase 2
+2025-02-01 07:08:23.841 UTC [INFO] [Thread:0x16f39b000] CustomBarrierExample Thread 1 completed phase 2
+2025-02-01 07:08:23.842 UTC [INFO] [Thread:0x16f39b000] CustomBarrierExample Thread 1 starting phase 3
+2025-02-01 07:08:23.842 UTC [INFO] [Thread:0x16f30f000] CustomBarrierExample Thread 0 starting phase 3
+2025-02-01 07:08:23.842 UTC [INFO] [Thread:0x16f427000] CustomBarrierExample Thread 2 starting phase 3
+2025-02-01 07:08:23.842 UTC [INFO] [Thread:0x16f4b3000] CustomBarrierExample Thread 3 starting phase 3
+2025-02-01 07:08:24.042 UTC [INFO] [Thread:0x16f39b000] CustomBarrierExample Thread 1 completed phase 3
+2025-02-01 07:08:24.054 UTC [INFO] [Thread:0x16f4b3000] CustomBarrierExample Thread 3 completed phase 3
+2025-02-01 07:08:24.179 UTC [INFO] [Thread:0x16f427000] CustomBarrierExample Thread 2 completed phase 3
+2025-02-01 07:08:24.576 UTC [INFO] [Thread:0x16f30f000] CustomBarrierExample Thread 0 completed phase 3
+2025-02-01 07:08:24.577 UTC [INFO] [Thread:0x16f30f000] CustomBarrierExample Thread 0 starting phase 4
+2025-02-01 07:08:24.577 UTC [INFO] [Thread:0x16f39b000] CustomBarrierExample Thread 1 starting phase 4
+2025-02-01 07:08:24.577 UTC [INFO] [Thread:0x16f427000] CustomBarrierExample Thread 2 starting phase 4
+2025-02-01 07:08:24.577 UTC [INFO] [Thread:0x16f4b3000] CustomBarrierExample Thread 3 starting phase 4
+2025-02-01 07:08:54.686 UTC [INFO] [Thread:0x1fccdc240] -----------------------------------
+2025-02-01 07:08:54.687 UTC [INFO] [Thread:0x1fccdc240] 
+Demonstrating custom barrier implementation:
+2025-02-01 07:08:54.908 UTC [INFO] [Thread:0x16b66b000] CustomBarrierExample Thread 2 completed phase 1
+2025-02-01 07:08:55.557 UTC [INFO] [Thread:0x16b553000] CustomBarrierExample Thread 0 completed phase 1
+2025-02-01 07:08:55.563 UTC [INFO] [Thread:0x16b6f7000] CustomBarrierExample Thread 3 completed phase 1
+2025-02-01 07:08:55.595 UTC [INFO] [Thread:0x16b5df000] CustomBarrierExample Thread 1 completed phase 1
+2025-02-01 07:08:55.595 UTC [INFO] [Thread:0x16b5df000] CustomBarrierExample Thread 1 starting phase 2
+2025-02-01 07:08:55.595 UTC [INFO] [Thread:0x16b66b000] CustomBarrierExample Thread 2 starting phase 2
+2025-02-01 07:08:55.595 UTC [INFO] [Thread:0x16b553000] CustomBarrierExample Thread 0 starting phase 2
+2025-02-01 07:08:55.595 UTC [INFO] [Thread:0x16b6f7000] CustomBarrierExample Thread 3 starting phase 2
+2025-02-01 07:08:56.002 UTC [INFO] [Thread:0x16b66b000] CustomBarrierExample Thread 2 completed phase 2
+2025-02-01 07:08:56.122 UTC [INFO] [Thread:0x16b5df000] CustomBarrierExample Thread 1 completed phase 2
+2025-02-01 07:08:56.234 UTC [INFO] [Thread:0x16b6f7000] CustomBarrierExample Thread 3 completed phase 2
+2025-02-01 07:08:56.412 UTC [INFO] [Thread:0x16b553000] CustomBarrierExample Thread 0 completed phase 2
+2025-02-01 07:08:56.412 UTC [INFO] [Thread:0x16b553000] CustomBarrierExample Thread 0 starting phase 3
+2025-02-01 07:08:56.412 UTC [INFO] [Thread:0x16b66b000] CustomBarrierExample Thread 2 starting phase 3
+2025-02-01 07:08:56.412 UTC [INFO] [Thread:0x16b5df000] CustomBarrierExample Thread 1 starting phase 3
+2025-02-01 07:08:56.412 UTC [INFO] [Thread:0x16b6f7000] CustomBarrierExample Thread 3 starting phase 3
+2025-02-01 07:08:56.749 UTC [INFO] [Thread:0x16b553000] CustomBarrierExample Thread 0 completed phase 3
+2025-02-01 07:08:57.068 UTC [INFO] [Thread:0x16b6f7000] CustomBarrierExample Thread 3 completed phase 3
+2025-02-01 07:08:57.329 UTC [INFO] [Thread:0x16b66b000] CustomBarrierExample Thread 2 completed phase 3
+2025-02-01 07:08:57.366 UTC [INFO] [Thread:0x16b5df000] CustomBarrierExample Thread 1 completed phase 3
+2025-02-01 07:08:57.366 UTC [INFO] [Thread:0x16b5df000] CustomBarrierExample Thread 1 starting phase 4
+2025-02-01 07:08:57.367 UTC [INFO] [Thread:0x16b6f7000] CustomBarrierExample Thread 3 starting phase 4
+2025-02-01 07:08:57.367 UTC [INFO] [Thread:0x16b66b000] CustomBarrierExample Thread 2 starting phase 4
+2025-02-01 07:08:57.367 UTC [INFO] [Thread:0x16b553000] CustomBarrierExample Thread 0 starting phase 4
+2025-02-01 07:16:56.601 UTC [INFO] [Thread:0x1fccdc240] Demonstrating std::barrier implementation:
+2025-02-01 07:16:56.898 UTC [INFO] [Thread:0x16f9df000] Thread 0 completed phase 1
+2025-02-01 07:16:56.987 UTC [INFO] [Thread:0x16fb83000] Thread 3 completed phase 1
+2025-02-01 07:16:57.352 UTC [INFO] [Thread:0x16fa6b000] Thread 1 completed phase 1
+2025-02-01 07:16:57.495 UTC [INFO] [Thread:0x16faf7000] Thread 2 completed phase 1
+2025-02-01 07:16:57.495 UTC [INFO] [Thread:0x16faf7000] Thread 2 starting phase 2
+2025-02-01 07:16:57.497 UTC [INFO] [Thread:0x16fb83000] Thread 3 starting phase 2
+2025-02-01 07:16:57.501 UTC [INFO] [Thread:0x16f9df000] Thread 0 starting phase 2
+2025-02-01 07:16:57.501 UTC [INFO] [Thread:0x16fa6b000] Thread 1 starting phase 2
+2025-02-01 07:16:57.729 UTC [INFO] [Thread:0x16fb83000] Thread 3 completed phase 2
+2025-02-01 07:16:57.884 UTC [INFO] [Thread:0x16fa6b000] Thread 1 completed phase 2
+2025-02-01 07:16:58.334 UTC [INFO] [Thread:0x16faf7000] Thread 2 completed phase 2
+2025-02-01 07:16:58.467 UTC [INFO] [Thread:0x16f9df000] Thread 0 completed phase 2
+2025-02-01 07:16:58.467 UTC [INFO] [Thread:0x16f9df000] Thread 0 starting phase 3
+2025-02-01 07:16:58.468 UTC [INFO] [Thread:0x16fa6b000] Thread 1 starting phase 3
+2025-02-01 07:16:58.477 UTC [INFO] [Thread:0x16fb83000] Thread 3 starting phase 3
+2025-02-01 07:16:58.531 UTC [INFO] [Thread:0x16faf7000] Thread 2 starting phase 3
+2025-02-01 07:16:58.648 UTC [INFO] [Thread:0x16fa6b000] Thread 1 completed phase 3
+2025-02-01 07:16:58.834 UTC [INFO] [Thread:0x16fb83000] Thread 3 completed phase 3
+2025-02-01 07:16:59.116 UTC [INFO] [Thread:0x16f9df000] Thread 0 completed phase 3
+2025-02-01 07:16:59.136 UTC [INFO] [Thread:0x16faf7000] Thread 2 completed phase 3
+2025-02-01 07:16:59.136 UTC [INFO] [Thread:0x16faf7000] Thread 2 starting phase 4
+2025-02-01 07:16:59.140 UTC [INFO] [Thread:0x16fb83000] Thread 3 starting phase 4
+2025-02-01 07:16:59.146 UTC [INFO] [Thread:0x16fa6b000] Thread 1 starting phase 4
+2025-02-01 07:16:59.148 UTC [INFO] [Thread:0x16f9df000] Thread 0 starting phase 4
+2025-02-01 07:16:59.148 UTC [INFO] [Thread:0x1fccdc240] -----------------------------------
+2025-02-01 07:16:59.148 UTC [INFO] [Thread:0x1fccdc240] 
+Demonstrating custom barrier implementation:
+2025-02-01 07:16:59.446 UTC [INFO] [Thread:0x16fb83000] CustomBarrierExample Thread 3 completed phase 1
+2025-02-01 07:16:59.763 UTC [INFO] [Thread:0x16fa6b000] CustomBarrierExample Thread 1 completed phase 1
+2025-02-01 07:16:59.791 UTC [INFO] [Thread:0x16faf7000] CustomBarrierExample Thread 2 completed phase 1
+2025-02-01 07:17:00.109 UTC [INFO] [Thread:0x16f9df000] CustomBarrierExample Thread 0 completed phase 1
+2025-02-01 07:17:00.109 UTC [INFO] [Thread:0x16f9df000] CustomBarrierExample Thread 0 starting phase 2
+2025-02-01 07:17:00.109 UTC [INFO] [Thread:0x16fa6b000] CustomBarrierExample Thread 1 starting phase 2
+2025-02-01 07:17:00.109 UTC [INFO] [Thread:0x16faf7000] CustomBarrierExample Thread 2 starting phase 2
+2025-02-01 07:17:00.109 UTC [INFO] [Thread:0x16fb83000] CustomBarrierExample Thread 3 starting phase 2
+2025-02-01 07:17:00.500 UTC [INFO] [Thread:0x16faf7000] CustomBarrierExample Thread 2 completed phase 2
+2025-02-01 07:17:00.553 UTC [INFO] [Thread:0x16fa6b000] CustomBarrierExample Thread 1 completed phase 2
+2025-02-01 07:17:00.693 UTC [INFO] [Thread:0x16f9df000] CustomBarrierExample Thread 0 completed phase 2
+2025-02-01 07:17:00.734 UTC [INFO] [Thread:0x16fb83000] CustomBarrierExample Thread 3 completed phase 2
+2025-02-01 07:17:00.734 UTC [INFO] [Thread:0x16fb83000] CustomBarrierExample Thread 3 starting phase 3
+2025-02-01 07:17:00.734 UTC [INFO] [Thread:0x16faf7000] CustomBarrierExample Thread 2 starting phase 3
+2025-02-01 07:17:00.734 UTC [INFO] [Thread:0x16fa6b000] CustomBarrierExample Thread 1 starting phase 3
+2025-02-01 07:17:00.734 UTC [INFO] [Thread:0x16f9df000] CustomBarrierExample Thread 0 starting phase 3
+2025-02-01 07:17:01.291 UTC [INFO] [Thread:0x16fb83000] CustomBarrierExample Thread 3 completed phase 3
+2025-02-01 07:17:01.361 UTC [INFO] [Thread:0x16f9df000] CustomBarrierExample Thread 0 completed phase 3
+2025-02-01 07:17:01.364 UTC [INFO] [Thread:0x16fa6b000] CustomBarrierExample Thread 1 completed phase 3
+2025-02-01 07:17:01.490 UTC [INFO] [Thread:0x16faf7000] CustomBarrierExample Thread 2 completed phase 3
+2025-02-01 07:17:01.490 UTC [INFO] [Thread:0x16faf7000] CustomBarrierExample Thread 2 starting phase 4
+2025-02-01 07:17:01.490 UTC [INFO] [Thread:0x16fa6b000] CustomBarrierExample Thread 1 starting phase 4
+2025-02-01 07:17:01.490 UTC [INFO] [Thread:0x16fb83000] CustomBarrierExample Thread 3 starting phase 4
+2025-02-01 07:17:01.490 UTC [INFO] [Thread:0x16f9df000] CustomBarrierExample Thread 0 starting phase 4
+2025-02-01 07:17:17.532 UTC [INFO] [Thread:0x1fccdc240] Demonstrating std::barrier implementation:
+2025-02-01 07:17:17.921 UTC [INFO] [Thread:0x16b3a3000] Thread 1 completed phase 1
+2025-02-01 07:17:17.954 UTC [INFO] [Thread:0x16b42f000] Thread 2 completed phase 1
+2025-02-01 07:17:18.390 UTC [INFO] [Thread:0x16b317000] Thread 0 completed phase 1
+2025-02-01 07:17:18.435 UTC [INFO] [Thread:0x16b4bb000] Thread 3 completed phase 1
+2025-02-01 07:17:18.435 UTC [INFO] [Thread:0x16b4bb000] Thread 3 starting phase 2
+2025-02-01 07:17:18.435 UTC [INFO] [Thread:0x16b3a3000] Thread 1 starting phase 2
+2025-02-01 07:17:18.441 UTC [INFO] [Thread:0x16b42f000] Thread 2 starting phase 2
+2025-02-01 07:17:18.462 UTC [INFO] [Thread:0x16b317000] Thread 0 starting phase 2
+2025-02-01 07:17:18.665 UTC [INFO] [Thread:0x16b317000] Thread 0 completed phase 2
+2025-02-01 07:17:18.678 UTC [INFO] [Thread:0x16b3a3000] Thread 1 completed phase 2
+2025-02-01 07:17:18.943 UTC [INFO] [Thread:0x16b42f000] Thread 2 completed phase 2
+2025-02-01 07:17:19.067 UTC [INFO] [Thread:0x16b4bb000] Thread 3 completed phase 2
+2025-02-01 07:17:19.068 UTC [INFO] [Thread:0x16b4bb000] Thread 3 starting phase 3
+2025-02-01 07:17:19.071 UTC [INFO] [Thread:0x16b317000] Thread 0 starting phase 3
+2025-02-01 07:17:19.071 UTC [INFO] [Thread:0x16b42f000] Thread 2 starting phase 3
+2025-02-01 07:17:19.071 UTC [INFO] [Thread:0x16b3a3000] Thread 1 starting phase 3
+2025-02-01 07:17:19.413 UTC [INFO] [Thread:0x16b4bb000] Thread 3 completed phase 3
+2025-02-01 07:17:19.444 UTC [INFO] [Thread:0x16b3a3000] Thread 1 completed phase 3
+2025-02-01 07:17:19.671 UTC [INFO] [Thread:0x16b42f000] Thread 2 completed phase 3
+2025-02-01 07:17:19.933 UTC [INFO] [Thread:0x16b317000] Thread 0 completed phase 3
+2025-02-01 07:17:19.933 UTC [INFO] [Thread:0x16b317000] Thread 0 starting phase 4
+2025-02-01 07:17:19.933 UTC [INFO] [Thread:0x16b4bb000] Thread 3 starting phase 4
+2025-02-01 07:17:19.940 UTC [INFO] [Thread:0x16b42f000] Thread 2 starting phase 4
+2025-02-01 07:17:19.942 UTC [INFO] [Thread:0x16b3a3000] Thread 1 starting phase 4
+2025-02-01 07:17:19.943 UTC [INFO] [Thread:0x1fccdc240] 
+-----------------------------------
+
+2025-02-01 07:17:19.943 UTC [INFO] [Thread:0x1fccdc240] 
+Demonstrating custom barrier implementation:
+2025-02-01 07:17:20.083 UTC [INFO] [Thread:0x16b4bb000] CustomBarrierExample Thread 3 completed phase 1
+2025-02-01 07:17:20.408 UTC [INFO] [Thread:0x16b3a3000] CustomBarrierExample Thread 1 completed phase 1
+2025-02-01 07:17:20.487 UTC [INFO] [Thread:0x16b317000] CustomBarrierExample Thread 0 completed phase 1
+2025-02-01 07:17:20.773 UTC [INFO] [Thread:0x16b42f000] CustomBarrierExample Thread 2 completed phase 1
+2025-02-01 07:17:20.774 UTC [INFO] [Thread:0x16b42f000] CustomBarrierExample Thread 2 starting phase 2
+2025-02-01 07:17:20.774 UTC [INFO] [Thread:0x16b4bb000] CustomBarrierExample Thread 3 starting phase 2
+2025-02-01 07:17:20.774 UTC [INFO] [Thread:0x16b3a3000] CustomBarrierExample Thread 1 starting phase 2
+2025-02-01 07:17:20.774 UTC [INFO] [Thread:0x16b317000] CustomBarrierExample Thread 0 starting phase 2
+2025-02-01 07:17:20.885 UTC [INFO] [Thread:0x16b3a3000] CustomBarrierExample Thread 1 completed phase 2
+2025-02-01 07:17:20.938 UTC [INFO] [Thread:0x16b317000] CustomBarrierExample Thread 0 completed phase 2
+2025-02-01 07:17:21.466 UTC [INFO] [Thread:0x16b4bb000] CustomBarrierExample Thread 3 completed phase 2
+2025-02-01 07:17:21.669 UTC [INFO] [Thread:0x16b42f000] CustomBarrierExample Thread 2 completed phase 2
+2025-02-01 07:17:21.670 UTC [INFO] [Thread:0x16b42f000] CustomBarrierExample Thread 2 starting phase 3
+2025-02-01 07:17:21.670 UTC [INFO] [Thread:0x16b4bb000] CustomBarrierExample Thread 3 starting phase 3
+2025-02-01 07:17:21.670 UTC [INFO] [Thread:0x16b3a3000] CustomBarrierExample Thread 1 starting phase 3
+2025-02-01 07:17:21.670 UTC [INFO] [Thread:0x16b317000] CustomBarrierExample Thread 0 starting phase 3
+2025-02-01 07:17:21.800 UTC [INFO] [Thread:0x16b317000] CustomBarrierExample Thread 0 completed phase 3
+2025-02-01 07:17:21.954 UTC [INFO] [Thread:0x16b4bb000] CustomBarrierExample Thread 3 completed phase 3
+2025-02-01 07:17:22.442 UTC [INFO] [Thread:0x16b3a3000] CustomBarrierExample Thread 1 completed phase 3
+2025-02-01 07:17:22.498 UTC [INFO] [Thread:0x16b42f000] CustomBarrierExample Thread 2 completed phase 3
+2025-02-01 07:17:22.498 UTC [INFO] [Thread:0x16b42f000] CustomBarrierExample Thread 2 starting phase 4
+2025-02-01 07:17:22.498 UTC [INFO] [Thread:0x16b317000] CustomBarrierExample Thread 0 starting phase 4
+2025-02-01 07:17:22.498 UTC [INFO] [Thread:0x16b4bb000] CustomBarrierExample Thread 3 starting phase 4
+2025-02-01 07:17:22.498 UTC [INFO] [Thread:0x16b3a3000] CustomBarrierExample Thread 1 starting phase 4
+2025-02-01 07:17:30.428 UTC [INFO] [Thread:0x1fccdc240] Demonstrating std::barrier implementation:
+2025-02-01 07:17:30.665 UTC [INFO] [Thread:0x16f9cb000] Thread 2 completed phase 1
+2025-02-01 07:17:30.668 UTC [INFO] [Thread:0x16f93f000] Thread 1 completed phase 1
+2025-02-01 07:17:30.816 UTC [INFO] [Thread:0x16fa57000] Thread 3 completed phase 1
+2025-02-01 07:17:31.329 UTC [INFO] [Thread:0x16f8b3000] Thread 0 completed phase 1
+2025-02-01 07:17:31.329 UTC [INFO] [Thread:0x16f8b3000] Thread 0 starting phase 2
+2025-02-01 07:17:31.333 UTC [INFO] [Thread:0x16f9cb000] Thread 2 starting phase 2
+2025-02-01 07:17:31.333 UTC [INFO] [Thread:0x16fa57000] Thread 3 starting phase 2
+2025-02-01 07:17:31.339 UTC [INFO] [Thread:0x16f93f000] Thread 1 starting phase 2
+2025-02-01 07:17:31.725 UTC [INFO] [Thread:0x16f8b3000] Thread 0 completed phase 2
+2025-02-01 07:17:31.948 UTC [INFO] [Thread:0x16f9cb000] Thread 2 completed phase 2
+2025-02-01 07:17:32.133 UTC [INFO] [Thread:0x16fa57000] Thread 3 completed phase 2
+2025-02-01 07:17:32.162 UTC [INFO] [Thread:0x16f93f000] Thread 1 completed phase 2
+2025-02-01 07:17:32.162 UTC [INFO] [Thread:0x16f93f000] Thread 1 starting phase 3
+2025-02-01 07:17:32.165 UTC [INFO] [Thread:0x16f9cb000] Thread 2 starting phase 3
+2025-02-01 07:17:32.165 UTC [INFO] [Thread:0x16f8b3000] Thread 0 starting phase 3
+2025-02-01 07:17:32.171 UTC [INFO] [Thread:0x16fa57000] Thread 3 starting phase 3
+2025-02-01 07:17:32.506 UTC [INFO] [Thread:0x16f9cb000] Thread 2 completed phase 3
+2025-02-01 07:17:32.683 UTC [INFO] [Thread:0x16f8b3000] Thread 0 completed phase 3
+2025-02-01 07:17:32.811 UTC [INFO] [Thread:0x16f93f000] Thread 1 completed phase 3
+2025-02-01 07:17:32.862 UTC [INFO] [Thread:0x16fa57000] Thread 3 completed phase 3
+2025-02-01 07:17:32.862 UTC [INFO] [Thread:0x16fa57000] Thread 3 starting phase 4
+2025-02-01 07:17:32.872 UTC [INFO] [Thread:0x16f8b3000] Thread 0 starting phase 4
+2025-02-01 07:17:32.872 UTC [INFO] [Thread:0x16f9cb000] Thread 2 starting phase 4
+2025-02-01 07:17:32.886 UTC [INFO] [Thread:0x16f93f000] Thread 1 starting phase 4
+2025-02-01 07:17:32.887 UTC [INFO] [Thread:0x1fccdc240] 
+-----------------------------------
+2025-02-01 07:17:32.887 UTC [INFO] [Thread:0x1fccdc240] 
+Demonstrating custom barrier implementation:
+2025-02-01 07:17:33.186 UTC [INFO] [Thread:0x16f9cb000] CustomBarrierExample Thread 2 completed phase 1
+2025-02-01 07:17:33.514 UTC [INFO] [Thread:0x16f8b3000] CustomBarrierExample Thread 0 completed phase 1
+2025-02-01 07:17:33.555 UTC [INFO] [Thread:0x16fa57000] CustomBarrierExample Thread 3 completed phase 1
+2025-02-01 07:17:33.573 UTC [INFO] [Thread:0x16f93f000] CustomBarrierExample Thread 1 completed phase 1
+2025-02-01 07:17:33.573 UTC [INFO] [Thread:0x16f93f000] CustomBarrierExample Thread 1 starting phase 2
+2025-02-01 07:17:33.573 UTC [INFO] [Thread:0x16fa57000] CustomBarrierExample Thread 3 starting phase 2
+2025-02-01 07:17:33.573 UTC [INFO] [Thread:0x16f8b3000] CustomBarrierExample Thread 0 starting phase 2
+2025-02-01 07:17:33.573 UTC [INFO] [Thread:0x16f9cb000] CustomBarrierExample Thread 2 starting phase 2
+2025-02-01 07:17:33.772 UTC [INFO] [Thread:0x16fa57000] CustomBarrierExample Thread 3 completed phase 2
+2025-02-01 07:17:33.989 UTC [INFO] [Thread:0x16f93f000] CustomBarrierExample Thread 1 completed phase 2
+2025-02-01 07:17:34.101 UTC [INFO] [Thread:0x16f8b3000] CustomBarrierExample Thread 0 completed phase 2
+2025-02-01 07:17:34.578 UTC [INFO] [Thread:0x16f9cb000] CustomBarrierExample Thread 2 completed phase 2
+2025-02-01 07:17:34.578 UTC [INFO] [Thread:0x16f9cb000] CustomBarrierExample Thread 2 starting phase 3
+2025-02-01 07:17:34.578 UTC [INFO] [Thread:0x16f8b3000] CustomBarrierExample Thread 0 starting phase 3
+2025-02-01 07:17:34.578 UTC [INFO] [Thread:0x16f93f000] CustomBarrierExample Thread 1 starting phase 3
+2025-02-01 07:17:34.578 UTC [INFO] [Thread:0x16fa57000] CustomBarrierExample Thread 3 starting phase 3
+2025-02-01 07:17:34.703 UTC [INFO] [Thread:0x16fa57000] CustomBarrierExample Thread 3 completed phase 3
+2025-02-01 07:17:34.884 UTC [INFO] [Thread:0x16f93f000] CustomBarrierExample Thread 1 completed phase 3
+2025-02-01 07:17:35.252 UTC [INFO] [Thread:0x16f9cb000] CustomBarrierExample Thread 2 completed phase 3
+2025-02-01 07:17:35.373 UTC [INFO] [Thread:0x16f8b3000] CustomBarrierExample Thread 0 completed phase 3
+2025-02-01 07:17:35.373 UTC [INFO] [Thread:0x16f8b3000] CustomBarrierExample Thread 0 starting phase 4
+2025-02-01 07:17:35.374 UTC [INFO] [Thread:0x16fa57000] CustomBarrierExample Thread 3 starting phase 4
+2025-02-01 07:17:35.374 UTC [INFO] [Thread:0x16f93f000] CustomBarrierExample Thread 1 starting phase 4
+2025-02-01 07:17:35.374 UTC [INFO] [Thread:0x16f9cb000] CustomBarrierExample Thread 2 starting phase 4
+2025-02-01 07:32:12.919 UTC [INFO] [Thread:0x1fccdc240] 
+Demonstrating custom barrier implementation:
+2025-02-01 07:32:13.100 UTC [INFO] [Thread:0x16fea7000] CustomBarrierExample Thread 3 completed phase 1
+2025-02-01 07:32:13.342 UTC [INFO] [Thread:0x16fd03000] CustomBarrierExample Thread 0 completed phase 1
+2025-02-01 07:32:13.476 UTC [INFO] [Thread:0x16fe1b000] CustomBarrierExample Thread 2 completed phase 1
+2025-02-01 07:32:13.707 UTC [INFO] [Thread:0x16fd8f000] CustomBarrierExample Thread 1 completed phase 1
+2025-02-01 07:32:13.707 UTC [INFO] [Thread:0x16fd8f000] CustomBarrierExample Thread 1 starting phase 2
+2025-02-01 07:32:13.707 UTC [INFO] [Thread:0x16fd03000] CustomBarrierExample Thread 0 starting phase 2
+2025-02-01 07:32:13.707 UTC [INFO] [Thread:0x16fe1b000] CustomBarrierExample Thread 2 starting phase 2
+2025-02-01 07:32:13.707 UTC [INFO] [Thread:0x16fea7000] CustomBarrierExample Thread 3 starting phase 2
+2025-02-01 07:32:13.833 UTC [INFO] [Thread:0x16fd03000] CustomBarrierExample Thread 0 completed phase 2
+2025-02-01 07:32:13.943 UTC [INFO] [Thread:0x16fd8f000] CustomBarrierExample Thread 1 completed phase 2
+2025-02-01 07:32:13.991 UTC [INFO] [Thread:0x16fe1b000] CustomBarrierExample Thread 2 completed phase 2
+2025-02-01 07:32:14.557 UTC [INFO] [Thread:0x16fea7000] CustomBarrierExample Thread 3 completed phase 2
+2025-02-01 07:32:14.557 UTC [INFO] [Thread:0x16fea7000] CustomBarrierExample Thread 3 starting phase 3
+2025-02-01 07:32:14.557 UTC [INFO] [Thread:0x16fd03000] CustomBarrierExample Thread 0 starting phase 3
+2025-02-01 07:32:14.557 UTC [INFO] [Thread:0x16fd8f000] CustomBarrierExample Thread 1 starting phase 3
+2025-02-01 07:32:14.557 UTC [INFO] [Thread:0x16fe1b000] CustomBarrierExample Thread 2 starting phase 3
+2025-02-01 07:32:14.945 UTC [INFO] [Thread:0x16fea7000] CustomBarrierExample Thread 3 completed phase 3
+2025-02-01 07:32:15.315 UTC [INFO] [Thread:0x16fe1b000] CustomBarrierExample Thread 2 completed phase 3
+2025-02-01 07:32:15.404 UTC [INFO] [Thread:0x16fd03000] CustomBarrierExample Thread 0 completed phase 3
+2025-02-01 07:32:15.485 UTC [INFO] [Thread:0x16fd8f000] CustomBarrierExample Thread 1 completed phase 3
+2025-02-01 07:32:15.485 UTC [INFO] [Thread:0x16fd8f000] CustomBarrierExample Thread 1 starting phase 4
+2025-02-01 07:32:15.485 UTC [INFO] [Thread:0x16fea7000] CustomBarrierExample Thread 3 starting phase 4
+2025-02-01 07:32:15.485 UTC [INFO] [Thread:0x16fe1b000] CustomBarrierExample Thread 2 starting phase 4
+2025-02-01 07:32:15.485 UTC [INFO] [Thread:0x16fd03000] CustomBarrierExample Thread 0 starting phase 4
+2025-02-01 07:32:15.485 UTC [INFO] [Thread:0x1fccdc240] 
+-----------------------------------
+2025-02-01 07:32:15.486 UTC [INFO] [Thread:0x1fccdc240] Demonstrating std::barrier implementation:
+2025-02-01 07:32:15.648 UTC [INFO] [Thread:0x16fe1b000] Thread 2 completed phase 1
+2025-02-01 07:32:15.650 UTC [INFO] [Thread:0x16fea7000] Thread 3 completed phase 1
+2025-02-01 07:32:16.307 UTC [INFO] [Thread:0x16fd8f000] Thread 1 completed phase 1
+2025-02-01 07:32:16.383 UTC [INFO] [Thread:0x16fd03000] Thread 0 completed phase 1
+2025-02-01 07:32:16.383 UTC [INFO] [Thread:0x16fd03000] Thread 0 starting phase 2
+2025-02-01 07:32:16.387 UTC [INFO] [Thread:0x16fea7000] Thread 3 starting phase 2
+2025-02-01 07:32:16.391 UTC [INFO] [Thread:0x16fe1b000] Thread 2 starting phase 2
+2025-02-01 07:32:16.399 UTC [INFO] [Thread:0x16fd8f000] Thread 1 starting phase 2
+2025-02-01 07:32:16.797 UTC [INFO] [Thread:0x16fe1b000] Thread 2 completed phase 2
+2025-02-01 07:32:17.129 UTC [INFO] [Thread:0x16fea7000] Thread 3 completed phase 2
+2025-02-01 07:32:17.359 UTC [INFO] [Thread:0x16fd8f000] Thread 1 completed phase 2
+2025-02-01 07:32:17.370 UTC [INFO] [Thread:0x16fd03000] Thread 0 completed phase 2
+2025-02-01 07:32:17.370 UTC [INFO] [Thread:0x16fd03000] Thread 0 starting phase 3
+2025-02-01 07:32:17.375 UTC [INFO] [Thread:0x16fd8f000] Thread 1 starting phase 3
+2025-02-01 07:32:17.375 UTC [INFO] [Thread:0x16fea7000] Thread 3 starting phase 3
+2025-02-01 07:32:17.377 UTC [INFO] [Thread:0x16fe1b000] Thread 2 starting phase 3
+2025-02-01 07:32:17.637 UTC [INFO] [Thread:0x16fea7000] Thread 3 completed phase 3
+2025-02-01 07:32:17.753 UTC [INFO] [Thread:0x16fe1b000] Thread 2 completed phase 3
+2025-02-01 07:32:17.936 UTC [INFO] [Thread:0x16fd8f000] Thread 1 completed phase 3
+2025-02-01 07:32:18.356 UTC [INFO] [Thread:0x16fd03000] Thread 0 completed phase 3
+2025-02-01 07:32:18.356 UTC [INFO] [Thread:0x16fd03000] Thread 0 starting phase 4
+2025-02-01 07:32:18.357 UTC [INFO] [Thread:0x16fd8f000] Thread 1 starting phase 4
+2025-02-01 07:32:18.364 UTC [INFO] [Thread:0x16fe1b000] Thread 2 starting phase 4
+2025-02-01 07:32:18.366 UTC [INFO] [Thread:0x16fea7000] Thread 3 starting phase 4
