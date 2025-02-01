@@ -166,7 +166,16 @@ public:
         } else {
             // not the last thread, need to wait
             ++m_waiting;
+
+            // wait on the condition variable m_cv. the unique_lock 'lock' is automatically
+            // unlocked during waiting and relocked when waking up. the lambda [this, phase_copy]
+            // captures the current object pointer and phase_copy by value. the lambda returns true
+            // only when phase_copy != m_phase, meaning the barrier has moved to a new phase. this
+            // ensures threads only proceed after a genuine phase change, protecting against spurious
+            // wakeups. when the last thread arrives and changes m_phase, all waiting threads will
+            // have their conditions satisfied and can proceed
             m_cv.wait(lock, [this, phase_copy] { return phase_copy != m_phase; });
+
             --m_waiting;
         }
     }

@@ -70,6 +70,44 @@ public:
 };
 ```
 
+### A special note on condition variable lambda usage
+
+```cpp
+m_cv.wait(lock, [this, phase_copy] { return phase_copy != m_phase; });
+```
+Let me break down this line of code which is part of the condition variable wait operation:
+
+1. `m_cv.wait()` - This is calling the wait method on our condition variable (m_cv)
+
+2. It takes two parameters:
+    - `lock`: A unique_lock that will be automatically unlocked while waiting and relocked when waking up
+    - A lambda function that serves as the predicate/condition to check
+
+3. `[this, phase_copy]` - This is the lambda capture clause:
+    - `this`: Captures the current object pointer so we can access member variables
+    - `phase_copy`: Captures the local phase_copy variable by value
+
+4. `{ return phase_copy != m_phase; }` - This is the lambda body:
+    - Returns true when the stored phase_copy is different from the current m_phase
+    - This indicates that the barrier has moved to a new phase
+
+The line essentially means:
+- Wait until the barrier's phase changes
+- While waiting, release the lock so other threads can proceed
+- Periodically wake up to check if the condition is true
+- When the condition becomes true (phase has changed), continue execution
+
+This is part of the barrier mechanism because:
+1. When the last thread arrives, it changes m_phase
+2. This makes the condition true for all waiting threads
+3. All waiting threads can then proceed to the next phase
+
+The use of phase_copy helps avoid the "spurious wakeup" problem by ensuring each thread only proceeds when the barrier has genuinely moved to a new phase, rather than just when it receives a notification.
+
+Without this predicate, threads might wake up falsely due to spurious wakeups, or miss a notification if it comes before they start waiting. The condition variable predicate pattern ensures robust synchronization.
+
+As we first saw above with the C++20 addition of `std::barrier` things have gotten a little easier.
+
 ## Usage Example
 
 ```cpp
