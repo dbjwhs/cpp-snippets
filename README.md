@@ -47,9 +47,14 @@ make
 - [factory/](design-patterns/factory/) - Factory pattern example
 
 ### Concurrency
-- [thread-pool/](concurrency/thread-pool/) - Thread pool implementation
-- [producer-consumer/](concurrency/producer-consumer/) - Producer-consumer pattern example
+- [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
+- [producer-consumer/](concurrency/producer-consumer/) - Producer-consumer pattern example in C++
 - [readers-writers/](concurrency/readers-writers/) - A thread-safe Readers-Writers synchronization mechanism in C++
+- [barrier-example/](concurrency/barrier-example/) - Example of the barrier pattern in C++
+- [dining-philosophers/](concurrency/dining-philosophers/) - Example of the classic dining philosophers problem in C++
+- [pipelining/](concurrency/pipelining/) - An example of pipelining in C++
+- [active-object-pattern/](concurrency/active-object-pattern/) - An example of the active object pattern in C++
+- [thread-safe-logging/](concurrency/thread-safe-logging/) - An thread-safe logging mechanism in C++
 
 ### Utilities
 - [string-utils/](utilities/string-utils/) - String manipulation utilities

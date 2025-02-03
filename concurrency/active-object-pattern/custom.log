@@ -1,0 +1,296 @@
+2025-02-03 08:14:33.313 UTC [INFO] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+2025-02-03 08:14:33.314 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:14:33.419 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:14:33.524 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:14:33.524 UTC [INFO] [Thread:0x1fccdc240] 
+2. Priority Handling:
+2025-02-03 08:14:33.629 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:14:33.730 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:14:33.835 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:14:34.045 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:14:34.045 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:14:34.046 UTC [INFO] [Thread:0x1fccdc240] 
+3. Timeout Handling:
+2025-02-03 08:14:34.048 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:14:34.247 UTC [INFO] [Thread:0x1fccdc240] Operation completed within timeout: 2
+2025-02-03 08:14:34.302 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:14:34.303 UTC [INFO] [Thread:0x1fccdc240] 
+4. Cancellation Handling:
+2025-02-03 08:14:34.303 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:14:34.303 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:14:34.303 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:14:34.303 UTC [INFO] [Thread:0x1fccdc240] 
+5. Error Handling:
+2025-02-03 08:14:34.453 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:14:34.454 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:14:34.454 UTC [INFO] [Thread:0x1fccdc240] 
+6. Mixed Operation Scenarios:
+2025-02-03 08:14:34.557 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:14:34.557 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:14:34.662 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:14:34.662 UTC [INFO] [Thread:0x1fccdc240] 
+7. Stress Test:
+2025-02-03 08:14:41.265 UTC [INFO] [Thread:0x1fccdc240] Completed: 42
+2025-02-03 08:14:41.266 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:14:41.266 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 43
+2025-02-03 08:15:28.587 UTC [INFO] [Thread:0x1fccdc240] 
+=== Comprehensive Test Suite ===
+2025-02-03 08:15:28.589 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:15:28.694 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:15:28.799 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:15:28.799 UTC [INFO] [Thread:0x1fccdc240] 
+2. Priority Handling:
+2025-02-03 08:15:28.904 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:15:29.009 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:15:29.111 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:15:29.321 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:15:29.321 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:15:29.321 UTC [INFO] [Thread:0x1fccdc240] 
+3. Timeout Handling:
+2025-02-03 08:15:29.323 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:15:29.525 UTC [INFO] [Thread:0x1fccdc240] Error: Should not have timed out!
+2025-02-03 08:15:29.578 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:15:29.579 UTC [INFO] [Thread:0x1fccdc240] 
+4. Cancellation Handling:
+2025-02-03 08:15:29.579 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:15:29.579 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:15:29.579 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:15:29.579 UTC [INFO] [Thread:0x1fccdc240] 
+5. Error Handling:
+2025-02-03 08:15:29.735 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:15:29.735 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:15:29.735 UTC [INFO] [Thread:0x1fccdc240] 
+6. Mixed Operation Scenarios:
+2025-02-03 08:15:29.837 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:15:29.837 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:15:29.939 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:15:29.939 UTC [INFO] [Thread:0x1fccdc240] 
+7. Stress Test:
+2025-02-03 08:15:37.010 UTC [INFO] [Thread:0x1fccdc240] Completed: 40
+2025-02-03 08:15:37.011 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:15:37.011 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 45
+2025-02-03 08:15:58.362 UTC [INFO] [Thread:0x1fccdc240] 
+=== Comprehensive Test Suite ===
+2025-02-03 08:15:58.363 UTC [INFO] [Thread:0x1fccdc240] 
+1. Basic Operations:
+2025-02-03 08:15:58.469 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:15:58.572 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:15:58.572 UTC [INFO] [Thread:0x1fccdc240] 
+2. Priority Handling:
+2025-02-03 08:15:58.672 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:15:58.777 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:15:58.880 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:15:58.985 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:15:59.086 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:15:59.087 UTC [INFO] [Thread:0x1fccdc240] 
+3. Timeout Handling:
+2025-02-03 08:15:59.088 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:15:59.293 UTC [INFO] [Thread:0x1fccdc240] Error: Should not have timed out!
+2025-02-03 08:15:59.348 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:15:59.348 UTC [INFO] [Thread:0x1fccdc240] 
+4. Cancellation Handling:
+2025-02-03 08:15:59.349 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:15:59.349 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:15:59.349 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:15:59.349 UTC [INFO] [Thread:0x1fccdc240] 
+5. Error Handling:
+2025-02-03 08:15:59.503 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:15:59.504 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:15:59.504 UTC [INFO] [Thread:0x1fccdc240] 
+6. Mixed Operation Scenarios:
+2025-02-03 08:15:59.606 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:15:59.606 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:15:59.710 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:15:59.710 UTC [INFO] [Thread:0x1fccdc240] 
+7. Stress Test:
+2025-02-03 08:16:06.450 UTC [INFO] [Thread:0x1fccdc240] Completed: 41
+2025-02-03 08:16:06.451 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:16:06.451 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 44
+2025-02-03 08:16:15.247 UTC [INFO] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+2025-02-03 08:16:15.248 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:16:15.353 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:16:15.455 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:16:15.455 UTC [INFO] [Thread:0x1fccdc240] 
+2. Priority Handling:
+2025-02-03 08:16:15.663 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:16:15.765 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:16:15.766 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:16:15.870 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:16:15.975 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:16:15.975 UTC [INFO] [Thread:0x1fccdc240] 
+3. Timeout Handling:
+2025-02-03 08:16:15.977 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:16:16.182 UTC [INFO] [Thread:0x1fccdc240] Error: Should not have timed out!
+2025-02-03 08:16:16.232 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:16:16.232 UTC [INFO] [Thread:0x1fccdc240] 
+4. Cancellation Handling:
+2025-02-03 08:16:16.233 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:16:16.233 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:16:16.233 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:16:16.233 UTC [INFO] [Thread:0x1fccdc240] 
+5. Error Handling:
+2025-02-03 08:16:16.394 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:16:16.394 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:16:16.394 UTC [INFO] [Thread:0x1fccdc240] 
+6. Mixed Operation Scenarios:
+2025-02-03 08:16:16.500 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:16:16.500 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:16:16.601 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:16:16.601 UTC [INFO] [Thread:0x1fccdc240] 
+7. Stress Test:
+2025-02-03 08:16:24.050 UTC [INFO] [Thread:0x1fccdc240] Completed: 38
+2025-02-03 08:16:24.050 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:16:24.050 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 47
+2025-02-03 08:17:56.571 UTC [INFO] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+
+2025-02-03 08:17:56.572 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+
+2025-02-03 08:17:56.674 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:17:56.779 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:17:56.779 UTC [INFO] [Thread:0x1fccdc240] 2. Priority Handling:
+
+2025-02-03 08:17:56.884 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:17:56.988 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:17:57.093 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:17:57.198 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:17:57.301 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:17:57.301 UTC [INFO] [Thread:0x1fccdc240] 3. Timeout Handling:
+
+2025-02-03 08:17:57.303 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:17:57.508 UTC [INFO] [Thread:0x1fccdc240] Operation completed within timeout: 2
+2025-02-03 08:17:57.560 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:17:57.561 UTC [INFO] [Thread:0x1fccdc240] 4. Cancellation Handling:
+
+2025-02-03 08:17:57.561 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:17:57.561 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:17:57.561 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:17:57.561 UTC [INFO] [Thread:0x1fccdc240] 5. Error Handling:
+
+2025-02-03 08:17:57.714 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:17:57.714 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:17:57.714 UTC [INFO] [Thread:0x1fccdc240] 6. Mixed Operation Scenarios:
+
+2025-02-03 08:17:57.819 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:17:57.820 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:17:57.924 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:17:57.925 UTC [INFO] [Thread:0x1fccdc240] 7. Stress Test:
+
+2025-02-03 08:18:05.031 UTC [INFO] [Thread:0x1fccdc240] Completed: 39
+2025-02-03 08:18:05.031 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:18:05.031 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 46
+2025-02-03 08:18:58.341 UTC [INFO] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+2025-02-03 08:18:58.343 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:18:58.448 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:18:58.548 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:18:58.548 UTC [INFO] [Thread:0x1fccdc240] 2. Priority Handling:
+2025-02-03 08:18:58.653 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:18:58.754 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:18:58.858 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:18:58.960 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:18:59.061 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:18:59.061 UTC [INFO] [Thread:0x1fccdc240] 3. Timeout Handling:
+2025-02-03 08:18:59.062 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:18:59.268 UTC [INFO] [Thread:0x1fccdc240] Error: Should not have timed out!
+2025-02-03 08:18:59.323 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:18:59.323 UTC [INFO] [Thread:0x1fccdc240] 4. Cancellation Handling:
+2025-02-03 08:18:59.324 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:18:59.324 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:18:59.324 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:18:59.324 UTC [INFO] [Thread:0x1fccdc240] 5. Error Handling:
+2025-02-03 08:18:59.474 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:18:59.474 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:18:59.474 UTC [INFO] [Thread:0x1fccdc240] 6. Mixed Operation Scenarios:
+2025-02-03 08:18:59.579 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:18:59.580 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:18:59.684 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:18:59.684 UTC [INFO] [Thread:0x1fccdc240] 7. Stress Test:
+2025-02-03 08:19:06.747 UTC [INFO] [Thread:0x1fccdc240] Completed: 40
+2025-02-03 08:19:06.747 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:19:06.747 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 45
+2025-02-03 08:21:20.998 UTC [CRITICAL] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+2025-02-03 08:21:20.999 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:21:21.102 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:21:21.207 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:21:21.207 UTC [INFO] [Thread:0x1fccdc240] 2. Priority Handling:
+2025-02-03 08:21:21.417 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:21:21.520 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:21:21.520 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:21:21.625 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:21:21.728 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:21:21.728 UTC [INFO] [Thread:0x1fccdc240] 3. Timeout Handling:
+2025-02-03 08:21:21.730 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:21:21.934 UTC [CRITICAL] [Thread:0x1fccdc240] Error: Should not have timed out!
+2025-02-03 08:21:21.989 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:21:21.989 UTC [INFO] [Thread:0x1fccdc240] 4. Cancellation Handling:
+2025-02-03 08:21:21.990 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:21:21.990 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:21:21.990 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:21:21.990 UTC [INFO] [Thread:0x1fccdc240] 5. Error Handling:
+2025-02-03 08:21:22.144 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:21:22.144 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:21:22.145 UTC [INFO] [Thread:0x1fccdc240] 6. Mixed Operation Scenarios:
+2025-02-03 08:21:22.248 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:21:22.249 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:21:22.354 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:21:22.354 UTC [INFO] [Thread:0x1fccdc240] 7. Stress Test:
+2025-02-03 08:21:29.443 UTC [INFO] [Thread:0x1fccdc240] Completed: 40
+2025-02-03 08:21:29.444 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:21:29.444 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 45
+2025-02-03 08:24:03.641 UTC [INFO] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+2025-02-03 08:24:03.642 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:24:03.747 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:24:03.852 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:24:03.852 UTC [INFO] [Thread:0x1fccdc240] 2. Priority Handling:
+2025-02-03 08:24:03.957 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:24:04.060 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:24:04.165 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:24:04.269 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:24:04.370 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:24:04.370 UTC [INFO] [Thread:0x1fccdc240] 3. Timeout Handling:
+2025-02-03 08:24:04.372 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:24:04.574 UTC [INFO] [Thread:0x1fccdc240] Operation completed within timeout: 2
+2025-02-03 08:24:04.626 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:24:04.626 UTC [INFO] [Thread:0x1fccdc240] 4. Cancellation Handling:
+2025-02-03 08:24:04.627 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:24:04.627 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:24:04.627 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:24:04.627 UTC [INFO] [Thread:0x1fccdc240] 5. Error Handling:
+2025-02-03 08:24:04.777 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:24:04.777 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:24:04.778 UTC [INFO] [Thread:0x1fccdc240] 6. Mixed Operation Scenarios:
+2025-02-03 08:24:04.882 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:24:04.882 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:24:04.985 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:24:04.985 UTC [INFO] [Thread:0x1fccdc240] 7. Stress Test:
+2025-02-03 08:24:11.741 UTC [INFO] [Thread:0x1fccdc240] Completed: 41
+2025-02-03 08:24:11.741 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:24:11.741 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 44
+2025-02-03 08:24:34.076 UTC [INFO] [Thread:0x1fccdc240] === Comprehensive Test Suite ===
+2025-02-03 08:24:34.076 UTC [INFO] [Thread:0x1fccdc240] 1. Basic Operations:
+2025-02-03 08:24:34.178 UTC [INFO] [Thread:0x1fccdc240] Add result (5+3): 8
+2025-02-03 08:24:34.281 UTC [INFO] [Thread:0x1fccdc240] Multiply result (4*2): 8
+2025-02-03 08:24:34.281 UTC [INFO] [Thread:0x1fccdc240] 2. Priority Handling:
+2025-02-03 08:24:34.386 UTC [INFO] [Thread:0x1fccdc240] High priority add (3+3): 6
+2025-02-03 08:24:34.491 UTC [INFO] [Thread:0x1fccdc240] High priority multiply (3*3): 9
+2025-02-03 08:24:34.596 UTC [INFO] [Thread:0x1fccdc240] Medium priority (2+2): 4
+2025-02-03 08:24:34.802 UTC [INFO] [Thread:0x1fccdc240] Low priority add (1+1): 2
+2025-02-03 08:24:34.802 UTC [INFO] [Thread:0x1fccdc240] Low priority multiply (2*2): 4
+2025-02-03 08:24:34.803 UTC [INFO] [Thread:0x1fccdc240] 3. Timeout Handling:
+2025-02-03 08:24:34.804 UTC [INFO] [Thread:0x1fccdc240] Expected immediate timeout caught: operation timed out
+2025-02-03 08:24:35.005 UTC [CRITICAL] [Thread:0x1fccdc240] Error: Should not have timed out!
+2025-02-03 08:24:35.060 UTC [INFO] [Thread:0x1fccdc240] Multiple timeout handling working
+2025-02-03 08:24:35.060 UTC [INFO] [Thread:0x1fccdc240] 4. Cancellation Handling:
+2025-02-03 08:24:35.060 UTC [INFO] [Thread:0x1fccdc240] Immediate cancellation working: operation cancelled
+2025-02-03 08:24:35.060 UTC [INFO] [Thread:0x1fccdc240] Multiple cancellation working
+2025-02-03 08:24:35.060 UTC [INFO] [Thread:0x1fccdc240] Cancellation with timeout working
+2025-02-03 08:24:35.060 UTC [INFO] [Thread:0x1fccdc240] 5. Error Handling:
+2025-02-03 08:24:35.221 UTC [INFO] [Thread:0x1fccdc240] Overflow handling working std::exception
+2025-02-03 08:24:35.221 UTC [INFO] [Thread:0x1fccdc240] High priority overflow handling working
+2025-02-03 08:24:35.221 UTC [INFO] [Thread:0x1fccdc240] 6. Mixed Operation Scenarios:
+2025-02-03 08:24:35.326 UTC [INFO] [Thread:0x1fccdc240] High priority result: 2
+2025-02-03 08:24:35.326 UTC [INFO] [Thread:0x1fccdc240] Mixed scenario handling working
+2025-02-03 08:24:35.431 UTC [INFO] [Thread:0x1fccdc240] Low priority result: 6
+2025-02-03 08:24:35.432 UTC [INFO] [Thread:0x1fccdc240] 7. Stress Test:
+2025-02-03 08:24:42.041 UTC [INFO] [Thread:0x1fccdc240] Completed: 42
+2025-02-03 08:24:42.041 UTC [INFO] [Thread:0x1fccdc240] Canceled: 15
+2025-02-03 08:24:42.041 UTC [INFO] [Thread:0x1fccdc240] Timed Out: 43
