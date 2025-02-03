@@ -527,16 +527,16 @@ int main() {
             std::vector<std::shared_ptr<MethodResult<int>>> results;
 
             // queue mix of operations with different priorities
-            for (int i = 0; i < numOperations; ++i) {
-                Priority priority = static_cast<Priority>(i % 3);  // Cycle through priorities
-                if (i % 2 == 0) {
-                    results.push_back(calculator.add(i, i, priority));
+            for (int ndx = 0; ndx < numOperations; ++ndx) {
+                Priority priority = static_cast<Priority>(ndx % 3);  // Cycle through priorities
+                if (ndx % 2 == 0) {
+                    results.push_back(calculator.add(ndx, ndx, priority));
                 } else {
-                    results.push_back(calculator.multiply(i, 2, priority));
+                    results.push_back(calculator.multiply(ndx, 2, priority));
                 }
 
                 // randomly cancel some operations
-                if (i % 7 == 0) {  // Cancel ~14% of operations
+                if (ndx % 7 == 0) {  // Cancel ~14% of operations
                     results.back()->cancel();
                 }
             }
