@@ -37,10 +37,12 @@ using string_type = std::string;
 constexpr size_type DEFAULT_BUFFER_SIZE = 1024;
 constexpr double EPSILON = 1e-6;
 
-// transform thread id to std::string
-std::string threadIdToString() {
+// transform thread id to std::string, note if no argument
+// current thread id, else passed in thread id
+template<typename ThreadType = std::thread::id>
+inline std::string threadIdToString(ThreadType thread_id = std::this_thread::get_id()) {
     std::stringstream ss;
-    ss << std::this_thread::get_id();
+    ss << thread_id;
     return ss.str();
 }
 
