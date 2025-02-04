@@ -123,6 +123,7 @@ public:
         std::vector<std::thread> threads;
 
         // create threads
+        threads.reserve(num_threads);
         for (int ndx = 0; ndx < num_threads; ++ndx) {
             threads.emplace_back(worker, std::ref(barrier), ndx, logger);
         }
