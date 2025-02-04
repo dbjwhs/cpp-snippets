@@ -1,10 +1,44 @@
 #!/bin/bash
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# ANSI Color Codes Explanation
+# ---------------------------
+# These variables contain ANSI escape codes for text coloring in the terminal
+#
+# Format: \033[<style>;<color>m
+# - \033 is the escape character
+# - Style values: 0=normal, 1=bold, 2=dim, 4=underlined
+# - Color values: 31=red, 32=green, 33=yellow, 34=blue, 35=purple, 36=cyan, 37=white
+#
+RED='\033[0;31m'    # Normal red text
+GREEN='\033[0;32m'  # Normal green text
+YELLOW='\033[1;33m' # Bold yellow text
+NC='\033[0m'        # No Color - resets color to terminal default
+#
+# Usage example:
+#   echo -e "${GREEN}Success${NC}"
+#   echo -e "${RED}Error${NC}"
+#
+# The ${NC} is essential - without it, all following terminal output
+# would continue in the last used color. Always reset color after usage
+# to prevent terminal color bleeding.
+
+# Flag for dry run mode
+DRY_RUN=false
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --dry-run|-d)
+            DRY_RUN=true
+            shift # Remove argument from processing
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--dry-run|-d]"
+            exit 1
+            ;;
+    esac
+done
 
 # Counter for successful and failed builds
 successful_builds=0
@@ -36,6 +70,14 @@ build_project() {
     local build_dir="build"
     local exe_name=$2
 
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY-RUN" "Would build project in ${project_dir}" "${YELLOW}"
+        log "DRY-RUN" "Would create build directory: ${build_dir}" "${YELLOW}"
+        log "DRY-RUN" "Would run: cmake .." "${YELLOW}"
+        log "DRY-RUN" "Would run: make" "${YELLOW}"
+        return 0
+    fi
+
     log "INFO" "Building project in ${project_dir}" "${YELLOW}"
 
     # Create and enter build directory
@@ -64,7 +106,11 @@ build_project() {
 }
 
 # Main script
-echo "Starting build process..."
+if [ "$DRY_RUN" = true ]; then
+    echo "Starting build process (DRY RUN - no actual builds will occur)..."
+else
+    echo "Starting build process..."
+fi
 
 # Find all directories containing CMakeLists.txt
 while IFS= read -r -d '' cmake_file; do
@@ -73,12 +119,17 @@ while IFS= read -r -d '' cmake_file; do
     # Skip if build directory is in path
     if [[ "${project_dir}" == *"/build/"* ]]; then
         continue
+        log "ERROR" "Found CMake project in: ${project_dir} skipping" "${RED}"
     fi
 
     # Get executable name from CMakeLists.txt
     exe_name=$(find_executable_name "${cmake_file}")
 
-    log "INFO" "Found CMake project in: ${project_dir}" "${YELLOW}"
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY-RUN" "Found CMake project in: ${project_dir}" "${YELLOW}"
+    else
+        log "INFO" "Found CMake project in: ${project_dir}" "${YELLOW}"
+    fi
 
     # Store current directory
     pushd "${project_dir}" > /dev/null || continue
@@ -101,25 +152,37 @@ done < <(find . -name "CMakeLists.txt" -print0)
 
 # Print summary
 echo
-log "SUMMARY" "Build process completed" "${GREEN}"
-log "SUMMARY" "Successful builds: ${successful_builds}" "${GREEN}"
+if [ "$DRY_RUN" = true ]; then
+    log "SUMMARY" "Build process completed (DRY RUN)" "${GREEN}"
+    log "SUMMARY" "Would build ${successful_builds} projects:" "${GREEN}"
+else
+    log "SUMMARY" "Build process completed" "${GREEN}"
+    log "SUMMARY" "Successful builds: ${successful_builds}" "${GREEN}"
+fi
+
 # Print successful builds
 for path in "${successful_paths[@]}"; do
-    if [ -f "${path}" ]; then
-        log "SUMMARY" "-> ${path}" "${GREEN}"
+    if [ "$DRY_RUN" = true ]; then
+        log "SUMMARY" "-> Would build: ${path}" "${GREEN}"
     else
-        log "SUMMARY" "-> ${path} (executable not found)" "${YELLOW}"
+        if [ -f "${path}" ]; then
+            log "SUMMARY" "-> ${path}" "${GREEN}"
+        else
+            log "SUMMARY" "-> ${path} (executable not found)" "${YELLOW}"
+        fi
     fi
 done
 
-log "SUMMARY" "Failed builds: ${failed_builds}" "${RED}"
-# Print failed builds
-for path in "${failed_paths[@]}"; do
-    log "SUMMARY" "-> ${path}" "${RED}"
-done
+if [ "$DRY_RUN" = false ]; then
+    log "SUMMARY" "Failed builds: ${failed_builds}" "${RED}"
+    # Print failed builds
+    for path in "${failed_paths[@]}"; do
+        log "SUMMARY" "-> ${path}" "${RED}"
+    done
+fi
 
-# Exit with failure if any builds failed
-if [ ${failed_builds} -gt 0 ]; then
+# Exit with failure if any builds failed (only in non-dry-run mode)
+if [ "$DRY_RUN" = false ] && [ ${failed_builds} -gt 0 ]; then
     exit 1
 fi
 

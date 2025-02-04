@@ -39,6 +39,8 @@ Or you can elect to build everything at once.
    - Provides similar colored output and logging
    - Shows a summary of cleaned projects
 
+Each of these scripts takes and optional `--dry-run` | `-d` argument to perform a *dry run* of the build and/or clean.
+
 ### Prerequisites
 
 - CMake 3.15 or higher
