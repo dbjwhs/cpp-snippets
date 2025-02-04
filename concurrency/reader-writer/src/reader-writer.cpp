@@ -174,7 +174,7 @@ int main() {
     for (int write_thrd_cnt = 0; write_thrd_cnt < WRITER_THREAD_CNT; ++write_thrd_cnt) {
         threads.emplace_back([&rw, write_thrd_cnt, &random_rw, &logger]() {
             logger.log(LogLevel::INFO, "Started writer thread " + std::to_string(write_thrd_cnt));
-            int write_cnt = random_rw.getNumber();
+            const int write_cnt = random_rw.getNumber();
             for (int writes = 0; writes < write_cnt; ++writes) {
                 rw.writeResource(write_thrd_cnt * 10 + writes, logger);
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
