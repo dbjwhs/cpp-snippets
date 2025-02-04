@@ -29,12 +29,8 @@ ClassType& operator=(const ClassType&) = delete
 ClassType(ClassType&) = delete; \
 ClassType& operator=(ClassType&) = delete
 
-// common type definitions
-using size_type = std::size_t;
-using string_type = std::string;
-
 // common constants
-constexpr size_type DEFAULT_BUFFER_SIZE = 1024;
+constexpr std::size_t DEFAULT_BUFFER_SIZE = 1024;
 constexpr double EPSILON = 1e-6;
 
 // transform thread id to std::string, note if no argument
