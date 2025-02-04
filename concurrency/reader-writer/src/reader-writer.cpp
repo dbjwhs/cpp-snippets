@@ -1,70 +1,10 @@
 // MIT License
 // Copyright (c) 2025 dbjwhs
 
-#include <iostream>
 #include <thread>
-#include <mutex>
 #include <condition_variable>
 #include <vector>
-#include <chrono>
-#include <random>
-
-#define DECLARE_NON_COPYABLE(ClassType) \
-    ClassType(const ClassType&) = delete; \
-    ClassType& operator=(const ClassType&) = delete
-
-#define DECLARE_NON_MOVEABLE(ClassType) \
-    ClassType(ClassType&) = delete; \
-    ClassType& operator=(ClassType&) = delete
-
-// simple random generator for int's
-class RandomGenerator {
-private:
-    std::mt19937 m_gen;
-    std::uniform_int_distribution<int> m_dist;  // for integers
-    // or
-    // std::uniform_real_distribution<double> m_dist;  // for floating point
-
-public:
-    RandomGenerator(int min, int max)
-        : m_gen(std::random_device{}())
-        , m_dist(min, max) {}
-
-    int getNumber() {
-        return m_dist(m_gen);
-    }
-
-    // delete copy and move operations
-    DECLARE_NON_COPYABLE(RandomGenerator);
-    DECLARE_NON_MOVEABLE(RandomGenerator);
-};
-
-// thread-safe singleton logger
-class Logger {
-private:
-    static inline std::mutex m_mutex;  // C++17 inline static member
-    std::ostream& m_stream;
-
-    // private constructor for singleton
-    explicit Logger() : m_stream(std::cout) {}
-
-    // delete copy and move operations
-    DECLARE_NON_COPYABLE(Logger);
-    DECLARE_NON_MOVEABLE(Logger);
-
-public:
-    // get singleton instance
-    static Logger& getInstance() {
-        static Logger instance;
-        return instance;
-    }
-
-    template<typename... Args>
-    void print(Args&&... args) {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        (m_stream << ... << std::forward<Args>(args)) << std::endl;
-    }
-};
+#include "../../../headers/project_utils.hpp"
 
 class ReadersWriters {
 private:
@@ -152,7 +92,7 @@ public:
     }
 
     // methods to simulate reading and writing with RAII locks
-    void readResource() {
+    void readResource(Logger& logger) {
         // acquire read lock using RAII, note very clean interface now for the startRead
         // and endRead calls, upon ReadLock construction we start the read, on function
         // return we end the read on ReadLock destruction
@@ -170,11 +110,11 @@ public:
             DECLARE_NON_COPYABLE(ReadLock);
         } m_readLock(*this);
 
-        Logger::getInstance().print("Thread ", std::this_thread::get_id(), " reading resource: ", m_sharedResource);
+        logger.log(LogLevel::INFO, "Thread " + std::to_string(std::this_thread::get_id()) + " reading resource: " + std::to_string(m_sharedResource));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    void writeResource(int value) {
+    void writeResource(int value, Logger& logger) {
         // acquire write lock using RAII, note very clean interface now for the startWrite
         // and endWrite calls, upon WriteLock construction we start the write, on function
         // return we end the write on WriteLock destruction
@@ -193,13 +133,15 @@ public:
         } m_writeLock(*this);
 
         m_sharedResource = value;
-        Logger::getInstance().print("Thread ", std::this_thread::get_id(), " wrote resource: ", value);
+        logger.log(LogLevel::INFO, "Thread " +  std::to_string(std::this_thread::get_id()) + " wrote resource: " + std::to_string(value));
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 };
 
 // example usage
 int main() {
+    Logger logger("../custom.log");
+
     // setup how many reader/write threads we want, ensure they are generated at compile time
     constexpr auto READER_THREAD_CNT = 2;
     constexpr auto WRITER_THREAD_CNT = 5;
@@ -207,7 +149,7 @@ int main() {
     // reserve our know sized vector<std::thread>
     std::vector<std::thread> threads;
     threads.reserve(READER_THREAD_CNT + WRITER_THREAD_CNT);
-    Logger::getInstance().print("Reserving ", READER_THREAD_CNT + WRITER_THREAD_CNT, " threads");
+    logger.log(LogLevel::INFO, "Reserving " + std::to_string(READER_THREAD_CNT + WRITER_THREAD_CNT) + " threads");
 
     // read/write class
     ReadersWriters rw;
@@ -217,27 +159,27 @@ int main() {
 
     // create reader threads
     for (int read_thrd_cnt = 0; read_thrd_cnt < READER_THREAD_CNT; ++read_thrd_cnt) {
-        threads.emplace_back([&rw, read_thrd_cnt, &random_rw]() {
-            Logger::getInstance().print("Started reader thread ", read_thrd_cnt);
+        threads.emplace_back([&rw, read_thrd_cnt, &random_rw, &logger]() {
+            logger.log(LogLevel::INFO, "Started reader thread " + std::to_string(read_thrd_cnt));
             int read_cnt = random_rw.getNumber();
             for (int reads = 0; reads < read_cnt; ++reads) {
-                rw.readResource();
+                rw.readResource(logger);
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
             }
-            Logger::getInstance().print("Finished reader thread ", read_thrd_cnt);
+            logger.log(LogLevel::INFO, "Finished reader thread " + std::to_string(read_thrd_cnt));
         });
     }
 
     // create writer threads
     for (int write_thrd_cnt = 0; write_thrd_cnt < WRITER_THREAD_CNT; ++write_thrd_cnt) {
-        threads.emplace_back([&rw, write_thrd_cnt, &random_rw]() {
-            Logger::getInstance().print("Started writer thread ", write_thrd_cnt);
+        threads.emplace_back([&rw, write_thrd_cnt, &random_rw, &logger]() {
+            logger.log(LogLevel::INFO, "Started writer thread " + std::to_string(write_thrd_cnt));
             int write_cnt = random_rw.getNumber();
             for (int writes = 0; writes < write_cnt; ++writes) {
-                rw.writeResource(write_thrd_cnt * 10 + writes);
+                rw.writeResource(write_thrd_cnt * 10 + writes, logger);
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
-            Logger::getInstance().print("Finished writer thread ", write_thrd_cnt);
+            logger.log(LogLevel::INFO, "Finished writer thread " + std::to_string(write_thrd_cnt));
         });
     }
 
