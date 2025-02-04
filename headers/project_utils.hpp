@@ -6,9 +6,7 @@
 
 // standard library includes
 #include <iostream>
-#include <vector>
 #include <string>
-#include <memory>
 #include <stdexcept>
 #include <thread>
 #include <mutex>
