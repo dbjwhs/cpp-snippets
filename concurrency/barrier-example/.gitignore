@@ -1,8 +1,0 @@
-# CLion project files
-.idea
-cmake-build-*
-CMakeCache.txt
-
-# OSX
-.DS_Store
-
