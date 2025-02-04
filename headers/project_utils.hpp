@@ -15,6 +15,7 @@
 #include <fstream>
 #include <chrono>
 #include <random>
+#include <cstddef>
 
 // Version information
 #define PROJECT_VERSION_MAJOR 1
@@ -37,6 +38,7 @@ constexpr double EPSILON = 1e-6;
 // current thread id, else passed in thread id
 template<typename ThreadType = std::thread::id>
 inline std::string threadIdToString(ThreadType thread_id = std::this_thread::get_id()) {
+
     std::stringstream ss;
     ss << thread_id;
     return ss.str();
