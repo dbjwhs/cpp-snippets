@@ -131,7 +131,10 @@ private:
                 //   - exit cleanly only when both shutdown is requested and all work is completed
                 // the check is needed because m_is_running starts as true (set in constructor) and becomes
                 // false when shutdown() is called, allowing for graceful completion of pending tasks
-                if (!m_is_running && m_activation_queue.empty()) {
+                //
+                // ReSharper disable once CppDFAConstantConditions
+                if (m_activation_queue.empty() && !m_is_running) {
+                    // ReSharper disable once CppDFAUnreachableCode
                     return;
                 }
 
