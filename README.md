@@ -13,6 +13,7 @@ A collection of self-contained C++ code snippets, examples, and mini-projects. E
 ├── design-patterns/     # Design pattern examples
 ├── concurrency/         # Threading and concurrency examples
 └── utilities/           # Helper functions and utility classes
+└── headers/             # Common code used throughout collection
 ```
 
 ## Building the Snippets
