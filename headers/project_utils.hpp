@@ -152,6 +152,7 @@ private:
         std::stringstream ss;
         struct tm tm_buf;
 #ifdef _WIN32
+		// ### not tested (did work few years ago)
         gmtime_s(&tm_buf, &time);
 #else
         gmtime_r(&time, &tm_buf);
