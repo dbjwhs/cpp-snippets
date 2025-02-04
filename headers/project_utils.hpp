@@ -147,7 +147,6 @@ private:
         const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
         auto time = std::chrono::system_clock::to_time_t(now);
 
-        std::stringstream ss;
         struct tm tm_buf;
 #ifdef _WIN32
         // ### not tested (did work few years ago)
@@ -156,6 +155,7 @@ private:
         gmtime_r(&time, &tm_buf);
 #endif
 
+        std::stringstream ss;
         ss << std::put_time(&tm_buf, "%Y-%m-%d %H:%M:%S");
         ss << '.' << std::setfill('0') << std::setw(3) << ms.count() << " UTC";
         return ss.str();
