@@ -62,6 +62,9 @@ make
 - [dates/](utilities/dates/) - Date and time utilities
 - [dir_scanner/](utilities/dir_scanner/) - A platform-agnostic C++ directory scanner that uses an iterative approach
 
+### Headers
+- [headers/](headers/) - C++ header (`.hpp`) files for various utilities used throughout the repository
+
 ## Contributing
 
 Feel free to suggest improvements or report issues. Each snippet should:
