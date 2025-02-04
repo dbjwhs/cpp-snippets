@@ -3,35 +3,14 @@
 //
 
 // ensure c++17 or later is being used
-#if __cplusplus < 201703L
-    #error This file requires C++17 or later
-#endif
 
-#include <iostream>
 #include <thread>
 #include <queue>
 #include <functional>
-#include <mutex>
 #include <condition_variable>
 #include <vector>
 #include <future>
-#include <type_traits>
-
-// thread-safe stream wrapper
-class ThreadSafeStream {
-private:
-    std::mutex m_mutex;
-    std::ostream& m_stream;
-
-public:
-    explicit ThreadSafeStream(std::ostream& stream) : m_stream(stream) {}
-
-    template<typename... Args>
-    void print(Args&&... args) {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        (m_stream << ... << std::forward<Args>(args)) << std::endl;
-    }
-};
+#include "../../../headers/project_utils.hpp"
 
 class ThreadPool {
 private:
@@ -46,20 +25,17 @@ private:
     // flag to signal thread pool shutdown
     bool m_stop;
     // thread-safe logger
-    ThreadSafeStream m_logger;
+    Logger& m_logger;
 
     // prevent default construction and copying of thread pool
-    ThreadPool() = delete;
-    ThreadPool(const ThreadPool&) = delete;
-    ThreadPool(ThreadPool&&) = delete;
-    ThreadPool& operator=(const ThreadPool&) = delete;
-    ThreadPool& operator=(ThreadPool&&) = delete;
+    DECLARE_NON_COPYABLE(ThreadPool);
+    DECLARE_NON_MOVEABLE(ThreadPool);
 
 public:
     // constructor creates specified number of worker threads
-    ThreadPool(size_t numThreads)
-        : m_stop(false), m_logger(std::cout) {
-        m_logger.print("Initializing thread pool with ", numThreads, " threads");
+    explicit ThreadPool(const size_t numThreads, Logger& logger)
+        : m_stop(false), m_logger(logger) {
+        m_logger.log(LogLevel::INFO, "Initializing thread pool with " + std::to_string(numThreads) + " threads");
 
         for (size_t i = 0; i < numThreads; ++i) {
             // create worker threads using lambda function
@@ -78,21 +54,21 @@ public:
 
                         // exit if stopped and no tasks remain
                         if (m_stop && m_tasks.empty()) {
-                            m_logger.print("Worker thread ", std::this_thread::get_id(), " shutting down");
+                            m_logger.log(LogLevel::INFO, "Worker thread " + threadIdToString(), " shutting down");
                             return;
                         }
 
                         // get next task from queue
                         task = std::move(m_tasks.front());
                         m_tasks.pop();
-                        m_logger.print("Worker thread ", std::this_thread::get_id(), " dequeued a task");
+                        m_logger.log(LogLevel::INFO, "Worker thread " + threadIdToString(), " dequeued a task");
                     }
 
                     // execute the task
                     task();
                 }
             });
-            m_logger.print("Created worker thread ", m_workers.back().get_id());
+            m_logger.log(LogLevel::INFO, "Created worker thread " + threadIdToString(m_workers.back().get_id()));
         }
     }
 
@@ -102,7 +78,7 @@ public:
             // signal threads to stop
             std::unique_lock<std::mutex> lock(m_queueMutex);
             m_stop = true;
-            m_logger.print("Initiating thread pool shutdown");
+            m_logger.log(LogLevel::INFO, "Initiating thread pool shutdown");
         }
 
         // wake up all threads
@@ -112,27 +88,28 @@ public:
         for (std::thread& worker : m_workers) {
             if (worker.joinable()) {
                 worker.join();
-                m_logger.print("Worker thread ", worker.get_id(), " joined");
+                m_logger.log(LogLevel::INFO, "Worker thread " + threadIdToString(worker.get_id()) + " joined");
             }
         }
-        m_logger.print("Thread pool shutdown complete");
+        m_logger.log(LogLevel::INFO, "Thread pool shutdown complete");
     }
 
     // enqueue a task and return a future for the result
     template<class TQueue, class... Args>
     auto enqueue(TQueue&& tqueue, Args&&... args)
-        -> std::future<typename std::invoke_result<TQueue, Args...>::type> {
+        -> std::future<std::invoke_result_t<TQueue, Args...>> {
         // determine the return type of the task
-        using return_type = typename std::invoke_result<TQueue, Args...>::type;
+        using return_type = std::invoke_result_t<TQueue, Args...>;
 
         // create a packaged task
         auto task = std::make_shared<std::packaged_task<return_type()>>(
-            std::bind(std::forward<TQueue>(tqueue), std::forward<Args>(args)...)
+            [Func = std::forward<TQueue>(tqueue)] {
+                return Func();
+            }
         );
 
         // get future for the task result
         std::future<return_type> result = task->get_future();
-
         {
             // lock the queue mutex
             std::unique_lock<std::mutex> lock(m_queueMutex);
@@ -141,9 +118,11 @@ public:
                 throw std::runtime_error("Cannot enqueue on stopped ThreadPool");
             }
 
-            // add task to queue
-            m_tasks.emplace([task]() { (*task)(); });
-            m_logger.print("Task enqueued");
+            // add task to queue via lamda
+            m_tasks.emplace([task]() {
+                (*task)();
+            });
+            m_logger.log(LogLevel::INFO, "Task enqueued");
         }
 
         // notify one waiting thread
@@ -153,17 +132,18 @@ public:
 };
 
 int main() {
+    Logger logger("../custom.log");
+
     try {
         // thread pool will use maximum number of concurrent threads supported
-        unsigned int threadCount = std::thread::hardware_concurrency();
-        ThreadSafeStream logger(std::cout);
+        const unsigned int threadCount = std::thread::hardware_concurrency();
 
         if (threadCount == 0) {
-            logger.print("Failed to detect the number of concurrent threads supported");
+            logger.log(LogLevel::INFO, "Failed to detect the number of concurrent threads supported");
             return 1;
         }
 
-        logger.print("This machine supports ", threadCount, " concurrent threads");
+        logger.log(LogLevel::INFO, "This machine supports " + std::to_string(threadCount) + " concurrent threads");
 
         // vector to store future results
         std::vector<std::future<int>> results;
@@ -171,14 +151,14 @@ int main() {
         // Create new scope for thread pool
         {
             // create thread pool with worker threads
-            ThreadPool pool(threadCount);
+            ThreadPool pool(threadCount, logger);
 
             // add tasks to the thread pool
             for (int i = 0; i < threadCount * 2; ++i) {
                 // enqueue task that prints thread id and returns square of input
                 results.emplace_back(
                     pool.enqueue([i, &logger] {
-                        logger.print("Task ", i, " running on thread ", std::this_thread::get_id());
+                        logger.log(LogLevel::INFO, "Task " + std::to_string(i) + " running on thread ", threadIdToString());
 
                         // do some work
                         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -190,12 +170,11 @@ int main() {
 
         // get and print results
         for (size_t i = 0; i < results.size(); ++i) {
-            logger.print("Result ", i, ": ", results[i].get());
+            logger.log(LogLevel::INFO, "Result ", std::to_string(i) + ": " + std::to_string(results[i].get()));
         }
     } catch (const std::exception& e) {
         // handle any exceptions
-        ThreadSafeStream logger(std::cerr);
-        logger.print("Error: ", e.what());
+        logger.log(LogLevel::CRITICAL, "Error: " + std::string(e.what()));
         return 1;
     }
 
