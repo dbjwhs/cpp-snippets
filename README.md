@@ -26,6 +26,19 @@ cmake ..
 make
 ```
 
+Or you can elect to build everything at once.
+
+1. `build_all.sh` that:
+   - Automatically finds and builds all CMake projects in your directory structure
+   - Creates build directories as needed
+   - Provides colored output and detailed logging
+   - Shows a comprehensive summary of successful and failed builds with executable paths
+
+2. `clean_all.sh` that:
+   - Finds and removes all build directories
+   - Provides similar colored output and logging
+   - Shows a summary of cleaned projects
+
 ### Prerequisites
 
 - CMake 3.15 or higher
