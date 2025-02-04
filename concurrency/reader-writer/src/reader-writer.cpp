@@ -110,7 +110,7 @@ public:
             DECLARE_NON_COPYABLE(ReadLock);
         } m_readLock(*this);
 
-        logger.log(LogLevel::INFO, "Thread " + std::to_string(std::this_thread::get_id()) + " reading resource: " + std::to_string(m_sharedResource));
+        logger.log(LogLevel::INFO, "Thread " + threadIdToString() + " reading resource: " + std::to_string(m_sharedResource));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
@@ -133,7 +133,7 @@ public:
         } m_writeLock(*this);
 
         m_sharedResource = value;
-        logger.log(LogLevel::INFO, "Thread " +  std::to_string(std::this_thread::get_id()) + " wrote resource: " + std::to_string(value));
+        logger.log(LogLevel::INFO, "Thread " + threadIdToString() + " wrote resource: " + std::to_string(value));
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 };

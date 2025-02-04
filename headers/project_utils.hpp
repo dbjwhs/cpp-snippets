@@ -37,6 +37,13 @@ using string_type = std::string;
 constexpr size_type DEFAULT_BUFFER_SIZE = 1024;
 constexpr double EPSILON = 1e-6;
 
+// transform thread id to std::string
+std::string threadIdToString() {
+    std::stringstream ss;
+    ss << std::this_thread::get_id();
+    return ss.str();
+}
+
 // simple random generator for int's
 class RandomGenerator {
 private:
