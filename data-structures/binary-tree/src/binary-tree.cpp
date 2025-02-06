@@ -2,13 +2,12 @@
 // Copyright (c) 2025 dbjwhs
 
 #include <iostream>
-#include <queue>
 #include <stack>
 #include <cassert>
-#include <memory>
 #include <functional>
 #include <optional>
 #include <string>
+#include "../../../headers/project_utils.hpp"
 
 // binary search tree implementation
 // key properties:
@@ -24,8 +23,12 @@ private:
         std::unique_ptr<Node> m_left;
         std::unique_ptr<Node> m_right;
 
-        explicit Node(const value_type& data)
-            : m_data(data), m_left(nullptr), m_right(nullptr) {}
+        // note std::move() vs const value_type data; this is better for heavy objects,
+        // moving is typically much less expensive than copying.
+        // (std::string, classes, etc.), yes I know for primitive types (int, double, etc.),
+        // move and copy operations are equivalent.
+        explicit Node(value_type  data)
+            : m_data(std::move(data)), m_left(nullptr), m_right(nullptr) {}
     };
 
     std::unique_ptr<Node> m_root;
@@ -73,11 +76,12 @@ private:
     bool isValidBSTHelper(const Node* node, /* NOLINT(misc-no-recursion) */
                          const std::optional<value_type>& min_value = std::nullopt,
                          const std::optional<value_type>& max_value = std::nullopt) const {  // NOLINT(misc-no-recursion)
-        if (!node) return true;
+        if (!node) {
+            return true;
+        }
 
         // check bounds if they exist
-        if ((min_value && !(min_value.value() < node->m_data)) ||
-            (max_value && !(node->m_data < max_value.value()))) {
+        if ((min_value && !(min_value.value() < node->m_data)) ||(max_value && !(node->m_data < max_value.value()))) {
             return false;
         }
 
@@ -332,23 +336,31 @@ private:
 
 // test implementation with multiple types
 void printInt(const int& value) {
-    std::cout << value << " ";
+    Logger logger("../custom.log");
+    logger.log(LogLevel::INFO, std::to_string(value) + " ");
 }
 
 void printString(const std::string& value) {
-    std::cout << value << " ";
+    Logger logger("../custom.log");
+    logger.log(LogLevel::INFO, value + " ");
 }
 
 int main() {
+    Logger logger("../custom.log");
+
     // test with integers
     BinaryTree<int> tree;
+
+    // note having been exposed to codebases that ship with asserts() I have found
+    // this "You shall not pass!" technique solid. e.g., fail at first error so you
+    // know exactly where you failed.
 
     // test an empty tree
     assert(tree.empty());
     assert(tree.size() == 0);   // NOLINT(readability-container-size-empty)
     assert(tree.maxDepth() == 0);
     assert(tree.isValidBST());
-    std::cout << "empty tree tests passed!\n";
+    logger.log(LogLevel::INFO, "empty tree tests passed!");
 
     // test BST insertion and search
     tree.insert(5);  // root
@@ -361,26 +373,26 @@ int main() {
 
     // verify BST property
     assert(tree.isValidBST());
-    std::cout << "BST property validation passed!\n";
+    logger.log(LogLevel::INFO, "BST property validation passed!");
 
     // test search functionality
     assert(tree.search(5));  // root
     assert(tree.search(2));  // leaf
     assert(tree.search(7));  // internal node
-    assert(!tree.search(1)); // non-existent value
-    assert(!tree.search(9)); // non-existent value
-    std::cout << "search functionality tests passed!\n";
+    assert(tree.search(1) == false); // non-existent value
+    assert(tree.search(9) == false); // non-existent value
+    logger.log(LogLevel::INFO, "search functionality tests passed!");
 
     // test duplicate insertion
     const size_t size_before = tree.size();
     tree.insert(5);  // should not insert
     assert(tree.size() == size_before);
-    std::cout << "duplicate handling tests passed!\n";
+    logger.log(LogLevel::INFO, "duplicate handling tests passed!");
 
     // test min/max functions
     assert(tree.findMinValue() == 2);
     assert(tree.findMaxValue() == 8);
-    std::cout << "min/max value tests passed!\n";
+    logger.log(LogLevel::INFO, "min/max value tests passed!");
 
     // test traversals
     std::vector<int> inorder_int_result;
@@ -406,17 +418,17 @@ int main() {
     // verify inorder traversal (should be sorted for BST)
     const std::vector<int> expected_inorder = {2, 3, 4, 5, 6, 7, 8};
     assert(inorder_int_result == expected_inorder);
-    std::cout << "inorder traversal verification passed!\n";
+    logger.log(LogLevel::INFO, "inorder traversal verification passed!");
 
     // verify preorder traversal
     const std::vector<int> expected_preorder = {5, 3, 2, 4, 7, 6, 8};
     assert(preorder_int_result == expected_preorder);
-    std::cout << "preorder traversal verification passed!\n";
+    logger.log(LogLevel::INFO, "preorder traversal verification passed!");
 
     // verify postorder traversal
     const std::vector<int> expected_postorder = {2, 4, 3, 6, 8, 7, 5};
     assert(postorder_int_result == expected_postorder);
-    std::cout << "postorder traversal verification passed!\n";
+    logger.log(LogLevel::INFO, "postorder traversal verification passed!");
 
     // test empty tree traversals
     const BinaryTree<int> empty_tree;
@@ -428,15 +440,15 @@ int main() {
 
     empty_tree.inOrderTraversal(captureEmpty);
     assert(empty_int_result.empty());
-    std::cout << "inOrderTraversal tree traversal tests passed!\n";
+    logger.log(LogLevel::INFO, "inOrderTraversal tree traversal tests passed!");
 
     empty_tree.preOrderTraversal(captureEmpty);
     assert(empty_int_result.empty());
-    std::cout << "preOrderTraversal tree traversal tests passed!\n";
+    logger.log(LogLevel::INFO, "preOrderTraversal tree traversal tests passed!");
 
     empty_tree.postOrderTraversal(captureEmpty);
     assert(empty_int_result.empty());
-    std::cout << "postOrderTraversal tree traversal tests passed!\n";
+    logger.log(LogLevel::INFO, "postOrderTraversal tree traversal tests passed!");
 
     // test single node tree traversals
     BinaryTree<int> single_node_tree;
@@ -451,26 +463,26 @@ int main() {
     single_node_tree.inOrderTraversal(captureSingle);
     assert(single_int_result == std::vector<int>{1});
     single_int_result.clear();
-    std::cout << "inOrderTraversal node traversal tests passed!\n";
+    logger.log(LogLevel::INFO, "inOrderTraversal node traversal tests passed!");
 
     single_node_tree.preOrderTraversal(captureSingle);
     assert(single_int_result == std::vector<int>{1});
     single_int_result.clear();
-    std::cout << "preOrderTraversal node traversal tests passed!\n";
+    logger.log(LogLevel::INFO, "preOrderTraversal node traversal tests passed!");
 
     single_node_tree.postOrderTraversal(captureSingle);
     assert(single_int_result == std::vector<int>{1});
-    std::cout << "postOrderTraversal node traversal tests passed!\n";
+    logger.log(LogLevel::INFO, "postOrderTraversal node traversal tests passed!");
 
     // print for visual verification
-    std::cout << "visual verification of traversals:\n";
-    std::cout << "inorder traversal: ";
+    logger.log(LogLevel::INFO, "visual verification of traversals:");
+    logger.log(LogLevel::INFO, "inorder traversal:");
     tree.inOrderTraversal(printInt);
-    std::cout << "\npreorder traversal: ";
+    logger.log(LogLevel::INFO, "\npreorder traversal:");
     tree.preOrderTraversal(printInt);
-    std::cout << "\npostorder traversal: ";
+    logger.log(LogLevel::INFO, "\npostorder traversal:");
     tree.postOrderTraversal(printInt);
-    std::cout << "\n";
+    logger.log(LogLevel::INFO, "");
 
     // test copy constructor
     const BinaryTree<int> tree2 = tree;
@@ -478,7 +490,7 @@ int main() {
     assert(tree2.size() == tree.size());
     assert(tree2.findMinValue() == tree.findMinValue());
     assert(tree2.findMaxValue() == tree.findMaxValue());
-    std::cout << "copy constructor tests passed!\n";
+    logger.log(LogLevel::INFO, "copy constructor tests passed!");
 
     // test assignment operator
     const BinaryTree<int> tree3 = tree;
@@ -486,9 +498,9 @@ int main() {
     assert(tree3.size() == tree.size());
     assert(tree3.findMinValue() == tree.findMinValue());
     assert(tree3.findMaxValue() == tree.findMaxValue());
-    std::cout << "assignment operator tests passed!\n";
+    logger.log(LogLevel::INFO, "assignment operator tests passed!");
 
-    std::cout << "all int BST tests passed successfully!\n";
+    logger.log(LogLevel::INFO, "all int BST tests passed successfully!");
 
     // test with strings
     BinaryTree<std::string> string_tree;
@@ -514,13 +526,13 @@ int main() {
     expected.emplace_back("hello");
     expected.emplace_back("xyz");
     assert(inorder_string_result == expected);
-    std::cout << "string tree tests passed!\n";
+    logger.log(LogLevel::INFO, "string tree tests passed!");
 
     // visual verification
-    std::cout << "\nstring tree inorder traversal: ";
+    logger.log(LogLevel::INFO, "string tree inorder traversal:");
     string_tree.inOrderTraversal(printString);
-    std::cout << "\n";
+    logger.log(LogLevel::INFO, "");
 
-    std::cout << "all generic type tests passed successfully!\n";
+    logger.log(LogLevel::INFO, "all generic type tests passed successfully!");
     return 0;
 }

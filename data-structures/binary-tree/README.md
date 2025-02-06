@@ -1,5 +1,24 @@
 # Binary Search Tree Implementation
 
+##  🚧 Under Construction  🚧
+
+### Future Improvements Required
+
+Before proceeding note the following is, and will be added soon.
+
+1. Add removal operations
+2. Implement balancing (AVL or Red-Black)
+3. Add iterator support
+4. Add serialization/deserialization (*mainly for data persistence to disk*)
+5. Add range queries
+6. And **finally**, remove hacky logging; currently logging is shoe horned in. The Best would be to add as an **observer pattern**, an observer of tree operations.
+   7. Separates logging concerns from tree operations
+   8. Makes it easy to add/remove logging at runtime 
+   9. Allows for multiple observers (could have logging + metrics + etc.)
+   10. Keeps the core tree operations clean and focused
+
+##  🚧 Under Construction  🚧
+
 ## What is a Binary Search Tree (BST)?
 
 A Binary Search Tree (BST) is a hierarchical data structure composed of nodes where each node stores a value and references to two children. BSTs enforce a specific ordering property:
@@ -138,12 +157,6 @@ This implementation is not thread-safe. External synchronization is required for
 - Returns false for failed searches
 - Silently ignores duplicate insertions
 
-## Future Improvements
-1. Add removal operations
-2. Implement balancing (AVL or Red-Black)
-3. Add iterator support
-4. Add serialization/deserialization
-5. Add range queries
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
