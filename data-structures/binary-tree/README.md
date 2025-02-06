@@ -1,10 +1,12 @@
 # Binary Search Tree Implementation
 
-##  🚧 Under Construction  🚧
+##  🚧 🚧
+
+### Under Construction
 
 ### Future Improvements Required
 
-Before proceeding note the following is, and will be added soon.
+Attention readers of the code the following will be added soon.
 
 1. Add removal operations
 2. Implement balancing (AVL or Red-Black)
@@ -12,12 +14,14 @@ Before proceeding note the following is, and will be added soon.
 4. Add serialization/deserialization (*mainly for data persistence to disk*)
 5. Add range queries
 6. And **finally**, remove hacky logging; currently logging is shoe horned in. The Best would be to add as an **observer pattern**, an observer of tree operations.
-   7. Separates logging concerns from tree operations
-   8. Makes it easy to add/remove logging at runtime 
-   9. Allows for multiple observers (could have logging + metrics + etc.)
-   10. Keeps the core tree operations clean and focused
+   - Separates logging concerns from tree operations
+   - Makes it easy to add/remove logging at runtime 
+   - Allows for multiple observers (could have logging + metrics + etc.)
+   - Keeps the core tree operations clean and focused
 
-##  🚧 Under Construction  🚧
+##  🚧 🚧
+
+---
 
 ## What is a Binary Search Tree (BST)?
 
