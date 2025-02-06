@@ -478,9 +478,9 @@ int main() {
     logger.log(LogLevel::INFO, "visual verification of traversals:");
     logger.log(LogLevel::INFO, "inorder traversal:");
     tree.inOrderTraversal(printInt);
-    logger.log(LogLevel::INFO, "\npreorder traversal:");
+    logger.log(LogLevel::INFO, "preorder traversal:");
     tree.preOrderTraversal(printInt);
-    logger.log(LogLevel::INFO, "\npostorder traversal:");
+    logger.log(LogLevel::INFO, "postorder traversal:");
     tree.postOrderTraversal(printInt);
     logger.log(LogLevel::INFO, "");
 
