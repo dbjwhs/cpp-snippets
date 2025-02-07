@@ -1,5 +1,9 @@
 # QuickSort Implementation
 
+## First My Personal Discovery of QuickSort
+
+In 1999, Jon Bentley's seminal work [Programming Pearls](https://wiki.c2.com/?ProgrammingPearls) hit the shelves of brick-and-mortar bookstores, back when discovering programming books meant wandering through physical aisles rather than scrolling through online reviews. The book became a touchstone for a generation of programmers, featuring among its many gems an implementation of QuickSort using what we now know as the Lomuto partition scheme. This was during an era when C dominated systems programming and before C++ had achieved its current ubiquity.
+
 ## Historical Background
 
 [Tony Hoare](https://www.cs.ox.ac.uk/people/tony.hoare/) *also known as C. A. R. Hoare* developed QuickSort in 1959 while studying at Moscow State University, where he was working on machine translation for the National Physical Laboratory. At the time, he was implementing a translation algorithm that needed to sort word frequencies efficiently. Beyond QuickSort, Hoare made numerous groundbreaking contributions to computer science, including Hoare Logic for verifying program correctness, the Communicating Sequential Processes (CSP) formal language, and the null reference concept (which he later called his "billion-dollar mistake"). Today QuickSort and its variants are estimated to perform billions of sorting operations daily, as it's the standard sorting algorithm in many programming language libraries including C++'s std::sort, Java's Arrays.sort(), and Android's TimSort (a hybrid of QuickSort and MergeSort).
@@ -115,13 +119,9 @@ The implementation includes tests for:
 - Space Complexity: O(log n) average case for recursion stack
 - In-place sorting: No additional array allocation required
 
-## Build and Run
 
-```bash
-g++ quicksort.cpp -o quicksort -std=c++11
-./quicksort
-```
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Contributing
-
-Feel free to submit issues and enhancement requests!
+Contributions are welcome! Please feel free to submit pull requests with improvements or bug fixes.
