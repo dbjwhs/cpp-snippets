@@ -22,19 +22,24 @@ NC='\033[0m'        # No Color - resets color to terminal default
 # would continue in the last used color. Always reset color after usage
 # to prevent terminal color bleeding.
 
-# Flag for dry run mode
+# Flags for script modes
 DRY_RUN=false
+RUN_AFTER_BUILD=false
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         --dry-run|-d)
             DRY_RUN=true
-            shift # Remove argument from processing
+            shift
+            ;;
+        --run|-r)
+            RUN_AFTER_BUILD=true
+            shift
             ;;
         *)
             echo "Unknown option: $1"
-            echo "Usage: $0 [--dry-run|-d]"
+            echo "Usage: $0 [--dry-run|-d] [--run|-r]"
             exit 1
             ;;
     esac
@@ -43,10 +48,13 @@ done
 # Counter for successful and failed builds
 successful_builds=0
 failed_builds=0
+successful_runs=0
+failed_runs=0
 
 # Arrays to store build paths
 declare -a successful_paths
 declare -a failed_paths
+declare -a failed_runs_paths
 
 # Function to log messages with timestamp
 log() {
@@ -59,9 +67,36 @@ log() {
 # Function to find executable name from CMakeLists.txt
 find_executable_name() {
     local cmake_file=$1
-    # Look for add_executable command in CMakeLists.txt
-    local exe_name=$(grep -m 1 "add_executable(" "${cmake_file}" | sed 's/add_executable(//' | cut -d' ' -f1 | tr -d '[:space:]')
+    # Look for add_executable command in CMakeLists.txt and handle potential spaces/special chars
+    local exe_name=$(grep -m 1 "add_executable(" "${cmake_file}" | \
+                    sed -E 's/add_executable[[:space:]]*\(([^[:space:]]+).*/\1/' | \
+                    tr -d '[:space:]')
     echo "${exe_name}"
+}
+
+# Function to run a built executable
+run_executable() {
+    local exe_path=$1
+    local project_dir=$2
+
+    if [ ! -f "${exe_path}" ]; then
+        log "ERROR" "Executable not found: ${exe_path}" "${RED}"
+        failed_runs_paths+=("${project_dir}")
+        ((failed_runs++))
+        return 1
+    fi
+
+    log "INFO" "Running executable: ${exe_path}" "${YELLOW}"
+    if "${exe_path}"; then
+        log "SUCCESS" "Successfully ran ${exe_path}" "${GREEN}"
+        ((successful_runs++))
+        return 0
+    else
+        log "ERROR" "Failed to run ${exe_path}" "${RED}"
+        failed_runs_paths+=("${project_dir}")
+        ((failed_runs++))
+        return 1
+    fi
 }
 
 # Function to build a single CMake project
@@ -75,6 +110,9 @@ build_project() {
         log "DRY-RUN" "Would create build directory: ${build_dir}" "${YELLOW}"
         log "DRY-RUN" "Would run: cmake .." "${YELLOW}"
         log "DRY-RUN" "Would run: make" "${YELLOW}"
+        if [ "$RUN_AFTER_BUILD" = true ]; then
+            log "DRY-RUN" "Would run executable: ${exe_name}" "${YELLOW}"
+        fi
         return 0
     fi
 
@@ -118,8 +156,8 @@ while IFS= read -r -d '' cmake_file; do
 
     # Skip if build directory is in path
     if [[ "${project_dir}" == *"/build/"* ]]; then
+        log "INFO" "Skipping build directory: ${project_dir}" "${YELLOW}"
         continue
-        log "ERROR" "Found CMake project in: ${project_dir} skipping" "${RED}"
     fi
 
     # Get executable name from CMakeLists.txt
@@ -138,7 +176,14 @@ while IFS= read -r -d '' cmake_file; do
     if build_project "${project_dir}" "${exe_name}"; then
         ((successful_builds++))
         # Store both project path and executable path
-        successful_paths+=("${project_dir}/build/${exe_name}")
+        current_dir=$(pwd)
+        exe_path="${current_dir}/${exe_name}"  # Use absolute path
+        successful_paths+=("${exe_path}")
+
+        # Run the executable if requested
+        if [ "$RUN_AFTER_BUILD" = true ] && [ "$DRY_RUN" = false ]; then
+            run_executable "${exe_path}" "${project_dir}"
+        fi
     else
         ((failed_builds++))
         failed_paths+=("${project_dir}")
@@ -179,11 +224,25 @@ if [ "$DRY_RUN" = false ]; then
     for path in "${failed_paths[@]}"; do
         log "SUMMARY" "-> ${path}" "${RED}"
     done
+
+    # Print run summary if run mode was enabled
+    if [ "$RUN_AFTER_BUILD" = true ]; then
+        echo
+        log "SUMMARY" "Run summary:" "${YELLOW}"
+        log "SUMMARY" "Successful runs: ${successful_runs}" "${GREEN}"
+        log "SUMMARY" "Failed runs: ${failed_runs}" "${RED}"
+        if [ ${failed_runs} -gt 0 ]; then
+            for path in "${failed_runs_paths[@]}"; do
+                log "SUMMARY" "-> Run failed: ${path}" "${RED}"
+            done
+        fi
+    fi
 fi
 
-# Exit with failure if any builds failed (only in non-dry-run mode)
-if [ "$DRY_RUN" = false ] && [ ${failed_builds} -gt 0 ]; then
+# Exit with failure if any builds failed or runs failed (only in non-dry-run mode)
+if [ "$DRY_RUN" = false ] && ([ ${failed_builds} -gt 0 ] || [ ${failed_runs} -gt 0 ]); then
     exit 1
 fi
 
 exit 0
+
