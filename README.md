@@ -4,16 +4,47 @@
 
 A collection of self-contained C++ code snippets, examples, and mini-projects. Each snippet is independently buildable and includes its own CMake configuration.
 
-## Repository Structure
+## Repository Structure Goal *(this is evolving)*
 
 ```
 .
 ├── algorithms/          # Algorithm implementations
 ├── data-structures/     # Custom data structure implementations
-├── design-patterns/     # Design pattern examples
-├── concurrency/         # Threading and concurrency examples
-└── utilities/           # Helper functions and utility classes
-└── headers/             # Common code used throughout collection
+├── algorithms/          # Algorithm implementations
+├── data-structures/     # Custom data structure implementations
+├── design-patterns/     # Design pattern implementations
+│   ├── creational/      # Object creation patterns
+│   │   ├── abstract-factory/   # Creates families of related objects
+│   │   ├── builder/            # Separates object construction from representation
+│   │   ├── factory-method/     # Defines interface for creating objects
+│   │   ├── prototype/          # Creates objects by cloning existing ones
+│   │   └── singleton/          # Ensures a class has only one instance
+│   ├── structural/     # Object composition patterns
+│   │   ├── adapter/            # Makes incompatible interfaces compatible
+│   │   ├── bridge/             # Separates abstraction from implementation
+│   │   ├── composite/          # Composes objects into tree structures
+│   │   ├── decorator/          # Adds responsibilities to objects dynamically
+│   │   ├── facade/             # Provides unified interface to a set of interfaces
+│   │   ├── flyweight/          # Shares common state between multiple objects
+│   │   └── proxy/              # Provides surrogate for another object
+│   └── behavioral/     # Object communication patterns
+│       ├── chain-of-responsibility/  # Passes requests along a chain
+│       ├── command/                  # Encapsulates a request as an object
+│       ├── interpreter/              # Defines grammar for instructions
+│       ├── iterator/                 # Accesses elements sequentially
+│       ├── mediator/                 # Defines how objects interact
+│       ├── memento/                  # Captures and restores object state
+│       ├── observer/                 # Notifies dependents of changes
+│       ├── state/                    # Alters object behavior when state changes
+│       ├── strategy/                 # Encapsulates interchangeable algorithms
+│       ├── template-method/          # Defines skeleton of an algorithm
+│       └── visitor/                  # Separates algorithm from object structure
+├── concurrency/        # Threading and concurrency examples
+├── utilities/          # Helper functions and utility classes
+└── headers/            # Common code used throughout collection
+├── concurrency/        # Threading and concurrency examples
+└── utilities/          # Helper functions and utility classes
+└── headers/            # Common code used throughout collection
 ```
 
 ## Building the Snippets
