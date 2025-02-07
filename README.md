@@ -109,6 +109,7 @@ Or you can elect to build everything at once.
 - [timer/](utilities/timer/) - High-resolution timer class
 - [dates/](utilities/dates/) - Date and time utilities
 - [dir_scanner/](utilities/dir_scanner/) - A platform-agnostic C++ directory scanner that uses an iterative approach
+- [mock-filesystem/](utilities/mock-filesystem/) - Simple Mock filesystem
 
 ### Headers
 - [headers/](headers/) - C++ header (`.hpp`) files for various utilities used throughout the repository
