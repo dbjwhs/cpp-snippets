@@ -65,13 +65,14 @@ Or you can elect to build everything at once.
    - Creates build directories as needed
    - Provides colored output and detailed logging
    - Shows a comprehensive summary of successful and failed builds with executable paths
+   - `--dry-run` | `-d` argument to perform a *dry run*
+   - `--run` | `-r` argument to perform *run* executable after build
 
 2. `clean_all.sh` that:
    - Finds and removes all build directories
    - Provides similar colored output and logging
    - Shows a summary of cleaned projects
-
-Each of these scripts takes and optional `--dry-run` | `-d` argument to perform a *dry run* of the build and/or clean.
+   - `--dry-run` | `-d` argument to perform a *dry run*
 
 ### Prerequisites
 
