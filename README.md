@@ -91,8 +91,8 @@ Or you can elect to build everything at once.
 - [binary-tree/](data-structures/binary-tree/) - Binary tree with traversal algorithms
 
 ### Design Patterns
-- [observer/](behavioral/design-patterns/observer/) - Observer pattern implementation
-- [factory/](structural/design-patterns/factory/) - Factory pattern example
+- [observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
+- [factory/](design-patterns/structural/factory/) - Factory pattern example
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
