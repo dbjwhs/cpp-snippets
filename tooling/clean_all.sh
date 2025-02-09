@@ -101,7 +101,7 @@ while IFS= read -r -d '' cmake_file; do
     else
         ((failed_count++))
     fi
-done < <(find . -name "CMakeLists.txt" -print0)
+done < <(find .. -name "CMakeLists.txt" -print0)
 
 # Print summary
 echo

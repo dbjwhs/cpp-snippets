@@ -193,7 +193,7 @@ while IFS= read -r -d '' cmake_file; do
     # Return to original directory
     popd > /dev/null
 
-done < <(find . -name "CMakeLists.txt" -print0)
+done < <(find .. -name "CMakeLists.txt" -print0)
 
 # Print summary
 echo
