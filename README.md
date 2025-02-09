@@ -94,6 +94,7 @@ Or you can elect to build everything at once.
 - [observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
 - [factory/](design-patterns/structural/factory/) - Factory pattern example
 - [factory/](design-patterns/behavioral/command/) - Command pattern example
+- [memento/](design-patterns/behavioral/memento/) - Memento pattern example
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
