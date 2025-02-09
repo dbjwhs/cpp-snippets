@@ -387,13 +387,13 @@ int main() {
     try {
         run_smart_device_tests(logger);
     } catch (const std::exception& e) {
-        std::cerr << "error during document testing: " + std::string(e.what());
+        logger.log(LogLevel::CRITICAL, "error during document testing: " + std::string(e.what()));
         return 1;
     }
     try {
         run_document_tests(logger);
     } catch (const std::exception& e) {
-        std::cerr << "error during smart device testing: " + std::string(e.what());
+        logger.log(LogLevel::CRITICAL, "error during smart device testing: " + std::string(e.what()));
         return 1;
     }
     return 0;
