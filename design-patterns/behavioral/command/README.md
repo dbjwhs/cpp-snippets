@@ -96,3 +96,9 @@ menuItem.setCommand(new PrintCommand(printer));
 - Use meaningful command names
 - Consider command versioning for long-lived systems
 - Implement proper cleanup in destructors
+
+## License
+This implementation is provided under the MIT License. See the LICENSE file for details.
+
+## Contributing
+Contributions are welcome! Please feel free to submit pull requests with improvements or bug fixes.
