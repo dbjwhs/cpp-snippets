@@ -97,6 +97,7 @@ Or you can elect to build everything at once.
 - [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern example
 - [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern example
 - [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern example
+- [behavioral/chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/) - Chain-of-responsibility pattern example
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
