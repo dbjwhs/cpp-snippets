@@ -64,7 +64,7 @@ public:
         return *this;
     }
 
-    // add element to the end of the list
+    // add an element to the end of the list
     void add(DataType value) {
         auto newNode = std::make_unique<Node>(std::move(value));
         if (!m_head) {
@@ -79,7 +79,7 @@ public:
         m_size++;
     }
 
-    // add element at specific position
+    // add an element at specific position
     bool insertAt(DataType value, size_t position) {
         if (position > m_size) {
             return false;
@@ -124,7 +124,7 @@ public:
         return false;
     }
 
-    // remove element at specific position
+    // remove an element at specific position
     bool removeAt(const size_t position) {
         if (position >= m_size) return false;
 
@@ -166,7 +166,7 @@ public:
         m_current = m_head.get();
     }
 
-    // get next element (for iteration)
+    // get the next element (for iteration)
     bool getNext(DataType& value) {
         if (!m_current) {
             return false;
@@ -184,12 +184,12 @@ public:
         m_size = 0;
     }
 
-    // get size of list
+    // get the size of a list
     [[nodiscard]] size_t getSize() const {
         return m_size;
     }
 
-    // check if list is empty
+    // check if a list is empty
     [[nodiscard]] bool isEmpty() const {
         return m_size == 0;
     }
@@ -355,10 +355,10 @@ int main() {
     {
         LinkedList<int> list;
         int value;
-        bool passed = !list.remove(1);  // remove from empty list
-        passed &= !list.removeAt(0);    // remove at from empty list
-        passed &= !list.get(0, value);  // get from empty list
-        passed &= !list.search(1);      // search in empty list
+        bool passed = !list.remove(1);  // remove from an empty list
+        passed &= !list.removeAt(0);    // remove at from an empty list
+        passed &= !list.get(0, value);  // get from an empty list
+        passed &= !list.search(1);      // search in an empty list
         list.add(1);
         passed &= !list.insertAt(2, 5); // insert at invalid position
         passed &= !list.removeAt(5);    // remove at invalid position
