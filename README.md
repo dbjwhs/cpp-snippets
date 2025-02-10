@@ -91,10 +91,12 @@ Or you can elect to build everything at once.
 - [binary-tree/](data-structures/binary-tree/) - Binary tree with traversal algorithms
 
 ### Design Patterns
-- [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
 - [structural/factory/](design-patterns/structural/factory/) - Factory pattern example
+- [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
 - [behavioral/command/](design-patterns/behavioral/command/) - Command pattern example
 - [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern example
+- [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern example
+- [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern example
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
