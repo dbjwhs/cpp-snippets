@@ -178,7 +178,7 @@ void run_tests(Logger& logger) {
 }
 
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     try {
         run_tests(logger);

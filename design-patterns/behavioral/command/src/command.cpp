@@ -380,7 +380,7 @@ void run_smart_device_tests(Logger& logger) {
 }
 
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // two examples of this design pattern both seemingly different but implemented
     // the same with the Command design patten.

@@ -112,7 +112,7 @@ std::vector<int> generateRandomVector(const int size) {
 }
 
 int main() {
-    Logger logger = Logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // test case 1: empty array
     logger.log(LogLevel::INFO, "test 1: empty array");

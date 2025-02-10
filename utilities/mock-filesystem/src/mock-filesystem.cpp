@@ -216,7 +216,7 @@ public:
 // example usage
 int main() {
     const MockFileSystem fs;
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // create some directories
     fs.createDirectory("home/");

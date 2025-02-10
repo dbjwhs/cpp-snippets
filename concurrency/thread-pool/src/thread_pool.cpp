@@ -132,7 +132,7 @@ public:
 };
 
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     try {
         // thread pool will use maximum number of concurrent threads supported

@@ -336,17 +336,15 @@ private:
 
 // test implementation with multiple types
 void printInt(const int& value) {
-    Logger logger("../custom.log");
-    logger.log(LogLevel::INFO, std::to_string(value) + " ");
+    Logger::getInstance().log(LogLevel::INFO, std::to_string(value) + " ");
 }
 
 void printString(const std::string& value) {
-    Logger logger("../custom.log");
-    logger.log(LogLevel::INFO, value + " ");
+    Logger::getInstance().log(LogLevel::INFO, value + " ");
 }
 
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // test with integers
     BinaryTree<int> tree;

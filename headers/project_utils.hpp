@@ -70,16 +70,14 @@ enum class LogLevel {
 };
 
 class Logger {
-public:
-    // default constructor uses executable path
-    Logger() {
-        m_log_file.open("app.log", std::ios::app);
-        if (!m_log_file.is_open()) {
-            throw std::runtime_error("Failed to open default log file");
-        }
-    }
+    // singleton instance
+    static Logger* m_instance;
 
-    // constructor with custom path
+	// do not allow default contructor
+	Logger() = delete;
+
+public:
+    // constructor with a custom path
     explicit Logger(const std::string& path) {
         if (!std::filesystem::exists(std::filesystem::path(path).parent_path())) {
             throw std::runtime_error("Invalid path provided: " + path);
@@ -89,6 +87,13 @@ public:
         if (!m_log_file.is_open()) {
             throw std::runtime_error("Failed to open log file: " + path);
         }
+    }
+
+    static Logger& getInstance() {
+        if (m_instance == nullptr) {
+            m_instance = new Logger("../custom.log");
+        }
+        return *m_instance;
     }
 
     ~Logger() {
@@ -161,5 +166,8 @@ private:
         return ss.str();
     }
 };
+
+// initialize static member
+Logger* Logger::m_instance = nullptr;
 
 #endif // PROJECT_UTILS_HPP

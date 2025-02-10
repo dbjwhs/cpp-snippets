@@ -197,15 +197,13 @@ public:
 
 // test helper function to print test results
 void printTestResult(const std::string& testName, const bool passed) {
-    Logger logger("../custom.log");
     const LogLevel logLevel = passed ? LogLevel::INFO : LogLevel::CRITICAL;
-
-    logger.log(logLevel, testName + (passed ? " PASSED" : " FAILED"));
+    Logger::getInstance().log(logLevel, testName + (passed ? " PASSED" : " FAILED"));
 }
 
 // test suite for linkedlist
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     logger.log(LogLevel::INFO, "starting linkedlist test suite...");
     logger.log(LogLevel::INFO, "================================");;

@@ -140,7 +140,7 @@ public:
 
 // example usage
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // setup how many reader/write threads we want, ensure they are generated at compile time
     constexpr auto READER_THREAD_CNT = 2;

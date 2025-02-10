@@ -18,11 +18,10 @@ private:
     std::condition_variable m_notEmpty;
     std::condition_variable m_notFull;
     size_t m_capacity;
-    Logger *m_logger;
+    Logger& m_logger = Logger::getInstance();
 
 public:
-    explicit ThreadSafeQueue(size_t max_size, Logger *logger)
-        : m_capacity(max_size), m_logger(logger) {}
+    explicit ThreadSafeQueue(const size_t max_size) : m_capacity(max_size) {}
 
     void push(T value) {
         std::unique_lock<std::mutex> lock(m_mutex);
@@ -59,12 +58,12 @@ private:
     ThreadSafeQueue<int>& m_queue;
     std::atomic<bool>& m_running;
     int m_id;
-    Logger *m_logger;
+    Logger& m_logger = Logger::getInstance();
 
 public:
     Producer(ThreadSafeQueue<int>& q, std::atomic<bool>& run,
-             int producer_id, Logger *logger)
-        : m_queue(q), m_running(run), m_id(producer_id), m_logger(logger) {}
+             int producer_id)
+        : m_queue(q), m_running(run), m_id(producer_id) {}
 
     void operator()() const {
         std::random_device rd;
@@ -74,7 +73,7 @@ public:
         while (m_running) {
             int value = dis(gen);
             m_queue.push(value);
-            m_logger->log(LogLevel::INFO, "Producer " + std::to_string(m_id) + " produced: " + std::to_string(value));
+            m_logger.log(LogLevel::INFO, "Producer " + std::to_string(m_id) + " produced: " + std::to_string(value));
 
             // simulate some work
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -88,17 +87,16 @@ private:
     ThreadSafeQueue<int>& m_queue;
     std::atomic<bool>& m_running;
     int m_id;
-    Logger *m_logger;
+    Logger& m_logger = Logger::getInstance();
 
 public:
     Consumer(ThreadSafeQueue<int>& q, std::atomic<bool>& run,
-             const int consumer_id, Logger *logger)
-        : m_queue(q), m_running(run), m_id(consumer_id), m_logger(logger) {}
+             const int consumer_id) : m_queue(q), m_running(run), m_id(consumer_id) {}
 
     void operator()() const {
         while (m_running || !m_queue.empty()) {
             int value = m_queue.pop();
-            m_logger->log(LogLevel::INFO, "Consumer " + std::to_string(m_id) + " consumed: " + std::to_string(value));
+            m_logger.log(LogLevel::INFO, "Consumer " + std::to_string(m_id) + " consumed: " + std::to_string(value));
 
             // simulate some work
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -110,9 +108,7 @@ int main() {
     constexpr size_t QUEUE_CAPACITY = 10;
     constexpr int NUM_PRODUCERS = 2;
     constexpr int NUM_CONSUMERS = 3;
-
-    Logger logger("../custom.log");
-    ThreadSafeQueue<int> queue(QUEUE_CAPACITY, &logger);
+    ThreadSafeQueue<int> queue(QUEUE_CAPACITY);
     std::atomic<bool> running(true);
 
     // Reserve vector capacity upfront to prevent reallocation during emplace_back.
@@ -127,12 +123,12 @@ int main() {
 
     // start producers
     for (int i = 0; i < NUM_PRODUCERS; ++i) {
-        producers.emplace_back(Producer(queue, running, i + 1, &logger));
+        producers.emplace_back(Producer(queue, running, i + 1));
     }
 
     // start consumers
     for (int i = 0; i < NUM_CONSUMERS; ++i) {
-        consumers.emplace_back(Consumer(queue, running, i + 1, &logger));
+        consumers.emplace_back(Consumer(queue, running, i + 1));
     }
 
     // let the simulation run for a while
@@ -140,7 +136,7 @@ int main() {
 
     // signal threads to stop, note std::atomic above and passed
     // to both Producer and Consumer CTOR's
-    // ReSharper disable once CppDFAUnusedValue
+    // ReSharper disabling once CppDFAUnusedValue
     running = false;
 
     // wait for all threads to finish

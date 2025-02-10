@@ -144,7 +144,7 @@ int main() {
     constexpr int NUM_THREADS = 4;
 
     // thread safe logger
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // demonstrate both implementations
     CustomBarrierExample::demonstrate(NUM_THREADS, &logger);

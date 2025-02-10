@@ -258,7 +258,7 @@ private:
 
 // enhanced test code
 int main() {
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     try {
         Calculator calculator;

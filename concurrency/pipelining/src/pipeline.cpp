@@ -143,7 +143,7 @@ int main() {
     SafeQueue<int> output_queue;
 
     // thread safe logger
-    Logger logger("../custom.log");
+    Logger& logger = Logger::getInstance();
 
     // create pipeline stage objects
     MultiplyStage multiply_stage(input_queue, multiply_queue, &logger);
