@@ -85,6 +85,7 @@ Or you can elect to build everything at once.
 ### Algorithms
 - [binary-search/](algorithms/binary-search/) - Binary search implementation with templated comparators
 - [quick-sort/](algorithms/quick-sort/) - Quick sort implementation with custom partitioning
+- [compression/](algorithms/compression/) - Compression; RLE, LZW, and Huffman
 
 ### Data Structures
 - [linked-list/](data-structures/linked-list/) - Generic linked list implementation
