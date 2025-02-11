@@ -92,6 +92,8 @@ Or you can elect to build everything at once.
 - [binary-tree/](data-structures/binary-tree/) - Binary tree with traversal algorithms
 
 ### Design Patterns
+- [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern example
+- [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern example
 - [structural/factory/](design-patterns/structural/factory/) - Factory pattern example
 - [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern example
 - [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
