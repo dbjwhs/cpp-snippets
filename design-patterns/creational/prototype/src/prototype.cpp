@@ -7,75 +7,160 @@
 #include <typeinfo>
 #include "./../../../../headers/project_utils.hpp"
 
-// prototype pattern
+// design pattern: prototype
+// category: creational pattern
 //
-// intent: specify the kinds of objects to create using a prototypical
-// instance, and create new objects by cloning this prototype. this pattern
-// is used when the cost of creating an object is more expensive than copying.
+// purpose: creates new objects by cloning an existing instance (prototype),
+//         serving as a blueprint for objects with similar properties. this
+//         pattern is particularly useful when object creation is more costly
+//         than cloning, or when creating objects at runtime based on dynamic
+//         conditions.
 //
-// key aspects of the pattern:
-// - avoids subclassing a creator class, like in factory method pattern
-// - avoids the inherent cost of creating a new object in the standard way
-// - allows dynamically adding/removing products at runtime
-// - specifies new objects by varying values rather than classes
-// - reduces the need for creating subclasses
+// uml class structure:
+// - prototype (abstract)
+//   |-- concrete prototype a
+//   |-- concrete prototype b
 //
-// typical use cases:
-// - when a system needs to be independent of how its products are created
-// - when classes to instantiate are specified at run-time
-// - when avoiding building a class hierarchy of factories
-// - when instances of a class can have one of only a few different combinations
-//   of state
+// key components:
+// - prototype (abstract class/interface):
+//   - declares interface for cloning itself
+//   - typically includes a pure virtual clone() method
+// - concrete prototype:
+//   - implements cloning operation
+//   - copies its own object's state to the clone
+// - client:
+//   - creates new objects by cloning the prototype
 //
-// advantages:
-// - hides concrete product classes from the client
-// - allows adding/removing products at runtime
-// - specifies new objects by varying values
-// - reduces subclass proliferation
-// - configures an application with classes dynamically
+// memory considerations:
+// - shallow copy vs deep copy decisions critical
+// - smart pointers (unique_ptr/shared_ptr) recommended for ownership
+// - copy constructors and assignment operators may need custom implementation
+// - consider resource handling in clone operations
+// - watch for circular references in complex object structures
 //
-// disadvantages:
-// - each concrete prototype subclass must implement the clone operation
-// - cloning complex objects with circular references can be challenging
+// thread safety:
+// - prototype registry should be thread-safe if shared
+// - clone operations should be thread-safe
+// - consider mutex protection for shared prototypes
+// - ensure atomic operations for reference counting
 //
-// class: prototype
-// purpose: declares an interface for cloning itself. serves as the base
-//          prototype from which all concrete prototypes derive.
+// performance implications:
+// - cloning typically faster than construction
+// - deep copying can be expensive for complex objects
+// - memory overhead from maintaining prototype instances
+// - consider lazy initialization for expensive prototypes
 //
-// key members:
-// - m_name: identifier for the prototype instance
-// - m_price: cost value associated with the prototype
-// - clone(): pure virtual method that concrete classes must implement to
-//           create a copy of themselves
-// - print_details(): virtual method to display prototype information
+// common implementations:
+// 1. registry-based:
+//    maintains a collection of prototype instances
+//    prototypes[key]->clone()
 //
-// implementation notes:
-// - uses smart pointers (unique_ptr) for memory safety
-// - implements virtual destructor for proper cleanup of derived classes
-// - provides base functionality for common attributes (name, price)
-// - uses modern c++ features for better type safety and performance
+// 2. factory-based:
+//    combines with factory pattern
+//    factory.createProduct(type).clone()
 //
-// memory management:
-// - clone() returns unique_ptr to ensure proper resource management
-// - virtual destructor ensures proper cleanup of derived classes
-// - copy operations should be carefully implemented in derived classes
+// 3. singleton registry:
+//    global access to prototype collection
+//    PrototypeRegistry::instance().getPrototype(key)
 //
-// threading considerations:
-// - cloning operations are independent and thread-safe
-// - shared prototypes should be protected if accessed concurrently
+// implementation variants:
+// - deep vs shallow copying
+// - cloning with parameters
+// - prototype manager/registry
+// - prototype factory
+// - cached prototype
 //
-// extensibility:
-// - new concrete prototypes can be added by inheriting from this class
-// - additional common functionality can be added to this base class
-// - clone method can be overridden to implement deep or shallow copying
+// best practices:
+// - use smart pointers for memory management
+// - implement virtual destructor
+// - consider both deep and shallow copy needs
+// - document cloning behavior
+// - validate cloned objects
+// - handle null/invalid cases
+// - use const correctness
+// - provide clear error messages
 //
-// usage example:
+// pitfalls to avoid:
+// - circular references in deep copying
+// - memory leaks in clone implementation
+// - inconsistent copy semantics
+// - unnecessary deep copying
+// - ignoring resource cleanup
+// - forgetting virtual destructor
+// - neglecting error handling
+//
+// example usage:
 // class ConcretePrototype : public Prototype {
-//     std::unique_ptr<Prototype> clone() const override {
-//         return std::make_unique<ConcretePrototype>(*this);
-//     }
+//     private:
+//         // resource handles, pointers, complex data
+//         std::unique_ptr<Resource> m_resource;
+//         std::vector<DataBlock> m_data;
+//
+//     public:
+//         std::unique_ptr<Prototype> clone() const override {
+//             // deep copy implementation
+//             auto clone = std::make_unique<ConcretePrototype>();
+//             clone->m_resource = std::make_unique<Resource>(*m_resource);
+//             clone->m_data = m_data;  // vector handles its own deep copy
+//             return clone;
+//         }
 // };
 //
+// complexity analysis:
+// - time: O(n) for deep copy, O(1) for shallow copy
+// - space: O(n) for deep copy, O(1) for shallow copy
+//   where n is the size/complexity of the object
+//
+// related patterns:
+// - abstract factory: can create prototypes
+// - composite: often used with prototype for part hierarchies
+// - decorator: can be used to add features to clones
+// - command: can store prototypes for undo/redo
+//
+// this implementation:
+// class: Prototype
+// - uses unique_ptr for automatic resource management
+// - provides virtual interface for cloning
+// - implements basic attribute handling (name, price)
+// - supports both deep and shallow copy through derived classes
+// - includes debugging support via print_details()
+//
+// ************************************************************************
+// historical note on inheritance and object slicing:
+//
+// during the 1990s-2005 era, a common architectural pattern was to create
+// a single root/uber base class (similar to java's Object class) from which
+// all other classes would inherit. examples include:
+//   - microsoft's mfc cObject
+//   - borland's toObject
+//   - early game engines' gameObject
+//
+// advantages of this approach:
+// - enabled polymorphic behavior across entire codebase
+// - simplified container storage (heterogeneous collections)
+// - provided common serialization mechanisms
+// - unified error handling and runtime type information (rtti)
+// - facilitated common memory management strategies
+//
+// critical warning - object slicing:
+// when passing derived objects by value instead of by pointer/reference,
+// the derived portion of the object gets "sliced off", leaving only the
+// base class portion. example:
+//   class Base { int x; };
+//   class Derived : public Base { int y; };
+//   void func(Base val) { ... }  // slicing occurs here
+//   Derived d;
+//   func(d);  // only Base::x is copied, Derived::y is lost
+//
+// modern best practices (2024):
+// - prefer composition over inheritance
+// - use virtual interfaces for polymorphic behavior
+// - leverage smart pointers (unique_ptr, shared_ptr)
+// - consider std::variant for type-safe polymorphism
+// - use references/pointers when polymorphism is needed
+// - explicitly delete copy operations if slicing is a concern:
+//   Base(const Base&) = delete;
+// ************************************************************************
 class Prototype {
 
 protected:
@@ -109,9 +194,8 @@ private:
     std::string m_manufacturer;
 
 public:
-    ElectronicProduct(const std::string& name, float price,
-                     int warranty_months, std::string  manufacturer)
-        : Prototype(name, price)
+    ElectronicProduct(const std::string& name, const float price, const int warranty_months, std::string  manufacturer)
+        : Prototype(name, price) /* note base class initialized */
         , m_warranty_months(warranty_months)
         , m_manufacturer(std::move(manufacturer)) {}
 
@@ -135,9 +219,8 @@ private:
     std::string m_material;
 
 public:
-    ClothingProduct(const std::string& name, float price,
-                   std::string  size, std::string  material)
-        : Prototype(name, price)
+    ClothingProduct(const std::string& name, const float price, std::string  size, std::string  material)
+        : Prototype(name, price) /* note base class initialized */
         , m_size(std::move(size))
         , m_material(std::move(material)) {}
 

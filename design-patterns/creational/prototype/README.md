@@ -62,6 +62,16 @@ class PrototypeRegistry {
 - Deep copying of complex objects can be computationally expensive
 - Managing prototype registry can add complexity
 
+## Critical warning - object slicing:
+When passing derived objects by value instead of by pointer/reference,  the derived portion of the object gets "sliced off", leaving only the base class portion. example:
+```cpp
+   class Base { int x; };
+   class Derived : public Base { int y; };
+   void func(Base val) { ... }  // slicing occurs here
+   Derived d;
+   func(d);  // only Base::x is copied, Derived::y is lost
+```
+
 ## Pattern Variations
 1. **Shallow Copy Prototype**: Creates new objects by copying only the immediate fields
 2. **Deep Copy Prototype**: Creates new objects by recursively copying all referenced objects
