@@ -47,7 +47,7 @@ private:
     std::mt19937 m_gen;
     std::uniform_int_distribution<int> m_dist;  // for integers
     // or
-    // std::uniform_real_distribution<double> m_dist;  // for floating point
+    // std::uniform_real_distribution<double> m_dist; // for floating point
 
 public:
     RandomGenerator(int min, int max)
@@ -73,7 +73,7 @@ class Logger {
     // singleton instance
     static Logger* m_instance;
 
-	// do not allow default contructor
+	// do not allow default constructor
 	Logger() = delete;
 
 public:
@@ -103,7 +103,7 @@ public:
     }
 
     // variadic template for logging, way better than overriding log() methods to except
-    // all potential arguments. See README.md for more details.
+    // all potential arguments. see README.md for more details.
     template<typename... Args>
     void log(LogLevel level, const Args&... args) {
         std::stringstream message;
