@@ -123,6 +123,10 @@ Or you can elect to build everything at once.
 ### Headers
 - [headers/](headers/) - C++ header (`.hpp`) files for various utilities used throughout the repository
 
+### Odds and Ends
+- [slicing/](odds-and-ends/slicing/) - Example of object slicing the has bit me in the past, simple but can be a pain in
+complex codebases.
+
 ## Contributing
 
 Feel free to suggest improvements or report issues. Each snippet should:
