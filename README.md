@@ -86,6 +86,7 @@ Or you can elect to build everything at once.
 - [binary-search/](algorithms/binary-search/) - Binary search implementation with templated comparators
 - [quick-sort/](algorithms/quick-sort/) - Quick sort implementation with custom partitioning
 - [compression/](algorithms/compression/) - Compression; RLE, LZW, and Huffman
+- [hash-table/](algorithms/hash-table/) - Hash Table; std::hash(), fnv-1a, murmur3
 
 ### Data Structures
 - [linked-list/](data-structures/linked-list/) - Generic linked list implementation
