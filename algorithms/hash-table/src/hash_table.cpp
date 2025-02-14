@@ -73,7 +73,7 @@ public:
     // - std::string str{"hello"};     // objects
     // - std::vector<int> v{1,2,3};    // containers
     // - int arr[]{1,2,3};             // arrays
-    // - return widget{};               // temporary objects
+    // - return widget{};              // temporary objects
     // - point p{1.0, 2.0};            // aggregates
     //
     // key benefits:
@@ -149,13 +149,13 @@ public:
         uint64_t hash = fnv_offset;
         const auto* bytes = reinterpret_cast<const unsigned char*>(&key);
 
-        for(size_t i = 0; i < sizeof(KeyType); ++i) {
+        for(size_t ndx = 0; ndx < sizeof(KeyType); ++ndx) {
             // fnv_prime = 16777619 (32 bit) or 1099511628211 (64 bit)
             // this special prime number was chosen because it enables good dispersion
             // and follows the form: 2^24 + 2^8 + 0x93 = 16777619
             constexpr uint64_t fnv_prime = 1099511628211ULL;
 
-            hash ^= bytes[i];
+            hash ^= bytes[ndx];
             hash *= fnv_prime;
         }
         return hash % bucket_count;
@@ -181,16 +181,16 @@ public:
     // 3. k1 *= c2 (second mixing step)
     // this combination of operations with these specific constants produces optimal
     // hash distribution characteristics while maintaining high performance
-    size_t operator()(const KeyType& key, size_t bucket_count) const override {
+    size_t operator()(const KeyType& key, const size_t bucket_count) const override {
         const auto* bytes = reinterpret_cast<const unsigned char*>(&key);
         uint32_t h1 = 0;
 
-        for(size_t i = 0; i < sizeof(KeyType) - sizeof(KeyType) % 4; i += 4) {
+        for (size_t ndx = 0; ndx < sizeof(KeyType) - sizeof(KeyType) % 4; ndx += 4) {
             // murmur3 magic constants
             constexpr uint32_t c2 = 0x1b873593;
             constexpr uint32_t c1 = 0xcc9e2d51;
 
-            uint32_t k1 = *reinterpret_cast<const uint32_t*>(bytes + i);
+            uint32_t k1 = *reinterpret_cast<const uint32_t*>(bytes + ndx);
             k1 *= c1;
             k1 = (k1 << 15) | (k1 >> 17);
             k1 *= c2;
@@ -200,7 +200,9 @@ public:
         }
         return h1 % bucket_count;
     }
-    [[nodiscard]] std::string name() const override { return "Murmur3"; }
+    [[nodiscard]] std::string name() const override {
+        return "Murmur3";
+    }
 };
 
 template<typename KeyType, typename ValueType>
@@ -208,14 +210,14 @@ class HashTable {
 private:
     // internal structure to store key-value pairs
     struct HashNode {
-        KeyType key;
-        ValueType value;
-        HashNode(const KeyType& k, ValueType  v) : key(k), value(std::move(v)) {}
+        KeyType m_key;
+        ValueType m_value;
+        HashNode(const KeyType& k, ValueType  v) : m_key(k), m_value(std::move(v)) {}
     };
 
     // member variables prefixed with m_
-    std::vector<std::list<HashNode>> m_buckets;      // vector of linked lists for chaining
-    size_t m_size;                                   // current number of elements
+    std::vector<std::list<HashNode>> m_buckets;     // vector of linked lists for chaining
+    size_t m_size;                                  // current number of elements
     size_t m_bucketCount;                           // total number of buckets
     float m_loadFactorThreshold;                    // threshold for rehashing
     std::shared_ptr<HashFunction<KeyType>> m_hashFunc;       // hash function strategy
@@ -242,11 +244,10 @@ private:
         // rehash all existing elements
         for (const auto& bucket : m_buckets) {
             for (const auto& node : bucket) {
-                size_t newIndex = hash(node.key);
+                size_t newIndex = hash(node.m_key);
                 newBuckets[newIndex].push_back(node);
             }
         }
-
         m_buckets = std::move(newBuckets);
     }
 
@@ -254,7 +255,7 @@ public:
     // constructor initializes hash table with specified hash function
     explicit HashTable(std::shared_ptr<HashFunction<KeyType>> hashFunc,
              size_t initialBucketCount = 16,
-             float loadFactorThreshold = 0.75)
+             const float loadFactorThreshold = 0.75)
         : m_buckets(initialBucketCount),
           m_size(0),
           m_bucketCount(initialBucketCount),
@@ -267,9 +268,8 @@ public:
 
     // insert operation - o(1) average case, o(n) worst case
     void insert(const KeyType& key, const ValueType& value) {
-        float currentLoadFactor = static_cast<float>(m_size + 1) / m_bucketCount;
-
         // check if rehashing is needed
+        float currentLoadFactor = static_cast<float>(m_size + 1) / m_bucketCount;
         if (currentLoadFactor > m_loadFactorThreshold) {
             rehash();
         }
@@ -278,15 +278,14 @@ public:
 
         // check if key already exists
         for (auto& node : m_buckets[index]) {
-            if (node.key == key) {
-                node.value = value;  // update existing value
-                Logger::getInstance().log(LogLevel::INFO,
-                    std::format("updated value for key={}", key));
+            if (node.m_key == key) {
+                node.m_value = value;  // update existing value
+                Logger::getInstance().log(LogLevel::INFO, std::format("updated value for key={}", key));
                 return;
             }
         }
 
-        // insert new key-value pair
+        // insert a new key-value pair
         m_buckets[index].push_back(HashNode(key, value));
         m_size++;
 
@@ -299,8 +298,8 @@ public:
         size_t index = hash(key);
 
         for (const auto& node : m_buckets[index]) {
-            if (node.key == key) {
-                value = node.value;
+            if (node.m_key == key) {
+                value = node.m_value;
                 Logger::getInstance().log(LogLevel::INFO,
                     std::format("found key={} in bucket={}", key, index));
                 return true;
@@ -318,7 +317,7 @@ public:
 
         auto& bucket = m_buckets[index];
         for (auto it = bucket.begin(); it != bucket.end(); ++it) {
-            if (it->key == key) {
+            if (it->m_key == key) {
                 bucket.erase(it);
                 m_size--;
                 Logger::getInstance().log(LogLevel::INFO,
@@ -398,7 +397,7 @@ void runHashTableTests(const std::shared_ptr<HashFunction<int>>& hashFunc) {
 
 int main() {
     // create vector of hash functions to test
-    std::vector<std::shared_ptr<HashFunction<int>>> hashFuncs = {
+    const std::vector<std::shared_ptr<HashFunction<int>>> hashFuncs = {
         std::make_shared<StdHash<int>>(),
         std::make_shared<FNV1aHash<int>>(),
         std::make_shared<Murmur3Hash<int>>()
@@ -408,6 +407,5 @@ int main() {
     for (const auto& hashFunc : hashFuncs) {
         runHashTableTests(hashFunc);
     }
-
     return 0;
 }
