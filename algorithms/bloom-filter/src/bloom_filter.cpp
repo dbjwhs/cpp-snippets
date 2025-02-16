@@ -31,10 +31,10 @@
 //
 class BloomFilter {
 private:
-    // size of the bit array, determines the memory footprint and false positive probability
+    // the size of the bit array, determines the memory footprint and false positive probability
     size_t m_size;
 
-    // number of hash functions used, affects the false positive rate and performance
+    // the number of hash functions used, affects the false positive rate and performance
     size_t m_hashCount;
 
     // bit array representing set membership, uses minimal memory
@@ -42,11 +42,11 @@ private:
 
     // generate hash index for an item using multiple hash functions
     // combines standard library hash with a seed to create multiple independent hash functions
-    size_t hash(const std::string& item, size_t seed) const {
+    [[nodiscard]] size_t hash(const std::string& item, size_t seed) const {
         return std::hash<std::string>{}(item + std::to_string(seed)) % m_size;
     }
 
-    / calculate optimal bit array size based on the bloom filter probabilistic model
+        // calculate optimal bit array size based on the bloom filter probabilistic model
         //
         // detailed theoretical background:
         // - wikipedia: https://en.wikipedia.org/wiki/Bloom_filter#Probability_of_false_positives
@@ -70,7 +70,7 @@ private:
         // references:
         // - "Probabilistic Data Structures and Algorithms for Big Data" by Ian Wrigley
         // - ACM Computing Surveys: Bloom Filters - https://dl.acm.org/doi/10.1145/1454370.1454380
-    size_t calculateSize(size_t expectedElements, double falsePositiveRate) const {
+    [[nodiscard]] static size_t calculateSize(size_t expectedElements, double falsePositiveRate) {
         // validate input parameters to prevent calculation errors
         if (expectedElements == 0 || falsePositiveRate <= 0 || falsePositiveRate >= 1) {
             Logger::getInstance().log(LogLevel::CRITICAL,
@@ -91,7 +91,7 @@ private:
 
     // calculate optimal number of hash functions
     // balances the trade-off between false positive rate and computational complexity
-    size_t calculateHashCount(size_t m, size_t n) const {
+    static size_t calculateHashCount(const size_t m, const size_t n) {
         // handle edge cases to prevent division by zero or invalid calculations
         if (n == 0) {
             Logger::getInstance().log(LogLevel::CRITICAL,
@@ -100,14 +100,14 @@ private:
         }
 
         // use optimal hash function count formula
-        double k = (m / static_cast<double>(n)) * std::log(2);
+        const double k = (m / static_cast<double>(n)) * std::log(2);
         return std::max(static_cast<size_t>(k), static_cast<size_t>(1));
     }
 
 public:
     // constructor initializes bloom filter with expected elements and false positive rate
-    // automatically calculates optimal bit array size and hash function count
-    BloomFilter(size_t expectedElements, double falsePositiveRate)
+    // automatically calculates optimal bit array size, and hash function counts
+    BloomFilter(const size_t expectedElements, double falsePositiveRate)
         : m_size(calculateSize(expectedElements, falsePositiveRate)),
           m_hashCount(calculateHashCount(m_size, expectedElements)),
           m_bitArray(m_size, false) {
@@ -128,7 +128,7 @@ public:
 
     // check if an item might be in the set
     // guarantees no false negatives, but allows potential false positives
-    bool contains(const std::string& item) const {
+    [[nodiscard]] bool contains(const std::string& item) const {
         for (size_t i = 0; i < m_hashCount; ++i) {
             size_t index = hash(item, i);
             if (!m_bitArray[index]) {
@@ -157,8 +157,8 @@ public:
     }
 
     // getters for internal parameters useful for testing and debugging
-    size_t getSize() const { return m_size; }
-    size_t getHashCount() const { return m_hashCount; }
+    [[nodiscard]] size_t getSize() const { return m_size; }
+    [[nodiscard]] size_t getHashCount() const { return m_hashCount; }
 };
 
 int main() {
