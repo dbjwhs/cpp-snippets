@@ -117,6 +117,7 @@ Or you can elect to build everything at once.
 - [pipelining/](concurrency/pipelining/) - An example of pipelining in C++
 - [active-object-pattern/](concurrency/active-object-pattern/) - An example of the active object pattern in C++
 - [thread-safe-logging/](concurrency/thread-safe-logging/) - An thread-safe logging mechanism in C++
+- [jthreads/](concurrency/jthreads/) - Since std::jthread doesn't seem to be part of OSX's C++20 support lets try to make one ourselves
 
 ### Utilities
 - [string-utils/](utilities/string-utils/) - String manipulation utilities
