@@ -89,6 +89,7 @@ Or you can elect to build everything at once.
 - [hash-table/](algorithms/hash-table/) - Hash Table; std::hash(), fnv-1a, murmur3
 - [bloom-filter/](algorithms/bloom-filter/) - Bloom filter
 - [hyperloglog/](algorithms/hyperloglog/) - Bloom filter
+- [merkle-tree/](algorithms/merkle-tree/) - Merkle tree
 
 ### Data Structures
 - [linked-list/](data-structures/linked-list/) - Generic linked list implementation
