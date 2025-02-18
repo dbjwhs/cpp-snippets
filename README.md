@@ -76,8 +76,8 @@ Or you can elect to build everything at once.
 
 ### Prerequisites
 
-- CMake 3.15 or higher
-- C++17 compliant compiler
+- CMake 3.30 or higher
+- C++20 compliant compiler (see gotcha's below for linux)
 - Git
 
 ## Snippets Index
@@ -192,6 +192,51 @@ cmake --build . --target all
 ```
 
 This will rebuild all the targets in your project.
+
+## Linux
+
+As of this writing 2/17/2025 most of the projects are building on linux, see below for my setup instructions. However there still are six (6) project not building, I am working through issues on them currently.
+
+### C++20 std::format Build Issues and Resolution
+
+### Problem Description
+Build failures occurred when attempting to use `std::format` in C++20 code. While the code built successfully in CLion, it failed during command line cmake/make builds with the error:
+```
+fatal error: format: No such file or directory
+```
+
+The system was initially running GCC 12.3.0 which had incomplete C++20 library support.
+
+### Root Cause
+GCC 12 implementations shipped with partial C++20 support. Specifically, the `std::format` header was not included in the standard library headers, which explained why the `<format>` header could not be found during compilation.
+
+### Solution
+The issue was resolved by upgrading to GCC 13, which provides complete C++20 support including the `std::format` implementation.
+
+#### Step 1: Add Required Repository
+```bash
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update
+```
+
+#### Step 2: Install GCC 13
+```bash
+sudo apt install gcc-13 g++-13 libstdc++-13-dev
+```
+
+#### Step 3: Set System Defaults
+```bash
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 130
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 130
+```
+
+### Result
+- Successfully upgraded to GCC 13.1.0 (Ubuntu 13.1.0-8ubuntu1~22.04)
+- Full C++20 support including `std::format`
+- Code now builds correctly both in CLion and command line environments
+
+### Key Learning (saving you three hours of headaches)
+When implementing C++20 features, particularly `std::format`, GCC 13 or later is required for complete standard library support. Earlier versions may have incomplete implementations of the C++20 standard library features.
 
 ## License
 
