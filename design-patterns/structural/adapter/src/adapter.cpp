@@ -7,6 +7,7 @@
 #include <vector>
 #include <cassert>
 #include <format>
+#include <bits/ranges_algo.h>
 #include "../../../../headers/project_utils.hpp"
 
 // Define file system concept
