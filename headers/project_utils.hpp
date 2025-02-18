@@ -14,6 +14,9 @@
 #include <chrono>
 #include <random>
 #include <cstddef>
+#include <sstream>
+#include <filesystem>
+#include <iomanip>
 
 // Version information
 #define PROJECT_VERSION_MAJOR 1
