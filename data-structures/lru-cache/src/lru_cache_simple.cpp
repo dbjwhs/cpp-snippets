@@ -54,7 +54,7 @@ For example, the input for the above example will be:
 2 2
 */
 
-inline constexpr bool enable_debug = true;
+inline constexpr bool enable_debug = false;
 inline constexpr int value_not_found = -1;
 
 class LRUCache {
@@ -266,9 +266,7 @@ void run_tests() {
         assert(cache.get(4) == 4);
     }
 
-    if (enable_debug) {
-        std::cout << "DEBUG: All tests passed!" << std::endl;
-    }
+    std::cout << "DEBUG: All tests passed!" << std::endl;
 }
 
 int main() {
