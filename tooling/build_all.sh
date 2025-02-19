@@ -7,11 +7,11 @@
 # Format: \033[<style>;<color>m
 # - \033 is the escape character
 # - Style values: 0=normal, 1=bold, 2=dim, 4=underlined
-# - Color values: 31=red, 32=green, 33=yellow, 34=blue, 35=purple, 36=cyan, 37=white
+# - Color values: 31=red, 32=green, 33=BLUE, 34=blue, 35=purple, 36=cyan, 37=white
 #
 RED='\033[0;31m'    # Normal red text
 GREEN='\033[0;32m'  # Normal green text
-YELLOW='\033[1;33m' # Bold yellow text
+BLUE='\033[0;94m'   # Normal blue text
 NC='\033[0m'        # No Color - resets color to terminal default
 #
 # Usage example:
@@ -86,7 +86,7 @@ run_executable() {
         return 1
     fi
 
-    log "INFO" "Running executable: ${exe_path}" "${YELLOW}"
+    log "INFO" "Running executable: ${exe_path}" "${BLUE}"
     if "${exe_path}"; then
         log "SUCCESS" "Successfully ran ${exe_path}" "${GREEN}"
         ((successful_runs++))
@@ -106,17 +106,17 @@ build_project() {
     local exe_name=$2
 
     if [ "$DRY_RUN" = true ]; then
-        log "DRY-RUN" "Would build project in ${project_dir}" "${YELLOW}"
-        log "DRY-RUN" "Would create build directory: ${build_dir}" "${YELLOW}"
-        log "DRY-RUN" "Would run: cmake .." "${YELLOW}"
-        log "DRY-RUN" "Would run: make" "${YELLOW}"
+        log "DRY-RUN" "Would build project in ${project_dir}" "${BLUE}"
+        log "DRY-RUN" "Would create build directory: ${build_dir}" "${BLUE}"
+        log "DRY-RUN" "Would run: cmake .." "${BLUE}"
+        log "DRY-RUN" "Would run: make" "${BLUE}"
         if [ "$RUN_AFTER_BUILD" = true ]; then
-            log "DRY-RUN" "Would run executable: ${exe_name}" "${YELLOW}"
+            log "DRY-RUN" "Would run executable: ${exe_name}" "${BLUE}"
         fi
         return 0
     fi
 
-    log "INFO" "Building project in ${project_dir}" "${YELLOW}"
+    log "INFO" "Building project in ${project_dir}" "${BLUE}"
 
     # Create and enter build directory
     mkdir -p "${build_dir}"
@@ -126,14 +126,14 @@ build_project() {
     }
 
     # Run CMake
-    log "INFO" "Running CMake..." "${YELLOW}"
+    log "INFO" "Running CMake..." "${BLUE}"
     cmake .. || {
         log "ERROR" "CMake configuration failed for ${project_dir}" "${RED}"
         return 1
     }
 
     # Run Make
-    log "INFO" "Running Make..." "${YELLOW}"
+    log "INFO" "Running Make..." "${BLUE}"
     make || {
         log "ERROR" "Make failed for ${project_dir}" "${RED}"
         return 1
@@ -156,7 +156,7 @@ while IFS= read -r -d '' cmake_file; do
 
     # Skip if build directory is in path
     if [[ "${project_dir}" == *"/build/"* ]]; then
-        log "INFO" "Skipping build directory: ${project_dir}" "${YELLOW}"
+        log "INFO" "Skipping build directory: ${project_dir}" "${BLUE}"
         continue
     fi
 
@@ -164,9 +164,9 @@ while IFS= read -r -d '' cmake_file; do
     exe_name=$(find_executable_name "${cmake_file}")
 
     if [ "$DRY_RUN" = true ]; then
-        log "DRY-RUN" "Found CMake project in: ${project_dir}" "${YELLOW}"
+        log "DRY-RUN" "Found CMake project in: ${project_dir}" "${BLUE}"
     else
-        log "INFO" "Found CMake project in: ${project_dir}" "${YELLOW}"
+        log "INFO" "Found CMake project in: ${project_dir}" "${BLUE}"
     fi
 
     # Store current directory
@@ -213,7 +213,7 @@ for path in "${successful_paths[@]}"; do
         if [ -f "${path}" ]; then
             log "SUMMARY" "-> ${path}" "${GREEN}"
         else
-            log "SUMMARY" "-> ${path} (executable not found)" "${YELLOW}"
+            log "SUMMARY" "-> ${path} (executable not found)" "${BLUE}"
         fi
     fi
 done
@@ -228,7 +228,7 @@ if [ "$DRY_RUN" = false ]; then
     # Print run summary if run mode was enabled
     if [ "$RUN_AFTER_BUILD" = true ]; then
         echo
-        log "SUMMARY" "Run summary:" "${YELLOW}"
+        log "SUMMARY" "Run summary:" "${BLUE}"
         log "SUMMARY" "Successful runs: ${successful_runs}" "${GREEN}"
         log "SUMMARY" "Failed runs: ${failed_runs}" "${RED}"
         if [ ${failed_runs} -gt 0 ]; then

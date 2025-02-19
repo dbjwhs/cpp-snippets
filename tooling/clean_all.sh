@@ -11,7 +11,7 @@
 #
 RED='\033[0;31m'    # Normal red text
 GREEN='\033[0;32m'  # Normal green text
-YELLOW='\033[1;33m' # Bold yellow text
+BLUE='\033[0;94m'   # Normal blue text
 NC='\033[0m'        # No Color - resets color to terminal default
 #
 # Usage example:
@@ -59,10 +59,10 @@ clean_project() {
 
     if [ -d "${build_dir}" ]; then
         if [ "$DRY_RUN" = true ]; then
-            log "DRY-RUN" "Would clean ${build_dir}" "${YELLOW}"
+            log "DRY-RUN" "Would clean ${build_dir}" "${BLUE}"
             return 0
         else
-            log "INFO" "Cleaning ${build_dir}" "${YELLOW}"
+            log "INFO" "Cleaning ${build_dir}" "${BLUE}"
             rm -rf "${build_dir}" || {
                 log "ERROR" "Failed to clean ${build_dir}" "${RED}"
                 return 1
@@ -72,9 +72,9 @@ clean_project() {
         fi
     else
         if [ "$DRY_RUN" = true ]; then
-            log "DRY-RUN" "No build directory found in ${project_dir}" "${YELLOW}"
+            log "DRY-RUN" "No build directory found in ${project_dir}" "${BLUE}"
         else
-            log "INFO" "No build directory found in ${project_dir}" "${YELLOW}"
+            log "INFO" "No build directory found in ${project_dir}" "${BLUE}"
         fi
         return 0
     fi
