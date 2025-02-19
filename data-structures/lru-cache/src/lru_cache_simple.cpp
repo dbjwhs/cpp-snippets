@@ -269,7 +269,44 @@ void run_tests() {
     std::cout << "DEBUG: All tests passed!" << std::endl;
 }
 
+inline constexpr bool enable_cmd = true;
+void run_cmd() {
+    if (enable_cmd) {
+        // 7 3
+        // 1 1 1
+        // 1 2 2
+        // 1 1 3
+        // 2 1
+        // 1 3 4
+        // 1 4 3
+        // 2 2
+
+        // interactive testing
+        int num_queries, cache_size;
+        std::cout << "Enter number of queries (N) and cache size (C): ";
+        std::cin >> num_queries >> cache_size;
+
+        LRUCache cache(cache_size);
+        for (int ndx = 0; ndx < num_queries; ++ndx) {
+            int type;
+            std::cin >> type;
+
+            // put/get
+            int key;
+            if (type == 1) {
+                int value;
+                std::cin >> key >> value;
+                cache.put(key, value);
+            } else if (type == 2) {
+                std::cin >> key;
+                std::cout << cache.get(key) << std::endl;
+            }
+        }
+    }
+}
+
 int main() {
     run_tests();
+    run_cmd();
     return 0;
 }
