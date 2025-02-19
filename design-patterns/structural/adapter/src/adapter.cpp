@@ -7,7 +7,10 @@
 #include <vector>
 #include <cassert>
 #include <format>
-#include <bits/ranges_algo.h>
+#if defined(__linux__) || defined(__linux) || defined(linux)
+    #include <bits/ranges_algo.h>
+#endif
+
 #include "../../../../headers/project_utils.hpp"
 
 // Define file system concept
