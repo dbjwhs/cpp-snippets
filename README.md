@@ -88,12 +88,13 @@ Or you can elect to build everything at once.
 - [compression/](algorithms/compression/) - Compression; RLE, LZW, and Huffman
 - [hash-table/](algorithms/hash-table/) - Hash Table; std::hash(), fnv-1a, murmur3
 - [bloom-filter/](algorithms/bloom-filter/) - Bloom filter
-- [hyperloglog/](algorithms/hyperloglog/) - Bloom filter
+- [hyperloglog/](algorithms/hyperloglog/) - Hyperloglog
 - [merkle-tree/](algorithms/merkle-tree/) - Merkle tree
 
 ### Data Structures
 - [linked-list/](data-structures/linked-list/) - Generic linked list implementation
 - [binary-tree/](data-structures/binary-tree/) - Binary tree with traversal algorithms
+- [lru-cache/](data-structures/lru-cache/) - My buddy JG asked me to write a simple C++ example of a LRU cache
 
 ### Design Patterns
 - [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern example
@@ -101,6 +102,8 @@ Or you can elect to build everything at once.
 - [structural/factory/](design-patterns/structural/factory/) - Factory pattern example
 - [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern example
 - [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern example
+- [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern example
+- [structural/pimpl/](design-patterns/structural/pimpl/) - Proxy pattern example
 - [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
 - [behavioral/command/](design-patterns/behavioral/command/) - Command pattern example
 - [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern example
@@ -132,6 +135,13 @@ Or you can elect to build everything at once.
 ### Odds and Ends
 - [slicing/](odds-and-ends/slicing/) - Example of object slicing the has bit me in the past, simple but can be a pain in
 complex codebases.
+
+### Tooling
+- [build_all.sh](tooling/build_all.sh/) - Builds all projects that contain CMake files
+- [clean_all.sh/](tooling/clean_all.sh/) - Cleans all projects that contain CMake files
+- [file_find_open.sh/](tooling/file_find_open.sh/) - Find all files containing and opens them
+- [new_line.sh/](tooling/new_line.sh/) - Adds new line on any coding file, I prefer this
+
 
 ## Contributing
 
