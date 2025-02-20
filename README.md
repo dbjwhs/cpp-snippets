@@ -100,6 +100,7 @@ Or you can elect to build everything at once.
 - [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern example
 - [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern example
 - [creational/factory/](design-patterns/creational/factory/) - Factory pattern example
+- [creational/abstract-factory/](design-patterns/creational/abstract-/) - Abstract factory pattern example
 - [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern example
 - [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern example
 - [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern example
@@ -246,7 +247,7 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 130
 - Code now builds correctly both in CLion and command line environments
 
 ### Key Learning (saving you three hours of headaches)
-When implementing C++20 features, particularly `std::format`, GCC 13 or later is required for complete standard library support. Earlier versions may have incomplete implementations of the C++20 standard library features.
+When implementing C++20 features, particularly `std::format`, GCC 13 or later is required xfor complete standard library support. Earlier versions may have incomplete implementations of the C++20 standard library features.
 
 ## License
 
