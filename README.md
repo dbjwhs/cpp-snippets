@@ -130,6 +130,9 @@ Or you can elect to build everything at once.
 - [dir_scanner/](utilities/dir_scanner/) - A platform-agnostic C++ directory scanner that uses an iterative approach
 - [mock-filesystem/](utilities/mock-filesystem/) - Simple Mock filesystem
 
+### Programming Paradigms
+- [negative-space/](programming-paradigms/negative-space) - Negative space programming
+
 ### Headers
 - [headers/](headers/) - C++ header (`.hpp`) files for various utilities used throughout the repository
 
