@@ -145,6 +145,7 @@ complex codebases.
 - [clean_all.sh/](tooling/clean_all.sh/) - Cleans all projects that contain CMake files
 - [file_find_open.sh/](tooling/file_find_open.sh/) - Find all files containing and opens them
 - [new_line.sh/](tooling/new_line.sh/) - Adds new line on any coding file, I prefer this
+- [update_cmake_license.sh/](tooling/update_cmake_license.sh/) - Ensure all CMakeList.txt files contain our header
 
 
 ## Contributing
