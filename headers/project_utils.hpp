@@ -69,6 +69,7 @@ public:
 enum class LogLevel {
     INFO,
     NORMAL,
+    ERROR,
     CRITICAL
 };
 
@@ -124,7 +125,7 @@ public:
         m_log_file.flush();
 
         // write to console
-        if (level == LogLevel::CRITICAL) {
+        if (level == LogLevel::CRITICAL || level == LogLevel::ERROR) {
             std::cerr << message.str();
         } else {
             std::cout << message.str();
@@ -142,6 +143,8 @@ private:
                 return "INFO";
             case LogLevel::NORMAL:
                 return "NORMAL";
+            case LogLevel::ERROR:
+                return "ERROR";
             case LogLevel::CRITICAL:
                 return "CRITICAL";
             default:
