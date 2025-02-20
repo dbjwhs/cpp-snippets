@@ -62,14 +62,6 @@ std::cout << "Estimated unique elements: " << uniqueCount << std::endl;
 - Accuracy depends on the number of registers
 - Not suitable for scenarios requiring 100% precise counting
 
-## Compilation
-
-Compile with C++17 support:
-
-```bash
-g++ -std=c++17 hyperloglog.cpp -o hyperloglog
-```
-
 ## Testing
 
 The implementation includes a basic test function that:
