@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2025 dbjwhs
+
 # mit license
 # copyright (c) 2025 dbjwhs
 #
