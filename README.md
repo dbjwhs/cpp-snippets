@@ -99,7 +99,7 @@ Or you can elect to build everything at once.
 ### Design Patterns
 - [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern example
 - [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern example
-- [structural/factory/](design-patterns/structural/factory/) - Factory pattern example
+- [creational/factory/](design-patterns/creational/factory/) - Factory pattern example
 - [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern example
 - [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern example
 - [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern example
