@@ -132,6 +132,7 @@ Or you can elect to build everything at once.
 
 ### Programming Paradigms
 - [negative-space/](programming-paradigms/negative-space) - Negative space programming
+- [diamond-problem/](programming-paradigms/diamond-problem) - Negative space programming
 
 ### Headers
 - [headers/](headers/) - C++ header (`.hpp`) files for various utilities used throughout the repository
