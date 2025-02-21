@@ -97,20 +97,21 @@ Or you can elect to build everything at once.
 - [lru-cache/](data-structures/lru-cache/) - My buddy JG asked me to write a simple C++ example of a LRU cache
 
 ### Design Patterns
-- [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern example
-- [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern example
-- [creational/factory/](design-patterns/creational/factory/) - Factory pattern example
-- [creational/abstract-factory/](design-patterns/creational/abstract-factory/) - Abstract factory pattern example
-- [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern example
-- [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern example
-- [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern example
-- [structural/pimpl/](design-patterns/structural/pimpl/) - Proxy pattern example
+- [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern
+- [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern
+- [creational/factory/](design-patterns/creational/factory/) - Factory pattern
+- [creational/abstract-factory/](design-patterns/creational/abstract-factory/) - Abstract factory pattern
+- [creational/builder/](design-patterns/creational/builder/) - Builder factory pattern
+- [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern
+- [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern
+- [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern
+- [structural/pimpl/](design-patterns/structural/pimpl/) - Proxy pattern
 - [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
-- [behavioral/command/](design-patterns/behavioral/command/) - Command pattern example
-- [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern example
-- [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern example
-- [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern example
-- [behavioral/chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/) - Chain-of-responsibility pattern example
+- [behavioral/command/](design-patterns/behavioral/command/) - Command pattern
+- [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern
+- [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern
+- [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern
+- [behavioral/chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/) - Chain-of-responsibility pattern
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
