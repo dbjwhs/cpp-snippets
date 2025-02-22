@@ -97,23 +97,32 @@ Or you can elect to build everything at once.
 - [lru-cache/](data-structures/lru-cache/) - My buddy JG asked me to write a simple C++ example of a LRU cache
 
 ### Design Patterns
+
+#### creational
 - [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern
 - [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern
 - [creational/factory/](design-patterns/creational/factory/) - Factory pattern
 - [creational/abstract-factory/](design-patterns/creational/abstract-factory/) - Abstract factory pattern
 - [creational/builder/](design-patterns/creational/builder/) - Builder factory pattern
+
+#### structural
 - [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern
 - [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern
 - [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern
 - [structural/pimpl/](design-patterns/structural/pimpl/) - Pimpl (pointer to Implementation) pattern
 - [structural/composite/](design-patterns/structural/composite/) - Composite pattern
 - [structural/bridge/](design-patterns/structural/bridge/) - Bridge pattern
+- [structural/facade/](design-patterns/structural/facade/) - Facade pattern
+- [structural/decorator/](design-patterns/structural/decorator/) - Decorator pattern
+
+#### behavioral
 - [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
 - [behavioral/command/](design-patterns/behavioral/command/) - Command pattern
 - [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern
 - [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern
 - [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern
 - [behavioral/chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/) - Chain-of-responsibility pattern
+- [behavioral/fail-fast/](design-patterns/behavioral/fail-fast/) - Fail fast pattern
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
