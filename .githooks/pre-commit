@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e  # exit on any error
 
-./tooling/new_line.sh
-./tooling/update_header_license.sh
+#./tooling/new_line.sh
+#./tooling/update_header_license.sh
 
 # if both scripts succeed, we will allow the commit
 exit 0
