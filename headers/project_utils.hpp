@@ -69,6 +69,7 @@ public:
 enum class LogLevel {
     INFO,
     NORMAL,
+    DEBUG,
     ERROR,
     CRITICAL
 };
@@ -79,6 +80,32 @@ class Logger {
 
 	// do not allow default constructor
 	Logger() = delete;
+
+    // helper method to handle the common logging logic
+    void write_log_message(LogLevel level, const std::string& message) {
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        // write to file
+        m_log_file << message;
+        m_log_file.flush();
+
+        // write to console
+        if (level == LogLevel::CRITICAL || level == LogLevel::ERROR) {
+            std::cerr << message;
+        } else { // INFO, NORMAL, DEBUG
+            std::cout << message;
+        }
+    }
+
+    // helper to build the log prefix
+    static std::stringstream create_log_prefix(LogLevel level) {
+        std::stringstream message;
+        message << get_utc_timestamp()
+                << " [" << log_level_to_string(level)
+                << "] [Thread:"
+                << std::this_thread::get_id() << "] ";
+        return message;
+    }
 
 public:
     // constructor with a custom path
@@ -107,34 +134,33 @@ public:
     }
 
     // variadic template for logging, way better than overriding log() methods to except
-    // all potential arguments. see README.md for more details.
+    // Primary template for logging without depth
     template<typename... Args>
-    void log(LogLevel level, const Args&... args) {
-        std::stringstream message;
-        message << get_utc_timestamp()
-                << " [" << log_level_to_string(level)
-                << "] [Thread:"
-                << std::this_thread::get_id() << "] ";
+    void log(const LogLevel level, const Args&... args) {
+        auto message = create_log_prefix(level);
         (message << ... << args);
         message << std::endl;
+        write_log_message(level, message.str());
+    }
 
-        std::lock_guard<std::mutex> lock(m_mutex);
-
-        // write to file
-        m_log_file << message.str();
-        m_log_file.flush();
-
-        // write to console
-        if (level == LogLevel::CRITICAL || level == LogLevel::ERROR) {
-            std::cerr << message.str();
-        } else {
-            std::cout << message.str();
-        }
+    // Overload for logging with depth
+    template<typename... Args>
+    void log_with_depth(const LogLevel level, const int depth, const Args&... args) {
+        auto message = create_log_prefix(level);
+        message << getIndentation(depth);
+        (message << ... << args);
+        message << std::endl;
+        write_log_message(level, message.str());
     }
 
 private:
     std::ofstream m_log_file;
     std::mutex m_mutex;
+
+    // utility function for expression tree visualization
+    static std::string getIndentation(const int depth) {
+        return std::string(depth * 2, ' ');
+    }
 
     // convert log level to string
     static std::string log_level_to_string(const LogLevel level) {
@@ -143,6 +169,8 @@ private:
                 return "INFO";
             case LogLevel::NORMAL:
                 return "NORMAL";
+            case LogLevel::DEBUG:
+                return "DEBUG";
             case LogLevel::ERROR:
                 return "ERROR";
             case LogLevel::CRITICAL:
