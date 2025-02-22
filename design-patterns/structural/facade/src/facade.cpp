@@ -96,15 +96,31 @@ public:
         Logger::getInstance().log(LogLevel::INFO, std::format("audio volume set to {}", m_volume));
     }
 
-    [[nodiscard]] float getVolume() const { return m_volume; }
-    [[nodiscard]] bool isInitialized() const { return m_initialized; }
-    [[nodiscard]] std::error_code getLastError() const { return m_lastError; }
+    [[nodiscard]] float getVolume() const {
+        return m_volume;
+    }
+    [[nodiscard]] bool isInitialized() const {
+        return m_initialized;
+    }
+    [[nodiscard]] std::error_code getLastError() const {
+        return m_lastError;
+    }
 
 private:
     // simulate hardware checks and initialization
-    static bool detectAudioDevice() { return true; }  // in real implementation, would check hardware
-    static bool initializeAudioBuffers() { return true; }  // would allocate actual buffers
-    static bool checkAudioPermissions() { return true; }  // would check system permissions
+
+    // in real implementation, would check hardware
+    static bool detectAudioDevice() {
+        return true;
+    }
+    // would allocate actual buffers
+    static bool initializeAudioBuffers() {
+        return true;
+    }
+    // would check system permissions
+    static bool checkAudioPermissions() {
+        return true;
+    }
 };
 
 // video system manages display and rendering
@@ -163,9 +179,19 @@ public:
 
 private:
     // simulate hardware checks and initialization
-    bool detectDisplayDevice() { return true; }  // would check for physical display
-    bool checkResolutionSupport(uint32_t w, uint32_t h) { return w >= 640 && h >= 480; }  // basic validation
-    bool initializeFrameBuffer() { return true; }  // would allocate actual frame buffer
+
+    // would check for physical display
+    static bool detectDisplayDevice() {
+        return true;
+    }
+    // basic validation
+    static bool checkResolutionSupport(const uint32_t w, const uint32_t h) {
+        return w >= 640 && h >= 480;
+    }
+    // would allocate actual frame buffer
+    static bool initializeFrameBuffer() {
+        return true;
+    }
 };
 
 // input system handles keyboard and mouse interactions
@@ -212,15 +238,31 @@ public:
         Logger::getInstance().log(LogLevel::INFO, std::format("mouse input {}", m_mouseEnabled ? "enabled" : "disabled"));
     }
 
-    [[nodiscard]] bool isMouseEnabled() const { return m_mouseEnabled; }
-    [[nodiscard]] bool isInitialized() const { return m_initialized; }
-    [[nodiscard]] std::error_code getLastError() const { return m_lastError; }
+    [[nodiscard]] bool isMouseEnabled() const {
+        return m_mouseEnabled;
+    }
+    [[nodiscard]] bool isInitialized() const {
+        return m_initialized;
+    }
+    [[nodiscard]] std::error_code getLastError() const {
+        return m_lastError;
+    }
 
 private:
     // simulate hardware checks and initialization
-    bool detectInputDevices() { return true; }  // would check for keyboard/mouse
-    bool initializeInputBuffers() { return true; }  // would set up input queues
-    bool registerInputHandlers() { return true; }  // would register system callbacks
+
+    // would check for keyboard/mouse
+    static bool detectInputDevices() {
+        return true;
+    }
+    // would set up input queues
+    static bool initializeInputBuffers() {
+        return true;
+    }
+    // would register system callbacks
+    static bool registerInputHandlers() {
+        return true;
+    }
 };
 
 // game system facade provides a simplified interface to the subsystems
@@ -269,7 +311,7 @@ public:
     }
 
     // configures common game settings through a single method
-    bool configureDefaultGameSettings() {
+    [[nodiscard]] bool configureDefaultGameSettings() const {
         if (!m_initialized) {
             Logger::getInstance().log(LogLevel::ERROR, std::format("cannot configure settings - system not initialized"));
             return false;
@@ -284,10 +326,18 @@ public:
     }
 
     // provides access to subsystems for testing
-    [[nodiscard]] const AudioSystem& getAudioSystem() const { return *m_audio; }
-    [[nodiscard]] const VideoSystem& getVideoSystem() const { return *m_video; }
-    [[nodiscard]] const InputSystem& getInputSystem() const { return *m_input; }
-    [[nodiscard]] std::error_code getLastError() const { return m_lastError; }
+    [[nodiscard]] const AudioSystem& getAudioSystem() const {
+        return *m_audio;
+    }
+    [[nodiscard]] const VideoSystem& getVideoSystem() const {
+        return *m_video;
+    }
+    [[nodiscard]] const InputSystem& getInputSystem() const {
+        return *m_input;
+    }
+    [[nodiscard]] std::error_code getLastError() const {
+        return m_lastError;
+    }
 };
 
 int main() {
@@ -295,12 +345,12 @@ int main() {
     Logger::getInstance().log(LogLevel::INFO, std::format("starting facade pattern tests"));
 
     // test 1: creation and initialization
-    auto gameSys = std::make_unique<GameSystemFacade>();
+    const auto gameSys = std::make_unique<GameSystemFacade>();
     assert(gameSys != nullptr && "facade creation failed");
     Logger::getInstance().log(LogLevel::INFO, std::format("test 1: facade created successfully"));
 
     // test 2: system initialization
-    bool initResult = gameSys->initialize();
+    bool const initResult = gameSys->initialize();
     assert(initResult && "facade initialization failed");
     if (!initResult) {
         Logger::getInstance().log(LogLevel::ERROR,
@@ -316,7 +366,7 @@ int main() {
     Logger::getInstance().log(LogLevel::INFO, std::format("test 3: all subsystems verified as initialized"));
 
     // test 4: configure and verify default settings
-    bool configResult = gameSys->configureDefaultGameSettings();
+    bool const configResult = gameSys->configureDefaultGameSettings();
     assert(configResult && "default configuration failed");
 
     // verify audio settings
