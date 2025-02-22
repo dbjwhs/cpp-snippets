@@ -105,7 +105,9 @@ Or you can elect to build everything at once.
 - [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern
 - [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern
 - [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern
-- [structural/pimpl/](design-patterns/structural/pimpl/) - Proxy pattern
+- [structural/pimpl/](design-patterns/structural/pimpl/) - Pimpl (pointer to Implementation) pattern
+- [structural/composite/](design-patterns/structural/composite/) - Composite pattern
+- [structural/bridge/](design-patterns/structural/bridge/) - Bridge pattern
 - [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
 - [behavioral/command/](design-patterns/behavioral/command/) - Command pattern
 - [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern
