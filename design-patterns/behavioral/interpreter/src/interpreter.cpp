@@ -85,7 +85,8 @@ public:
     [[nodiscard]] virtual int interpret(const Context& context) const = 0;
     [[nodiscard]] virtual std::string toString() const = 0;
     virtual void debugPrint(const int depth = 0) const {
-        Logger::getInstance().log_with_depth(LogLevel::DEBUG, depth, std::format("Expression: {}", toString()));
+        Logger::getInstance().log_with_depth(LogLevel::DEBUG, depth
+            , std::format("Expression: {}", this->toString()));
     }
 };
 
@@ -108,7 +109,7 @@ public:
     }
 
     int getVariable(const std::string& name) const {
-        auto it = m_variables.find(name);
+        const auto it = m_variables.find(name);
         if (it == m_variables.end()) {
             throw std::runtime_error("Variable not found: " + name);
         }
@@ -123,7 +124,9 @@ public:
             std::format("Context: Operation count: {}", m_operationCount));
     }
 
-    int getOperationCount() const { return m_operationCount; }
+    int getOperationCount() const {
+        return m_operationCount;
+    }
 };
 
 // terminal expression for numbers
@@ -316,7 +319,6 @@ void runTests() {
 
     // test case 1: basic arithmetic operations
     {
-        Context context;
         Logger::getInstance().log(LogLevel::INFO, "Test 1: Basic arithmetic operations");
 
         auto expr = std::make_unique<AddExpression>(
@@ -325,6 +327,7 @@ void runTests() {
         );
 
         expr->debugPrint();
+        Context context;
         assert(expr->interpret(context) == 8);
         Logger::getInstance().log(LogLevel::INFO, "Test 1a: Addition passed");
 
