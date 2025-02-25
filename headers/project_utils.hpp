@@ -11,7 +11,6 @@
 #include <thread>
 #include <mutex>
 #include <fstream>
-#include <chrono>
 #include <random>
 #include <cstddef>
 #include <sstream>
@@ -53,7 +52,7 @@ private:
     // std::uniform_real_distribution<double> m_dist; // for floating point
 
 public:
-    RandomGenerator(int min, int max)
+    RandomGenerator(const int min, const int max)
         : m_gen(std::random_device{}())
         , m_dist(min, max) {}
 
@@ -75,25 +74,29 @@ enum class LogLevel {
 };
 
 class Logger {
-    // singleton instance
-    static Logger* m_instance;
+    static Logger* m_instance; // singleton instance
+    static std::mutex m_instance_mutex; // mutex for thread-safe initialization
 
-	// do not allow default constructor
-	Logger() = delete;
+    // do not allow default constructor
+    Logger() = delete;
 
     // helper method to handle the common logging logic
-    void write_log_message(LogLevel level, const std::string& message) {
+    void write_log_message(const LogLevel level, const std::string& message) {
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        // write to file
-        m_log_file << message;
-        m_log_file.flush();
+        // write to file if file logging is enabled for this level
+        if (is_level_enabled(level) && m_file_output_enabled) {
+            m_log_file << message;
+            m_log_file.flush();
+        }
 
-        // write to console
-        if (level == LogLevel::CRITICAL || level == LogLevel::ERROR) {
-            std::cerr << message;
-        } else { // INFO, NORMAL, DEBUG
-            std::cout << message;
+        // write to console if console logging is enabled for this level
+        if (is_level_enabled(level)) {
+            if ((level == LogLevel::CRITICAL || level == LogLevel::ERROR) && m_stderr_enabled) {
+                std::cerr << message;
+            } else { // INFO, NORMAL, DEBUG
+                std::cout << message;
+            }
         }
     }
 
@@ -108,6 +111,23 @@ class Logger {
     }
 
 public:
+    // RAII class for temporarily disabling stderr output
+    class StderrSuppressionGuard {
+    public:
+        StderrSuppressionGuard() : m_was_enabled(Logger::getInstance().isStderrEnabled()) {
+            Logger::getInstance().disableStderr();
+        }
+
+        ~StderrSuppressionGuard() {
+            if (m_was_enabled) {
+                Logger::getInstance().enableStderr();
+            }
+        }
+
+    private:
+        bool m_was_enabled;
+    };
+
     // constructor with a custom path
     explicit Logger(const std::string& path) {
         if (!std::filesystem::exists(std::filesystem::path(path).parent_path())) {
@@ -118,13 +138,37 @@ public:
         if (!m_log_file.is_open()) {
             throw std::runtime_error("Failed to open log file: " + path);
         }
+
+        // Initialize enabled levels - all levels enabled by default
+        for (int ndx = 0; ndx < static_cast<int>(LogLevel::CRITICAL) + 1; ++ndx) {
+            m_enabled_levels[ndx] = true;
+        }
     }
 
     static Logger& getInstance() {
+        std::lock_guard<std::mutex> lock(m_instance_mutex);
         if (m_instance == nullptr) {
             m_instance = new Logger("../custom.log");
         }
         return *m_instance;
+    }
+
+    // custom path version of getInstance
+    static Logger& getInstance(const std::string& custom_path) {
+        std::lock_guard<std::mutex> lock(m_instance_mutex);
+        if (m_instance == nullptr) {
+            m_instance = new Logger(custom_path);
+        }
+        return *m_instance;
+    }
+
+    // clean up the singleton instance
+    static void destroyInstance() {
+        std::lock_guard<std::mutex> lock(m_instance_mutex);
+        if (m_instance != nullptr) {
+            delete m_instance;
+            m_instance = nullptr;
+        }
     }
 
     ~Logger() {
@@ -137,15 +181,21 @@ public:
     // Primary template for logging without depth
     template<typename... Args>
     void log(const LogLevel level, const Args&... args) {
+        if (!is_level_enabled(level)) {
+            return;
+        }
         auto message = create_log_prefix(level);
         (message << ... << args);
         message << std::endl;
         write_log_message(level, message.str());
     }
 
-    // Overload for logging with depth
+    // overload for logging with depth
     template<typename... Args>
     void log_with_depth(const LogLevel level, const int depth, const Args&... args) {
+        if (!is_level_enabled(level)) {
+            return;
+        }
         auto message = create_log_prefix(level);
         message << getIndentation(depth);
         (message << ... << args);
@@ -153,9 +203,59 @@ public:
         write_log_message(level, message.str());
     }
 
+    // enable/disable specific log level
+    void setLevelEnabled(LogLevel level, bool enabled) {
+        int levelIndex = static_cast<int>(level);
+        if (levelIndex >= 0 && levelIndex <= static_cast<int>(LogLevel::CRITICAL)) {
+            m_enabled_levels[levelIndex] = enabled;
+        }
+    }
+
+    // check if a specific log level is enabled
+    bool isLevelEnabled(LogLevel level) const {
+        return is_level_enabled(level);
+    }
+
+    // disable stderr output
+    void disableStderr() {
+        m_stderr_enabled = false;
+    }
+
+    // 3nable stderr output
+    void enableStderr() {
+        m_stderr_enabled = true;
+    }
+
+    // get current stderr output state
+    bool isStderrEnabled() const {
+        return m_stderr_enabled;
+    }
+
+    // enable/disable file output
+    void setFileOutputEnabled(bool enabled) {
+        m_file_output_enabled = enabled;
+    }
+
+    // check if file output is enabled
+    bool isFileOutputEnabled() const {
+        return m_file_output_enabled;
+    }
+
 private:
     std::ofstream m_log_file;
     std::mutex m_mutex;
+    std::atomic<bool> m_stderr_enabled{true};
+    std::atomic<bool> m_file_output_enabled{true};
+    std::atomic<bool> m_enabled_levels[5]{true, true, true, true, true}; // One for each log level
+
+    // check if a level is enabled (internal helper)
+    bool is_level_enabled(LogLevel level) const {
+        int levelIndex = static_cast<int>(level);
+        if (levelIndex >= 0 && levelIndex <= static_cast<int>(LogLevel::CRITICAL)) {
+            return m_enabled_levels[levelIndex];
+        }
+        return false;
+    }
 
     // utility function for expression tree visualization
     static std::string getIndentation(const int depth) {
@@ -201,7 +301,8 @@ private:
     }
 };
 
-// initialize static member
+// Initialize static members
 Logger* Logger::m_instance = nullptr;
+std::mutex Logger::m_instance_mutex;
 
 #endif // PROJECT_UTILS_HPP
