@@ -74,11 +74,10 @@ enum class LogLevel {
 };
 
 class Logger {
-    static Logger* m_instance; // singleton instance
-    static std::mutex m_instance_mutex; // mutex for thread-safe initialization
-
-    // do not allow default constructor
-    Logger() = delete;
+private:
+    // Changed from raw pointer to weak_ptr to implement shared_ptr singleton
+    inline static std::weak_ptr<Logger> m_instance;
+    inline static std::mutex m_instance_mutex; // mutex for thread-safe initialization
 
     // helper method to handle the common logging logic
     void write_log_message(const LogLevel level, const std::string& message) {
@@ -110,6 +109,23 @@ class Logger {
         return message;
     }
 
+    // Constructor is now private to control instantiation
+    explicit Logger(const std::string& path) {
+        if (!std::filesystem::exists(std::filesystem::path(path).parent_path())) {
+            throw std::runtime_error("Invalid path provided: " + path);
+        }
+
+        m_log_file.open(path, std::ios::app);
+        if (!m_log_file.is_open()) {
+            throw std::runtime_error("Failed to open log file: " + path);
+        }
+
+        // initialize enabled levels - all levels enabled by default
+        for (int ndx = 0; ndx < static_cast<int>(LogLevel::CRITICAL) + 1; ++ndx) {
+            m_enabled_levels[ndx] = true;
+        }
+    }
+
 public:
     // raii class for temporarily disabling stderr output
     class StderrSuppressionGuard {
@@ -128,57 +144,46 @@ public:
         bool m_was_enabled;
     };
 
-    // constructor with a custom path
-    explicit Logger(const std::string& path) {
-        if (!std::filesystem::exists(std::filesystem::path(path).parent_path())) {
-            throw std::runtime_error("Invalid path provided: " + path);
+    // Private method to get or create the instance
+    static std::shared_ptr<Logger> getOrCreateInstance(const std::string& path = "../custom.log") {
+        std::lock_guard<std::mutex> lock(m_instance_mutex);
+        std::shared_ptr<Logger> instance = m_instance.lock();
+        if (!instance) {
+            instance = std::shared_ptr<Logger>(new Logger(path));
+            m_instance = instance;
         }
-
-        m_log_file.open(path, std::ios::app);
-        if (!m_log_file.is_open()) {
-            throw std::runtime_error("Failed to open log file: " + path);
-        }
-
-        // initialize enabled levels - all levels enabled by default
-        for (int ndx = 0; ndx < static_cast<int>(LogLevel::CRITICAL) + 1; ++ndx) {
-            m_enabled_levels[ndx] = true;
-        }
+        return instance;
     }
 
+    // Returns a reference for backward compatibility but uses shared_ptr internally
     static Logger& getInstance() {
-        std::lock_guard<std::mutex> lock(m_instance_mutex);
-        if (m_instance == nullptr) {
-            m_instance = new Logger("../custom.log");
-        }
-        return *m_instance;
+        return *getOrCreateInstance();
     }
 
-    // custom path version of getinstance
+    // custom path version of getInstance
     static Logger& getInstance(const std::string& custom_path) {
-        std::lock_guard<std::mutex> lock(m_instance_mutex);
-        if (m_instance == nullptr) {
-            m_instance = new Logger(custom_path);
-        }
-        return *m_instance;
+        return *getOrCreateInstance(custom_path);
     }
 
-    // clean up the singleton instance
-    static void destroyInstance() {
-        std::lock_guard<std::mutex> lock(m_instance_mutex);
-        if (m_instance != nullptr) {
-            delete m_instance;
-            m_instance = nullptr;
-        }
+    // New method for code that explicitly wants to manage the shared_ptr
+    static std::shared_ptr<Logger> getInstancePtr() {
+        return getOrCreateInstance();
     }
 
+    // With custom path for the shared_ptr version
+    static std::shared_ptr<Logger> getInstancePtr(const std::string& custom_path) {
+        return getOrCreateInstance(custom_path);
+    }
+
+    // Destructor remains the same
     ~Logger() {
         if (m_log_file.is_open()) {
             m_log_file.close();
         }
     }
 
-    // variadic template for logging, way better than overriding log() methods to except
-    // primary template for logging without depth
+    // The rest of the methods remain unchanged
+    // variadic template for logging
     template<typename... Args>
     void log(const LogLevel level, const Args&... args) {
         if (!is_level_enabled(level)) {
@@ -221,7 +226,7 @@ public:
         m_stderr_enabled = false;
     }
 
-    // 3nable stderr output
+    // enable stderr output
     void enableStderr() {
         m_stderr_enabled = true;
     }
@@ -301,8 +306,6 @@ private:
     }
 };
 
-// initialize static members
-Logger* Logger::m_instance = nullptr;
-std::mutex Logger::m_instance_mutex;
+// No need to explicitly define static members when using inline
 
 #endif // project_utils_hpp
