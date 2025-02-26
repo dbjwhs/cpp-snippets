@@ -124,6 +124,7 @@ Or you can elect to build everything at once.
 - [behavioral/chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/) - Chain-of-responsibility pattern
 - [behavioral/fail-fast/](design-patterns/behavioral/fail-fast/) - Fail fast pattern
 - [behavioral/interpreter/](design-patterns/behavioral/interpreter/) - Interpreter pattern
+- [behavioral/iterator/](design-patterns/behavioral/iterator/) - Iterator pattern
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
