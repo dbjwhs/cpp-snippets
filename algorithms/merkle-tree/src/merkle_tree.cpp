@@ -38,11 +38,11 @@ private:
 
     // calculate hash of input data using std::hash
     //
-    // note: this implementation uses std::hash which is NOT cryptographically secure and should not be used
+    // note: this implementation uses std::hash which is not cryptographically secure and should not be used
     // in production systems. std::hash is designed for hash tables and provides no cryptographic guarantees
     // against collision attacks or preimage attacks. in a real implementation, you should use a cryptographic
     // hash function like sha-256 or blake2 from a trusted crypto library such as openssl, botan, or libsodium.
-    // I use std::hash here only to demonstrate the merkle tree concept and data structure patterns.
+    // i use std::hash here only to demonstrate the merkle tree concept and data structure patterns.
     //
     // vulnerabilities of std::hash:
     // 1. collision attacks: an attacker can easily find different inputs that produce the same hash
@@ -62,15 +62,15 @@ private:
     /*
         #include <openssl/sha.h>
 
-        std::string calculateHash(const std::string& data) {
-            unsigned char hash[SHA256_DIGEST_LENGTH];
-            SHA256_CTX sha256;
-            SHA256_Init(&sha256);
-            SHA256_Update(&sha256, data.c_str(), data.size());
-            SHA256_Final(hash, &sha256);
+        std::string calculatehash(const std::string& data) {
+            unsigned char hash[sha256_digest_length];
+            sha256_ctx sha256;
+            sha256_init(&sha256);
+            sha256_update(&sha256, data.c_str(), data.size());
+            sha256_final(hash, &sha256);
 
             std::stringstream ss;
-            for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            for(int i = 0; i < sha256_digest_length; i++) {
                 ss << std::hex << std::setw(2) << std::setfill('0')
                    << static_cast<int>(hash[i]);
             }
@@ -82,15 +82,15 @@ private:
     /*
         #include <sodium.h>
 
-        std::string calculateHash(const std::string& data) {
-            unsigned char hash[crypto_generichash_BYTES];
+        std::string calculatehash(const std::string& data) {
+            unsigned char hash[crypto_generichash_bytes];
             crypto_generichash(hash, sizeof(hash),
                               reinterpret_cast<const unsigned char*>(data.c_str()),
                               data.size(),
                               nullptr, 0);
 
             std::stringstream ss;
-            for(int i = 0; i < crypto_generichash_BYTES; i++) {
+            for(int i = 0; i < crypto_generichash_bytes; i++) {
                 ss << std::hex << std::setw(2) << std::setfill('0')
                    << static_cast<int>(hash[i]);
             }

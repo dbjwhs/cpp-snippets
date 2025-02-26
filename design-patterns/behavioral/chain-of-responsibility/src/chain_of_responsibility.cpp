@@ -70,9 +70,9 @@ protected:
         post_approve_expense(purpose);
     }
 
-    // Hook method for additional approval actions
+    // hook method for additional approval actions
     virtual void post_approve_expense(const std::string& purpose) {
-        // Default implementation does nothing
+        // default implementation does nothing
     }
 };
 

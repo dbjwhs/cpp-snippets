@@ -1,31 +1,31 @@
 #ifndef TZ_PRIVATE_H
 #define TZ_PRIVATE_H
 
-// The MIT License (MIT)
+// the mit license (mit)
 //
-// Copyright (c) 2015, 2016 Howard Hinnant
+// copyright (c) 2015, 2016 howard hinnant
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "software"), to deal
+// in the software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
+// copies of the software, and to permit persons to whom the software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// the above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// the software is provided "as is", without warranty of any kind, express or
+// implied, including but not limited to the warranties of merchantability,
+// fitness for a particular purpose and noninfringement. in no event shall the
+// authors or copyright holders be liable for any claim, damages or other
+// liability, whether in an action of contract, tort or otherwise, arising from,
+// out of or in connection with the software or the use or other dealings in the
+// software.
 //
-// Our apologies.  When the previous paragraph was written, lowercase had not yet
+// our apologies.  when the previous paragraph was written, lowercase had not yet
 // been invented (that would involve another several millennia of evolution).
-// We did not mean to shout.
+// we did not mean to shout.
 
 #if !defined(_MSC_VER) || (_MSC_VER >= 1900)
 #include "tz.h"
@@ -88,7 +88,7 @@ private:
             month_weekday_last_(date::month(0U), date::weekday_last(date::weekday(0U)))
         {}
 
-#endif // !defined(_MSC_VER) || (_MSC_VER >= 1900)
+#endif // !defined(_msc_ver) || (_msc_ver >= 1900)
 
         U& operator=(const date::month_day& x);
         U& operator=(const date::month_weekday_last& x);
@@ -123,12 +123,12 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const MonthDayTime& x);
 };
 
-// A Rule specifies one or more set of datetimes without using an offset.
-// Multiple dates are specified with multiple years.  The years in effect
+// a rule specifies one or more set of datetimes without using an offset.
+// multiple dates are specified with multiple years.  the years in effect
 // go from starting_year_ to ending_year_, inclusive.  starting_year_ <=
 // ending_year_. save_ is in effect for times from the specified time
-// onward, including the specified time. When the specified time is
-// local, it uses the save_ from the chronologically previous Rule, or if
+// onward, including the specified time. when the specified time is
+// local, it uses the save_ from the chronologically previous rule, or if
 // there is none, 0.
 
 //forward declare to avoid warnings in gcc 6.2
@@ -256,7 +256,7 @@ struct zonelet
     zonelet& operator=(const zonelet&) = delete;
 };
 
-#else  // USE_OS_TZDB
+#else  // use_os_tzdb
 
 struct ttinfo
 {
@@ -302,7 +302,7 @@ struct transition
     }
 };
 
-#endif  // USE_OS_TZDB
+#endif  // use_os_tzdb
 
 }  // namespace detail
 
@@ -312,4 +312,4 @@ struct transition
 #include "tz.h"
 #endif
 
-#endif  // TZ_PRIVATE_H
+#endif  // tz_private_h

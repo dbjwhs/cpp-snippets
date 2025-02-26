@@ -1,36 +1,36 @@
 #ifndef DATE_H
 #define DATE_H
 
-// The MIT License (MIT)
+// the mit license (mit)
 //
-// Copyright (c) 2015, 2016, 2017 Howard Hinnant
-// Copyright (c) 2016 Adrian Colomitchi
-// Copyright (c) 2017 Florian Dang
-// Copyright (c) 2017 Paul Thompson
-// Copyright (c) 2018, 2019 Tomasz Kamiński
-// Copyright (c) 2019 Jiangang Zhuang
+// copyright (c) 2015, 2016, 2017 howard hinnant
+// copyright (c) 2016 adrian colomitchi
+// copyright (c) 2017 florian dang
+// copyright (c) 2017 paul thompson
+// copyright (c) 2018, 2019 tomasz kamiński
+// copyright (c) 2019 jiangang zhuang
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "software"), to deal
+// in the software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
+// copies of the software, and to permit persons to whom the software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// the above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// the software is provided "as is", without warranty of any kind, express or
+// implied, including but not limited to the warranties of merchantability,
+// fitness for a particular purpose and noninfringement. in no event shall the
+// authors or copyright holders be liable for any claim, damages or other
+// liability, whether in an action of contract, tort or otherwise, arising from,
+// out of or in connection with the software or the use or other dealings in the
+// software.
 //
-// Our apologies.  When the previous paragraph was written, lowercase had not yet
+// our apologies.  when the previous paragraph was written, lowercase had not yet
 // been invented (that would involve another several millennia of evolution).
-// We did not mean to shout.
+// we did not mean to shout.
 
 #ifndef HAS_STRING_VIEW
 #  if __cplusplus >= 201703 || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
@@ -38,7 +38,7 @@
 #  else
 #    define HAS_STRING_VIEW 0
 #  endif
-#endif  // HAS_STRING_VIEW
+#endif  // has_string_view
 
 #include <cassert>
 #include <algorithm>
@@ -73,14 +73,14 @@
 #  pragma GCC diagnostic ignored "-Wpedantic"
 # endif
 # if __GNUC__ < 5
-   // GCC 4.9 Bug 61489 Wrong warning with -Wmissing-field-initializers
+   // gcc 4.9 bug 61489 wrong warning with -wmissing-field-initializers
 #  pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 # endif
 #endif
 
 #ifdef _MSC_VER
 #   pragma warning(push)
-// warning C4127: conditional expression is constant
+// warning c4127: conditional expression is constant
 #   pragma warning(disable : 4127)
 #endif
 
@@ -88,7 +88,7 @@ namespace date
 {
 
 //---------------+
-// Configuration |
+// configuration |
 //---------------+
 
 #ifndef ONLY_C_LOCALE
@@ -96,18 +96,18 @@ namespace date
 #endif
 
 #if defined(_MSC_VER) && (!defined(__clang__) || (_MSC_VER < 1910))
-// MSVC
+// msvc
 #  ifndef _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
 #    define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
 #  endif
 #  if _MSC_VER < 1910
-//   before VS2017
+//   before vs2017
 #    define CONSTDATA const
 #    define CONSTCD11
 #    define CONSTCD14
 #    define NOEXCEPT _NOEXCEPT
 #  else
-//   VS2017 and later
+//   vs2017 and later
 #    define CONSTDATA constexpr const
 #    define CONSTCD11 constexpr
 #    define CONSTCD14 constexpr
@@ -115,20 +115,20 @@ namespace date
 #  endif
 
 #elif defined(__SUNPRO_CC) && __SUNPRO_CC <= 0x5150
-// Oracle Developer Studio 12.6 and earlier
+// oracle developer studio 12.6 and earlier
 #  define CONSTDATA constexpr const
 #  define CONSTCD11 constexpr
 #  define CONSTCD14
 #  define NOEXCEPT noexcept
 
 #elif __cplusplus >= 201402
-// C++14
+// c++14
 #  define CONSTDATA constexpr const
 #  define CONSTCD11 constexpr
 #  define CONSTCD14 constexpr
 #  define NOEXCEPT noexcept
 #else
-// C++11
+// c++11
 #  define CONSTDATA constexpr const
 #  define CONSTCD11 constexpr
 #  define CONSTCD14
@@ -141,7 +141,7 @@ namespace date
 #  else
 #    define HAS_UNCAUGHT_EXCEPTIONS 0
 #  endif
-#endif  // HAS_UNCAUGHT_EXCEPTIONS
+#endif  // has_uncaught_exceptions
 
 #ifndef HAS_VOID_T
 #  if __cplusplus >= 201703 || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
@@ -149,14 +149,14 @@ namespace date
 #  else
 #    define HAS_VOID_T 0
 #  endif
-#endif  // HAS_VOID_T
+#endif  // has_void_t
 
-// Protect from Oracle sun macro
+// protect from oracle sun macro
 #ifdef sun
 #  undef sun
 #endif
 
-// Work around for a NVCC compiler bug which causes it to fail
+// work around for a nvcc compiler bug which causes it to fail
 // to compile std::ratio_{multiply,divide} when used directly
 // in the std::chrono::duration template instantiations below
 namespace detail {
@@ -168,7 +168,7 @@ using ratio_divide = decltype(std::ratio_divide<R1, R2>{});
 }  // namespace detail
 
 //-----------+
-// Interface |
+// interface |
 //-----------+
 
 // durations
@@ -312,7 +312,7 @@ CONSTCD11
 year_month_weekday_last
 operator/(const month_weekday_last& mwdl, int         y) NOEXCEPT;
 
-// Detailed interface
+// detailed interface
 
 // day
 
@@ -967,28 +967,28 @@ CONSTCD11 date::day  operator "" _d(unsigned long long d) NOEXCEPT;
 CONSTCD11 date::year operator "" _y(unsigned long long y) NOEXCEPT;
 
 }  // inline namespace literals
-#endif // !defined(_MSC_VER) || (_MSC_VER >= 1900)
+#endif // !defined(_msc_ver) || (_msc_ver >= 1900)
 
-// CONSTDATA date::month January{1};
-// CONSTDATA date::month February{2};
-// CONSTDATA date::month March{3};
-// CONSTDATA date::month April{4};
-// CONSTDATA date::month May{5};
-// CONSTDATA date::month June{6};
-// CONSTDATA date::month July{7};
-// CONSTDATA date::month August{8};
-// CONSTDATA date::month September{9};
-// CONSTDATA date::month October{10};
-// CONSTDATA date::month November{11};
-// CONSTDATA date::month December{12};
+// constdata date::month january{1};
+// constdata date::month february{2};
+// constdata date::month march{3};
+// constdata date::month april{4};
+// constdata date::month may{5};
+// constdata date::month june{6};
+// constdata date::month july{7};
+// constdata date::month august{8};
+// constdata date::month september{9};
+// constdata date::month october{10};
+// constdata date::month november{11};
+// constdata date::month december{12};
 //
-// CONSTDATA date::weekday Sunday{0u};
-// CONSTDATA date::weekday Monday{1u};
-// CONSTDATA date::weekday Tuesday{2u};
-// CONSTDATA date::weekday Wednesday{3u};
-// CONSTDATA date::weekday Thursday{4u};
-// CONSTDATA date::weekday Friday{5u};
-// CONSTDATA date::weekday Saturday{6u};
+// constdata date::weekday sunday{0u};
+// constdata date::weekday monday{1u};
+// constdata date::weekday tuesday{2u};
+// constdata date::weekday wednesday{3u};
+// constdata date::weekday thursday{4u};
+// constdata date::weekday friday{5u};
+// constdata date::weekday saturday{6u};
 
 #if HAS_VOID_T
 
@@ -1006,10 +1006,10 @@ struct is_clock<T, std::void_t<decltype(T::now()), typename T::rep, typename T::
 
 template<class T> inline constexpr bool is_clock_v = is_clock<T>::value;
 
-#endif  // HAS_VOID_T
+#endif  // has_void_t
 
 //----------------+
-// Implementation |
+// implementation |
 //----------------+
 
 // utilities
@@ -1235,7 +1235,7 @@ trunc(const std::chrono::duration<Rep, Period>& d)
 #  else
 #    define HAS_CHRONO_ROUNDING 0
 #  endif
-#endif  // HAS_CHRONO_ROUNDING
+#endif  // has_chrono_rounding
 
 #if HAS_CHRONO_ROUNDING == 0
 
@@ -1352,14 +1352,14 @@ ceil(const std::chrono::time_point<Clock, FromDuration>& tp)
     return time_point<Clock, To>{ceil<To>(tp.time_since_epoch())};
 }
 
-#else  // HAS_CHRONO_ROUNDING == 1
+#else  // has_chrono_rounding == 1
 
 using std::chrono::floor;
 using std::chrono::ceil;
 using std::chrono::round;
 using std::chrono::abs;
 
-#endif  // HAS_CHRONO_ROUNDING
+#endif  // has_chrono_rounding
 
 namespace detail
 {
@@ -1984,7 +1984,7 @@ operator "" _y(unsigned long long y) NOEXCEPT
 {
     return date::year(static_cast<int>(y));
 }
-#endif  // !defined(_MSC_VER) || (_MSC_VER >= 1900)
+#endif  // !defined(_msc_ver) || (_msc_ver >= 1900)
 
 CONSTDATA date::last_spec last{};
 
@@ -2057,7 +2057,7 @@ weekday_indexed::ok() const NOEXCEPT
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wconversion"
-#endif  // __GNUC__
+#endif  // __gnuc__
 
 CONSTCD11
 inline
@@ -2068,7 +2068,7 @@ weekday_indexed::weekday_indexed(const date::weekday& wd, unsigned index) NOEXCE
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic pop
-#endif  // __GNUC__
+#endif  // __gnuc__
 
 namespace detail
 {
@@ -3909,13 +3909,13 @@ struct undocumented {explicit undocumented() = default;};
 
 // width<n>::value is the number of fractional decimal digits in 1/n
 // width<0>::value and width<1>::value are defined to be 0
-// If 1/n takes more than 18 fractional decimal digits,
+// if 1/n takes more than 18 fractional decimal digits,
 //   the result is truncated to 19.
-// Example:  width<2>::value    ==  1
-// Example:  width<3>::value    == 19
-// Example:  width<4>::value    ==  2
-// Example:  width<10>::value   ==  1
-// Example:  width<1000>::value ==  3
+// example:  width<2>::value    ==  1
+// example:  width<3>::value    == 19
+// example:  width<4>::value    ==  2
+// example:  width<10>::value   ==  1
+// example:  width<1000>::value ==  3
 template <std::uint64_t n, std::uint64_t d, unsigned w = 0,
           bool should_continue = n%d != 0 && (w < 19)>
 struct width
@@ -4466,7 +4466,7 @@ msl(std::ratio<N, D>) NOEXCEPT
 }
 
 
-#else  // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <= 411)
+#else  // __cplusplus < 201402 || (defined(__edg_version__) && __edg_version__ <= 411)
 
 inline
 std::string
@@ -4511,7 +4511,7 @@ msl(std::ratio<N, D>)
     return std::basic_string<CharT>(1, '[') + to_string<CharT>(R::num) + CharT{']'};
 }
 
-#endif  // __cplusplus < 201402 || (defined(__EDG_VERSION__) && __EDG_VERSION__ <= 411)
+#endif  // __cplusplus < 201402 || (defined(__edg_version__) && __edg_version__ <= 411)
 
 template <class CharT>
 CONSTCD11
@@ -4948,9 +4948,9 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
             throw std::bad_alloc();
         stat_hold.reset(status);
     }
-    size_t n_might_match = nkw;  // At this point, any keyword might match
+    size_t n_might_match = nkw;  // at this point, any keyword might match
     size_t n_does_match = 0;     // but none of them definitely do
-    // Initialize all statuses to might_match, except for "" keywords are does_match
+    // initialize all statuses to might_match, except for "" keywords are does_match
     unsigned char* st = status;
     for (auto ky = kb; ky != ke; ++ky, ++st)
     {
@@ -4963,10 +4963,10 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
             ++n_does_match;
         }
     }
-    // While there might be a match, test keywords against the next CharT
+    // while there might be a match, test keywords against the next chart
     for (size_t indx = 0; is && n_might_match > 0; ++indx)
     {
-        // Peek at the next CharT but don't consume it
+        // peek at the next chart but don't consume it
         auto ic = is.peek();
         if (ic == EOF)
         {
@@ -4975,11 +4975,11 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
         }
         auto c = static_cast<char>(toupper(static_cast<unsigned char>(ic)));
         bool consume = false;
-        // For each keyword which might match, see if the indx character is c
-        // If a match if found, consume c
-        // If a match is found, and that is the last character in the keyword,
+        // for each keyword which might match, see if the indx character is c
+        // if a match if found, consume c
+        // if a match is found, and that is the last character in the keyword,
         //    then that keyword matches.
-        // If the keyword doesn't match this character, then change the keyword
+        // if the keyword doesn't match this character, then change the keyword
         //    to doesn't match
         st = status;
         for (auto ky = kb; ky != ke; ++ky, ++st)
@@ -5007,7 +5007,7 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
         if (consume)
         {
             (void)is.get();
-            // If we consumed a character and there might be a matched keyword that
+            // if we consumed a character and there might be a matched keyword that
             //   was marked matched on a previous iteration, then such keywords
             //   are now marked as not matching.
             if (n_might_match + n_does_match > 1)
@@ -5024,8 +5024,8 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
             }
         }
     }
-    // We've exited the loop because we hit eof and/or we have no more "might matches".
-    // Return the first matching result
+    // we've exited the loop because we hit eof and/or we have no more "might matches".
+    // return the first matching result
     for (st = status; kb != ke; ++kb, ++st)
         if (*st == does_match)
             break;
@@ -5036,7 +5036,7 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
 
 }  // namespace detail
 
-#endif  // ONLY_C_LOCALE
+#endif  // only_c_locale
 
 template <class CharT, class Traits, class Duration>
 std::basic_ostream<CharT, Traits>&
@@ -5085,9 +5085,9 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
 #if !ONLY_C_LOCALE
                     const CharT f[] = {'%', *fmt};
                     facet.put(os, os, os.fill(), &tm, std::begin(f), std::end(f));
-#else  // ONLY_C_LOCALE
+#else  // only_c_locale
                     os << weekday_names().first[tm.tm_wday+7*(*fmt == 'a')];
-#endif  // ONLY_C_LOCALE
+#endif  // only_c_locale
                 }
                 else
                 {
@@ -5110,9 +5110,9 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
 #if !ONLY_C_LOCALE
                     const CharT f[] = {'%', *fmt};
                     facet.put(os, os, os.fill(), &tm, std::begin(f), std::end(f));
-#else  // ONLY_C_LOCALE
+#else  // only_c_locale
                     os << month_names().first[tm.tm_mon+12*(*fmt != 'B')];
-#endif  // ONLY_C_LOCALE
+#endif  // only_c_locale
                 }
                 else
                 {
@@ -5159,7 +5159,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                         *fe++ = modified;
                     *fe++ = *fmt;
                     facet.put(os, os, os.fill(), &tm, std::begin(f), fe);
-#else  // ONLY_C_LOCALE
+#else  // only_c_locale
                     if (*fmt == 'c')
                     {
                         auto wd = static_cast<int>(extract_weekday(os, fds));
@@ -5187,7 +5187,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                         os.width(2);
                         os << static_cast<int>(ymd.year()) % 100;
                     }
-#endif  // ONLY_C_LOCALE
+#endif  // only_c_locale
                 }
                 command = nullptr;
                 modified = CharT{};
@@ -6014,7 +6014,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
             {
                 if (offset_sec == nullptr)
                 {
-                    // Can not format %z with unknown offset
+                    // can not format %z with unknown offset
                     os.setstate(ios::failbit);
                     return os;
                 }
@@ -6048,7 +6048,7 @@ to_stream(std::basic_ostream<CharT, Traits>& os, const CharT* fmt,
                 {
                     if (abbrev == nullptr)
                     {
-                        // Can not format %Z with unknown time_zone
+                        // can not format %z with unknown time_zone
                         os.setstate(ios::failbit);
                         return os;
                     }
@@ -6472,7 +6472,7 @@ template <class CharT, class Traits, class ...Args>
 void
 read(std::basic_istream<CharT, Traits>& is, CharT a0, Args&& ...args)
 {
-    // No-op if a0 == CharT{}
+    // no-op if a0 == chart{}
     if (a0 != CharT{})
     {
         auto ic = is.peek();
@@ -6613,24 +6613,24 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
         CONSTDATA int not_a_ampm = -1;
         CONSTDATA minutes not_a_offset = minutes::min();
 
-        int Y = not_a_year;             // c, F, Y                   *
-        int y = not_a_2digit_year;      // D, x, y                   *
+        int Y = not_a_year;             // c, f, y                   *
+        int y = not_a_2digit_year;      // d, x, y                   *
         int g = not_a_2digit_year;      // g                         *
-        int G = not_a_year;             // G                         *
-        int C = not_a_century;          // C                         *
-        int m = not_a_month;            // b, B, h, m, c, D, F, x    *
-        int d = not_a_day;              // c, d, D, e, F, x          *
+        int G = not_a_year;             // g                         *
+        int C = not_a_century;          // c                         *
+        int m = not_a_month;            // b, b, h, m, c, d, f, x    *
+        int d = not_a_day;              // c, d, d, e, f, x          *
         int j = not_a_doy;              // j                         *
-        int wd = not_a_weekday;         // a, A, u, w                *
-        int H = not_a_hour;             // c, H, R, T, X             *
-        int I = not_a_hour_12_value;    // I, r                      *
+        int wd = not_a_weekday;         // a, a, u, w                *
+        int H = not_a_hour;             // c, h, r, t, x             *
+        int I = not_a_hour_12_value;    // i, r                      *
         int p = not_a_ampm;             // p, r                      *
-        int M = not_a_minute;           // c, M, r, R, T, X          *
-        Duration s = not_a_second;      // c, r, S, T, X             *
-        int U = not_a_week_num;         // U                         *
-        int V = not_a_week_num;         // V                         *
-        int W = not_a_week_num;         // W                         *
-        std::basic_string<CharT, Traits, Alloc> temp_abbrev;  // Z   *
+        int M = not_a_minute;           // c, m, r, r, t, x          *
+        Duration s = not_a_second;      // c, r, s, t, x             *
+        int U = not_a_week_num;         // u                         *
+        int V = not_a_week_num;         // v                         *
+        int W = not_a_week_num;         // w                         *
+        std::basic_string<CharT, Traits, Alloc> temp_abbrev;  // z   *
         minutes temp_offset = not_a_offset;  // z                    *
 
         using detail::read;
@@ -6645,7 +6645,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
             case 'a':
             case 'A':
             case 'u':
-            case 'w':  // wd:  a, A, u, w
+            case 'w':  // wd:  a, a, u, w
                 if (command)
                 {
                     int trial_wd = not_a_weekday;
@@ -6774,7 +6774,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                         }
                         is.setstate(err);
 #else
-                        // "%a %b %e %T %Y"
+                        // "%a %b %e %t %y"
                         auto nm = detail::weekday_names();
                         auto i = detail::scan_keyword(is, nm.first, nm.second) - nm.first;
                         checked_set(wd, static_cast<int>(i % 7), not_a_weekday, is);
@@ -6866,7 +6866,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                         }
                         is.setstate(err);
 #else
-                        // "%T"
+                        // "%t"
                         using dfs = detail::decimal_format_seconds<Duration>;
                         CONSTDATA auto w = Duration::period::den == 1 ? 2 : 3 + dfs::width;
                         int tH = not_a_hour;
@@ -7041,7 +7041,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                     if (modified == CharT{})
                     {
                         int tI = not_a_hour_12_value;
-                        // reads in an hour into I, but most be in [1, 12]
+                        // reads in an hour into i, but most be in [1, 12]
                         read(is, rs{tI, 1, width == -1 ? 2u : static_cast<unsigned>(width)});
                         if (!(1 <= tI && tI <= 12))
                             is.setstate(ios::failbit);
@@ -7223,7 +7223,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                         }
                         is.setstate(err);
 #else
-                        // "%I:%M:%S %p"
+                        // "%i:%m:%s %p"
                         using dfs = detail::decimal_format_seconds<Duration>;
                         CONSTDATA auto w = Duration::period::den == 1 ? 2 : 3 + dfs::width;
                         long double S{};
@@ -7655,7 +7655,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                 break;
             }
         }
-        // is.fail() || *fmt == CharT{}
+        // is.fail() || *fmt == chart{}
         if (is.rdstate() == ios::goodbit && command)
         {
             if (modified == CharT{})
@@ -7667,7 +7667,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
         {
             if (y != not_a_2digit_year)
             {
-                // Convert y and an optional C to Y
+                // convert y and an optional c to y
                 if (!(0 <= y && y <= 99))
                     goto broken;
                 if (C == not_a_century)
@@ -7695,7 +7695,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
             }
             if (g != not_a_2digit_year)
             {
-                // Convert g and an optional C to G
+                // convert g and an optional c to g
                 if (!(0 <= g && g <= 99))
                     goto broken;
                 if (C == not_a_century)
@@ -7844,12 +7844,12 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                     goto broken;
                 if (p != not_a_ampm)
                 {
-                    // p is in [0, 1] == [AM, PM]
-                    // Store trial H in I
+                    // p is in [0, 1] == [am, pm]
+                    // store trial h in i
                     if (I == 12)
                         --p;
                     I += p*12;
-                    // Either set H from I or make sure H and I are consistent
+                    // either set h from i or make sure h and i are consistent
                     if (H == not_a_hour)
                         H = I;
                     else if (I != H)
@@ -7857,7 +7857,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                 }
                 else  // p == not_a_ampm
                 {
-                    // if H, make sure H and I could be consistent
+                    // if h, make sure h and i could be consistent
                     if (H != not_a_hour)
                     {
                         if (I == 12)
@@ -7870,7 +7870,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
                             goto broken;
                         }
                     }
-                    else  // I is ambiguous, AM or PM?
+                    else  // i is ambiguous, am or pm?
                         goto broken;
                 }
             }
@@ -8114,7 +8114,7 @@ public:
         , abbrev_(abbrev)
         , offset_(offset)
         {}
-#endif  // HAS_STRING_VIEW
+#endif  // has_string_view
 };
 
 #ifdef _MSC_VER
@@ -8176,7 +8176,7 @@ parse(const std::basic_string<CharT, Traits, Alloc>& format, Parsable& tp,
     return {format, tp, &abbrev, &offset};
 }
 
-// const CharT* formats
+// const chart* formats
 
 template <class Parsable, class CharT>
 inline
@@ -8222,7 +8222,7 @@ parse(const CharT* format, Parsable& tp,
     return {format, tp, &abbrev, &offset};
 }
 
-#else  // !defined _MSC_VER
+#else  // !defined _msc_ver
 
 template <class Parsable, class CharT, class Traits, class Alloc>
 std::basic_istream<CharT, Traits>&
@@ -8281,7 +8281,7 @@ parse(const std::basic_string<CharT, Traits, Alloc>& format, Parsable& tp,
     return {format, tp, &abbrev, &offset};
 }
 
-// const CharT* formats
+// const chart* formats
 
 template <class Parsable, class CharT>
 inline
@@ -8327,7 +8327,7 @@ parse(const CharT* format, Parsable& tp,
     return {format, tp, &abbrev, &offset};
 }
 
-#endif  // !defined _MSC_VER
+#endif  // !defined _msc_ver
 
 // duration streaming
 
@@ -8351,4 +8351,4 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
 # pragma GCC diagnostic pop
 #endif
 
-#endif  // DATE_H
+#endif  // date_h

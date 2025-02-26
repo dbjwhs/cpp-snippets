@@ -26,22 +26,22 @@ public:
     }
 };
 
-// case 1: By pointer - no slicing
+// case 1: by pointer - no slicing
 void processByPointer(Base* obj) {
     Logger::getInstance().log(LogLevel::INFO, "Processing by pointer: ");
     obj->print();
 }
 
-// case 2: By reference - no slicing
+// case 2: by reference - no slicing
 void processByReference(Base& obj) {
     Logger::getInstance().log(LogLevel::INFO, "Processing by reference: ");
     obj.print();
 }
 
-// case 3: By value - slicing occurs!
+// case 3: by value - slicing occurs!
 void processByValue(Base obj) {
     Logger::getInstance().log(LogLevel::INFO, "Processing by value: ");
-    obj.print();  // will only print Base data, derived data is lost!
+    obj.print();  // will only print base data, derived data is lost!
 }
 
 int main() {
@@ -52,13 +52,13 @@ int main() {
     d.print();
     Logger::getInstance().log(LogLevel::INFO, "");
 
-    // case 1: Pointer - works correctly
+    // case 1: pointer - works correctly
     processByPointer(&d);
 
-    // case 2: Reference - works correctly
+    // case 2: reference - works correctly
     processByReference(d);
 
-    // case 3: Value - demonstrates slicing
+    // case 3: value - demonstrates slicing
     processByValue(d);
 
     return 0;

@@ -50,7 +50,7 @@ private:
     //    - prevents denial of service via resource exhaustion
     //    - protects against malicious inputs designed to trigger excessive recursion
     //
-    void quickSortRecursive(std::size_t low, std::size_t high, std::size_t depth = 0) { // NOLINT(misc-no-recursion)
+    void quickSortRecursive(std::size_t low, std::size_t high, std::size_t depth = 0) { // nolint(misc-no-recursion)
 
         // adjust max_depth per your needs
         while (low < high) {

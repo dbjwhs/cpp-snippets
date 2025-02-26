@@ -258,7 +258,7 @@ public:
         context.incrementOperations();
         const int rightValue = m_right->interpret(context);
         if (rightValue == 0) {
-            // ### make this INFO since we have tests for it, but this should be an ERROR
+            // ### make this info since we have tests for it, but this should be an error
             Logger::getInstance().log(LogLevel::INFO, "DivideExpression: Division by zero");
             throw std::runtime_error("Division by zero");
         }
@@ -428,7 +428,7 @@ void runTests() {
             result = expr2->interpret(context);
             assert(false && "Should have thrown undefined variable exception");
         } catch (const std::runtime_error& e) {
-            // ### make this INFO since we have tests for it, but this should be an ERROR
+            // ### make this info since we have tests for it, but this should be an error
             Logger::getInstance().log(LogLevel::INFO, std::format("Context: {}", e.what()));
 
             Logger::getInstance().log(LogLevel::INFO
@@ -441,10 +441,10 @@ void runTests() {
         Context context;
         Logger::getInstance().log(LogLevel::INFO, "Test 6: Operation counting");
 
-        // Reset operation count before this test
+        // reset operation count before this test
         context.resetOperationCount();
 
-        // Create expression: (2 * 3) + 4
+        // create expression: (2 * 3) + 4
         auto expr = std::make_unique<AddExpression>(
             std::make_unique<MultiplyExpression>(
                 std::make_unique<NumberExpression>(2),
@@ -456,11 +456,11 @@ void runTests() {
         expr->debugPrint();
         int result = expr->interpret(context);
 
-        // Count should be:
+        // count should be:
         // 1 for multiply
         // 1 for add
         // 3 for number expressions (2, 3, and 4)
-        // Total: 5 operations
+        // total: 5 operations
         assert(context.getOperationCount() == 5);
         Logger::getInstance().log(LogLevel::INFO,
             std::format("Test 6: Operation counting passed. Total operations: {}, interpret result: {}"

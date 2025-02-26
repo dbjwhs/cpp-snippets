@@ -75,7 +75,7 @@ private:
     std::chrono::high_resolution_clock::time_point m_end_time;
     bool m_is_running = false;
 
-    // Helper template function to get elapsed time in specified duration
+    // helper template function to get elapsed time in specified duration
     template<typename DurationType>
     [[nodiscard]] double get_elapsed_duration() const {
         if (!m_is_running) {
@@ -92,14 +92,14 @@ private:
 int main() {
     HighResolutionTimer timer;
 
-    // test 1: Basic timing
+    // test 1: basic timing
     std::cout << "Test 1: Basic timing with microseconds delay\n";
     timer.start();
     std::this_thread::sleep_for(std::chrono::microseconds(500));
     timer.stop();
     std::cout << "Elapsed time: " << timer.elapsed_formatted() << "\n\n";
 
-    // test 2: Different time units
+    // test 2: different time units
     std::cout << "Test 2: Display time in different units\n";
     timer.start();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -110,18 +110,18 @@ int main() {
     std::cout << "Seconds:      " << timer.elapsed_seconds() << " s\n";
     std::cout << "Formatted:    " << timer.elapsed_formatted() << "\n\n";
 
-    // test 3: Timer status
+    // test 3: timer status
     std::cout << "Test 3: Timer status checking\n";
     timer.reset();
-    // ReSharper disable CppDFAConstantConditions
+    // resharper disable cppdfaconstantconditions
     std::cout << "After reset, timer running: " << (timer.running() ? "yes" : "no") << "\n";
     timer.start();
     std::cout << "After start, timer running: " << (timer.running() ? "yes" : "no") << "\n";
     timer.stop();
     std::cout << "After stop, timer running: " << (timer.running() ? "yes" : "no") << "\n\n";
-    // ReSharper restore CppDFAConstantConditions
+    // resharper restore cppdfaconstantconditions
 
-    // test 4: Measuring while running
+    // test 4: measuring while running
     std::cout << "Test 4: Measuring while timer is running\n";
     timer.start();
     std::cout << "Starting measurement...\n";
@@ -132,7 +132,7 @@ int main() {
     timer.stop();
     std::cout << "Final time: " << timer.elapsed_formatted() << "\n\n";
 
-    // test 5: Multiple start/stops
+    // test 5: multiple start/stops
     std::cout << "Test 5: Multiple start/stops\n";
     timer.reset();
     timer.start();

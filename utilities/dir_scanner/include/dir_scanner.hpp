@@ -24,10 +24,10 @@ struct FileInfo {
     std::string m_last_write_time;     // last modification time as string
     bool m_is_directory{false};        // is this a directory?
     bool m_is_symlink{false};          // is this a symbolic link?
-    std::string m_owner;               // File owner (POSIX systems only)
-    std::string m_group;               // file group (POSIX systems only)
+    std::string m_owner;               // file owner (posix systems only)
+    std::string m_group;               // file group (posix systems only)
 
-    // Format permissions as string (rwxrwxrwx format)
+    // format permissions as string (rwxrwxrwx format)
     [[nodiscard]] std::string get_permission_string() const;
 };
 
@@ -45,7 +45,7 @@ public:
     DirectoryScanner(DirectoryScanner&&) = default;
     DirectoryScanner& operator=(DirectoryScanner&&) = default;
 
-    // default destructor is sufficient as we only manage RAII-compliant members
+    // default destructor is sufficient as we only manage raii-compliant members
     ~DirectoryScanner() = default;
 
     // scan all files and directories, returning detailed information
@@ -64,7 +64,7 @@ public:
     // scan files matching a pattern with detailed information
     [[nodiscard]] std::vector<FileInfo> scan_by_pattern_detailed(const std::string& pattern) const;
 
-    // Get the root path
+    // get the root path
     [[nodiscard]] const fs::path& get_root() const { return m_root; }
 
 private:
@@ -74,7 +74,7 @@ private:
     // helper function to gather detailed file information
     static FileInfo get_file_info(const fs::directory_entry& entry) ;
 
-    // helper function to get file owner and group (POSIX systems only)
+    // helper function to get file owner and group (posix systems only)
     static void get_posix_ownership(const fs::path& path, std::string& owner,
                            std::string& group) ;
 
@@ -82,4 +82,4 @@ private:
     static std::string format_file_time(const fs::file_time_type& time) ;
 };
 
-#endif // DIR_SCANNER_HPP
+#endif // dir_scanner_hpp

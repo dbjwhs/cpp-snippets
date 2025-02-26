@@ -36,7 +36,7 @@ private:
 };
 
 
-// implementation class definition note users of StringWrapper need not know these details
+// implementation class definition note users of stringwrapper need not know these details
 class StringWrapper::Impl {
 public:
     explicit Impl(std::string  str = "") : m_data(std::move(str)) {}

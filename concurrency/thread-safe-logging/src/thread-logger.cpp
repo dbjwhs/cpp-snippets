@@ -49,7 +49,7 @@ public:
     }
 
     // variadic template for logging, way better than overiding log() methods to except
-    // all potential arguments. See README.md for more details.
+    // all potential arguments. see readme.md for more details.
     template<typename... Args>
     void log(LogLevel level, const Args&... args) {
         std::stringstream message;

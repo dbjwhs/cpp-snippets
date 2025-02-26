@@ -81,7 +81,7 @@ public:
     }
 };
 
-// concrete strategy for PayPal payments
+// concrete strategy for paypal payments
 class PayPalStrategy final : public PaymentStrategy {
 private:
     std::string m_email;

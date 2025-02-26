@@ -22,8 +22,8 @@
 // 3. spell checkers: preliminary dictionary word existence tests
 // 4. data deduplication: first-pass filtering before detailed comparison
 //
-// real-world enterprise example; when I was on the VADP team at VMware we used a Bloom filter
-// as first pass filter before calculating expensive SHA hashes.
+// real-world enterprise example; when i was on the vadp team at vmware we used a bloom filter
+// as first pass filter before calculating expensive sha hashes.
 // - initial data chunk identification
 // - bloom filter as a fast, memory-efficient first-pass filter
 // - quickly eliminate non-duplicate chunks before expensive cryptographic hash comparisons
@@ -49,8 +49,8 @@ private:
         // calculate optimal bit array size based on the bloom filter probabilistic model
         //
         // detailed theoretical background:
-        // - wikipedia: https://en.wikipedia.org/wiki/Bloom_filter#Probability_of_false_positives
-        // - original paper: Burton H. Bloom. "Space/Time Trade-offs in Hash Coding with Allowable Errors" (1970)
+        // - wikipedia: https://en.wikipedia.org/wiki/bloom_filter#probability_of_false_positives
+        // - original paper: burton h. bloom. "space/time trade-offs in hash coding with allowable errors" (1970)
         //
         // mathematical derivation of the optimal bit array size:
         // m = -((n * ln(p)) / (ln(2)^2))
@@ -68,8 +68,8 @@ private:
         // space complexity: o(m) - proportional to bit array size
         //
         // references:
-        // - "Probabilistic Data Structures and Algorithms for Big Data" by Ian Wrigley
-        // - ACM Computing Surveys: Bloom Filters - https://dl.acm.org/doi/10.1145/1454370.1454380
+        // - "probabilistic data structures and algorithms for big data" by ian wrigley
+        // - acm computing surveys: bloom filters - https://dl.acm.org/doi/10.1145/1454370.1454380
     [[nodiscard]] static size_t calculateSize(size_t expectedElements, double falsePositiveRate) {
         // validate input parameters to prevent calculation errors
         if (expectedElements == 0 || falsePositiveRate <= 0 || falsePositiveRate >= 1) {

@@ -13,8 +13,8 @@
 // - evolved from common problems in object-oriented programming where objects required complex initialization
 // - became increasingly important as systems grew more complex and object configuration became more sophisticated
 //
-// As an example, the year is ~2008 and I open a file in the VMware source code, only to uncover a c++ constructor
-// that was, I kid you not, 20+ pages long. At least that is what I recall, it was scary.
+// as an example, the year is ~2008 and i open a file in the vmware source code, only to uncover a c++ constructor
+// that was, i kid you not, 20+ pages long. at least that is what i recall, it was scary.
 //
 // core problems solved:
 // 1. telescoping constructor problem:
@@ -170,19 +170,19 @@ public:
 // method chaining; behind the scenes
 //
 // what looks like methods being called during construction:
-//    ComputerBuilder()
-//        .setCPU("AMD Ryzen 9")
-//        .setMotherboard("ASUS ROG")
+//    computerbuilder()
+//        .setcpu("amd ryzen 9")
+//        .setmotherboard("asus rog")
 //        .build();
 //
 // is actually executing as separate steps:
-// 1. ComputerBuilder temp;                   // temporary object created
-// 2. temp.setCPU("AMD Ryzen 9");             // returns reference to temp
-// 3. temp.setMotherboard("ASUS ROG");        // called on same object
+// 1. computerbuilder temp;                   // temporary object created
+// 2. temp.setcpu("amd ryzen 9");             // returns reference to temp
+// 3. temp.setmotherboard("asus rog");        // called on same object
 // 4. temp.build();                           // final build step
 //
-// this works because each setter returns ComputerBuilder&:
-//    ComputerBuilder& setCPU(const std::string& cpu) {
+// this works because each setter returns computerbuilder&:
+//    computerbuilder& setcpu(const std::string& cpu) {
 //        m_computer->m_cpu = cpu;
 //        return *this;    // returns reference to self
 //    }
@@ -194,7 +194,7 @@ public:
 // - maintains object context through the chain
 //
 // limitations:
-// - all chained methods MUST return reference to the builder
+// - all chained methods must return reference to the builder
 // - harder to debug intermediate states
 // - can mask performance implications
 // - error handling can be less clear

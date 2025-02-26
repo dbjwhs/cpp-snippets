@@ -68,7 +68,7 @@ private:
 
 public:
     CoffeeMaker() :
-        BeverageMaker("Coffee", 95.0), // coffee at 95°C
+        BeverageMaker("Coffee", 95.0), // coffee at 95°c
         m_needsFoamedMilk(false) {}
 
     void setFoamedMilk(const bool need) {
@@ -184,7 +184,7 @@ int main() {
 
     TeaMaker earlGrey("Earl Grey");
     earlGrey.setSweetenerPreference(true);
-    earlGrey.prepareBeverage();  // sweet Earl Grey tea
+    earlGrey.prepareBeverage();  // sweet earl grey tea
 
     // test 3: prepare hot chocolate
     logger.log(LogLevel::INFO, "test 3 - hot chocolate variations:");

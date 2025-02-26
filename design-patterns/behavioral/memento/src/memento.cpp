@@ -38,7 +38,7 @@ public:
         std::size_t m_font_size;
         bool m_is_bold;
 
-        // only Document can access Memento's constructor
+        // only document can access memento's constructor
         friend class Document;
 
         Memento(std::string  content, std::string  font_name,
@@ -55,11 +55,11 @@ public:
     // creates a memento containing the current state
     // note
     // using curly braces {} for initialization instead of parentheses ();
-    // this is a modern C++ style recommendation that helps prevent some common issues.
+    // this is a modern c++ style recommendation that helps prevent some common issues.
     //
     // example
-    // int x(5.3); -> Will compile, silently truncates to 5
-    // int x{5.3}; -> Won't compile, prevents accidental data loss
+    // int x(5.3); -> will compile, silently truncates to 5
+    // int x{5.3}; -> won't compile, prevents accidental data loss
     [[nodiscard]] Memento create_memento() const {
         return Memento{m_content, m_font_name, m_font_size, m_is_bold};
     }
@@ -90,13 +90,13 @@ public:
     void save_state() {
         // when saving a new state, remove any redo states
         if (m_current_index < m_history.size()) {
-            // Warning about vector::erase with size_t index:
-            // When adding size_t (unsigned long) to vector::iterator, it converts to
-            // difference_type (signed long). This conversion from unsigned->signed could
-            // lose data for very large indices; if you encounter that issue I suggest
-            // this (IMHO) ugly cast...
+            // warning about vector::erase with size_t index:
+            // when adding size_t (unsigned long) to vector::iterator, it converts to
+            // difference_type (signed long). this conversion from unsigned->signed could
+            // lose data for very large indices; if you encounter that issue i suggest
+            // this (imho) ugly cast...
             // m_history.erase(m_history.begin() + static_cast<std::ptrdiff_t>(m_current_index), m_history.end());
-            // ...I tested it, it works, but ugly so nope.
+            // ...i tested it, it works, but ugly so nope.
             m_history.erase(m_history.begin() + m_current_index, m_history.end());
         }
         m_history.push_back(m_document.create_memento());

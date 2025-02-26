@@ -91,11 +91,11 @@ public:
         }
     }
 
-    // methods to simulate reading and writing with RAII locks
+    // methods to simulate reading and writing with raii locks
     void readResource(Logger& logger) {
-        // acquire read lock using RAII, note very clean interface now for the startRead
-        // and endRead calls, upon ReadLock construction we start the read, on function
-        // return we end the read on ReadLock destruction
+        // acquire read lock using raii, note very clean interface now for the startread
+        // and endread calls, upon readlock construction we start the read, on function
+        // return we end the read on readlock destruction
         class ReadLock {
             ReadersWriters& m_rw;
         public:
@@ -115,9 +115,9 @@ public:
     }
 
     void writeResource(int value, Logger& logger) {
-        // acquire write lock using RAII, note very clean interface now for the startWrite
-        // and endWrite calls, upon WriteLock construction we start the write, on function
-        // return we end the write on WriteLock destruction
+        // acquire write lock using raii, note very clean interface now for the startwrite
+        // and endwrite calls, upon writelock construction we start the write, on function
+        // return we end the write on writelock destruction
         class WriteLock {
             ReadersWriters& m_rw;
         public:

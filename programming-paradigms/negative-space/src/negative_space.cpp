@@ -19,7 +19,7 @@
 // 3. focus on what cannot happen rather than what can
 // 4. establish clear boundaries through constraints
 
-// SafeString class demonstrates negative space programming principles
+// safestring class demonstrates negative space programming principles
 // by explicitly defining what cannot happen rather than what can
 class SafeString {
 private:
@@ -43,13 +43,13 @@ public:
     void setValue(const std::string& value) {
         // check what's not allowed first
         if (value.empty()) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO, std::format("Empty string not allowed"));
             throw std::invalid_argument("empty string not allowed");
         }
 
         if (value.length() > m_maxLength) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO,
                 std::format("String exceeds maximum length of {}", m_maxLength));
             throw std::invalid_argument("string length exceeds maximum");
@@ -58,7 +58,7 @@ public:
         // check for forbidden characters
         for (const char c : value) {
             if (std::find(m_forbiddenChars.begin(), m_forbiddenChars.end(), c) != m_forbiddenChars.end()) {
-                // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+                // make this info since we have negative tests, but should be error/critical
                 Logger::getInstance().log(LogLevel::INFO,
                     std::format("String contains forbidden character: {}", static_cast<int>(c)));
                 throw std::invalid_argument("string contains forbidden character");

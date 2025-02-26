@@ -13,9 +13,9 @@
 class Observer {
 public:
     virtual ~Observer() = default;
-    // update method called by the Subject when state changes
-    // @param message Description of the update
-    // @param value New value to be processed
+    // update method called by the subject when state changes
+    // @param message description of the update
+    // @param value new value to be processed
     virtual void update(const std::string& message, double value) = 0;
 };
 
@@ -43,22 +43,22 @@ private:
 public:
     // constructor that binds together the variable, setter method, and subject
     // constructor that binds together the variable, setter method, and subject
-    // @param target_var Reference to the variable to be modified
-    // @param setter_method Pointer to the method that will modify the variable
-    // @param subject_ref Reference to the subject that will notify observers
+    // @param target_var reference to the variable to be modified
+    // @param setter_method pointer to the method that will modify the variable
+    // @param subject_ref reference to the subject that will notify observers
     WeatherNotifier(double& target_var, SetterMethod setter_method, Subject& subject_ref)
         : m_target(target_var), m_setter(setter_method), m_subject(subject_ref) {}
 
     // operator that combines setting the value and notifying observers
-    // @param value New value to be set
+    // @param value new value to be set
     void operator()(double value) const {
         m_setter(m_target, value);  // set the new value
         m_subject.notify();         // notify all observers
     }
 };
 
-// concrete implementation of the Subject interface that monitors weather conditions.
-// uses WeatherNotifier to automatically notify observers when values change.
+// concrete implementation of the subject interface that monitors weather conditions.
+// uses weathernotifier to automatically notify observers when values change.
 class WeatherStation : public Subject {
 private:
     std::vector<std::shared_ptr<Observer>> m_observers;  // list of registered observers
@@ -66,7 +66,7 @@ private:
     double m_humidity;    // current humidity
     double m_pressure;    // current pressure
 
-    // static setter methods used by WeatherNotifier
+    // static setter methods used by weathernotifier
     static void setTemp(double& target, const double value) { target = value; }
     static void setHumid(double& target, const double value) { target = value; }
     static void setPress(double& target, const double value) { target = value; }
@@ -85,13 +85,13 @@ public:
           m_pressure_notifier(m_pressure, setPress, *this) {}
 
     // register a new observer to receive notifications
-    // @param observer Shared pointer to the observer
+    // @param observer shared pointer to the observer
     void attach(const std::shared_ptr<Observer> observer) override {
         m_observers.push_back(observer);
     }
 
     // remove an observer from the notification list
-    // @param observer Shared pointer to the observer to remove
+    // @param observer shared pointer to the observer to remove
     void detach(std::shared_ptr<Observer> observer) override {
         std::erase_if(m_observers, [observer](const std::shared_ptr<Observer>& obj) {
             return obj == observer;
@@ -141,7 +141,7 @@ public:
 // concrete observer that triggers alerts based on temperature thresholds
 class WeatherAlert final : public Observer {
 private:
-    double m_temperatureThreshold;  // Temperature threshold for alerts
+    double m_temperatureThreshold;  // temperature threshold for alerts
 
 public:
     explicit WeatherAlert(const double threshold) : m_temperatureThreshold(threshold) {}

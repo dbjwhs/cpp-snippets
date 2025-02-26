@@ -31,7 +31,7 @@ struct HuffmanNode {
 //
 // detailed explanation:
 // this comparator is crucial for building the huffman tree. it works with
-// HuffmanNode (above) objects that contain:
+// huffmannode (above) objects that contain:
 //   - m_char: the character stored in the node
 //   - m_frequency: how often that character appears
 //   - m_left and m_right: pointers to child nodes
@@ -403,7 +403,7 @@ public:
         return decoded;
     }
 
-    // File compression/decompression methods that return the compressed/decompressed data
+    // file compression/decompression methods that return the compressed/decompressed data
     std::pair<std::string, std::pair<size_t, double>> compress_and_get_file_rle(const std::string& filename) {
         std::ifstream input_file(filename, std::ios::binary);
         if (!input_file) {
@@ -444,7 +444,7 @@ public:
         return {compressed, {(compressed.length() + 7) / 8, m_compression_ratio}};
     }
 
-    // Helper to get huffman root
+    // helper to get huffman root
     [[nodiscard]] std::shared_ptr<HuffmanNode> get_huffman_root() const {
         return m_huffman_root;
     }
@@ -508,7 +508,7 @@ void run_tests() {
         std::string test_file = "../frost_giants_daughter.txt";
         logger.log(LogLevel::INFO, "test 4: file compression and decompression verification");
 
-        // Read original file content
+        // read original file content
         if (std::ifstream file(test_file, std::ios::binary); file.is_open()) {
             std::string original_content((std::istreambuf_iterator<char>(file)),
                                        std::istreambuf_iterator<char>());
@@ -517,7 +517,7 @@ void run_tests() {
             size_t original_size = original_content.length();
             bool verification_passed = true;
 
-            // Test RLE
+            // test rle
             {
                 auto [compressed_data, result] = compressor.compress_and_get_file_rle(test_file);
                 std::string decompressed = compressor.decompress_rle(compressed_data);
@@ -531,7 +531,7 @@ void run_tests() {
                 logger.log(LogLevel::INFO, "Decompression verification: " + (rle_match ? passed : failed));
             }
 
-            // Test LZW
+            // test lzw
             {
                 auto [compressed_data, result] = compressor.compress_and_get_file_lzw(test_file);
                 std::string decompressed = compressor.decompress_lzw(compressed_data);
@@ -545,7 +545,7 @@ void run_tests() {
                 logger.log(LogLevel::INFO, "Decompression verification: " + (lzw_match ? passed : failed));
             }
 
-            // Test Huffman
+            // test huffman
             {
                 auto [compressed_data, result] = compressor.compress_and_get_file_huffman(test_file);
                 std::string decompressed = compressor.decompress_huffman(compressed_data,

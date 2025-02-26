@@ -86,12 +86,12 @@ int main() {
     Configuration* config1 = Configuration::getInstance();
     const Configuration* config2 = Configuration::getInstance();
 
-    // note to old C programmers regarding C++ assert messages:
-    // the ability to add a custom message using && with a string literal is a C++ feature
+    // note to old c programmers regarding c++ assert messages:
+    // the ability to add a custom message using && with a string literal is a c++ feature
     // that takes advantage of:
     // 1. string literals being convertible to bool (evaluating to true)
     // 2. the short-circuit behavior of &&
-    // 3. the C++ assertion system's ability to capture both parts as the message
+    // 3. the c++ assertion system's ability to capture both parts as the message
     // this is one of those subtle but useful c++ features that isn't well known
     // verify both pointers point to the same instance
     assert(config1 == config2 && "singleton instances should be identical");

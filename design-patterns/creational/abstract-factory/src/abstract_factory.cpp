@@ -11,14 +11,14 @@
 //   without specifying their concrete classes
 //
 // - key components:
-//   1. abstract factory (UIFactory): declares interface for operations that create abstract products
-//   2. concrete factories (LightThemeFactory, DarkThemeFactory): implement operations to create concrete products
-//   3. abstract products (Button, Checkbox): declare interfaces for a family of related products
-//   4. concrete products (LightButton, DarkButton, etc): define products created by concrete factory
+//   1. abstract factory (uifactory): declares interface for operations that create abstract products
+//   2. concrete factories (lightthemefactory, darkthemefactory): implement operations to create concrete products
+//   3. abstract products (button, checkbox): declare interfaces for a family of related products
+//   4. concrete products (lightbutton, darkbutton, etc): define products created by concrete factory
 //
 // - benefits:
 //   - isolates concrete classes from client code
-//   - ensures product families work together (e.g., all UI components match in theme)
+//   - ensures product families work together (e.g., all ui components match in theme)
 //   - makes exchanging product families easy (switch entire theme by changing factory)
 //   - promotes consistency among products (factory guarantees compatible products)
 //

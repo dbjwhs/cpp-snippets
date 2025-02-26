@@ -255,14 +255,14 @@ private:
     std::vector<std::unique_ptr<Command>> m_commands;
 
 public:
-    // Add default constructor
+    // add default constructor
     SceneCommand() = default;
 
-    // Delete copy constructor and assignment operator
+    // delete copy constructor and assignment operator
     SceneCommand(const SceneCommand&) = delete;
     SceneCommand& operator=(const SceneCommand&) = delete;
 
-    // Add move constructor and assignment operator
+    // add move constructor and assignment operator
     SceneCommand(SceneCommand&&) = default;
     SceneCommand& operator=(SceneCommand&&) = default;
 
@@ -282,7 +282,7 @@ public:
         }
     }
 
-    // Add clone method for making deep copies
+    // add clone method for making deep copies
     [[nodiscard]] std::unique_ptr<Command> clone() const override {
         auto new_scene = std::make_unique<SceneCommand>();
         for (const auto& cmd : m_commands) {
@@ -316,7 +316,7 @@ public:
 
     void activate_scene(const std::string& name) {
         if (auto it = m_scenes.find(name); it != m_scenes.end()) {
-            // Clone the scene instead of trying to copy it
+            // clone the scene instead of trying to copy it
             execute_command(it->second->clone());
         }
     }
@@ -329,7 +329,7 @@ void run_smart_device_tests(Logger& logger) {
     const SmartDevice bedroom_light("BR_LIGHT_1");
     SmartDevice thermostat("THERM_1");
 
-    // Verify initial states
+    // verify initial states
     logger.log(LogLevel::INFO, "Verifying initial device states...");
     assert(!living_room_light.is_on() && "Light should be off initially");
     assert(!bedroom_light.is_on() && "Light should be off initially");
@@ -362,7 +362,7 @@ void run_smart_device_tests(Logger& logger) {
     assert(thermostat.get_temperature() == 22 && "Temperature should be back to 22°C");
     logger.log(LogLevel::INFO, "✓ Temperature successfully reverted to 22°C");
 
-    // Test edge cases
+    // test edge cases
     logger.log(LogLevel::INFO, "Testing edge cases...");
 
     logger.log(LogLevel::INFO, "Testing scene activation with non-existent scene...");
@@ -372,8 +372,8 @@ void run_smart_device_tests(Logger& logger) {
     logger.log(LogLevel::INFO, "✓ Non-existent scene handled correctly");
 
     logger.log(LogLevel::INFO, "Testing multiple undo operations...");
-    home.undo_last(); // Should undo the movie scene activation
-    home.undo_last(); // Should do nothing as stack is empty
+    home.undo_last(); // should undo the movie scene activation
+    home.undo_last(); // should do nothing as stack is empty
     logger.log(LogLevel::INFO, "✓ Multiple undos handled without errors");
 
     logger.log(LogLevel::INFO, "All Smart Home Automation tests passed successfully!");
@@ -383,7 +383,7 @@ int main() {
     Logger& logger = Logger::getInstance();
 
     // two examples of this design pattern both seemingly different but implemented
-    // the same with the Command design patten.
+    // the same with the command design patten.
     try {
         run_smart_device_tests(logger);
     } catch (const std::exception& e) {

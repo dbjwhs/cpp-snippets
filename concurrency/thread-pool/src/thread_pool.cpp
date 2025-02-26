@@ -148,7 +148,7 @@ int main() {
         // vector to store future results
         std::vector<std::future<int>> results;
 
-        // Create new scope for thread pool
+        // create new scope for thread pool
         {
             // create thread pool with worker threads
             ThreadPool pool(threadCount, logger);

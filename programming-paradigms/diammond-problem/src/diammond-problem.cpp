@@ -9,20 +9,20 @@
 // without virtual inheritance, this creates two separate copies of the base class, leading to ambiguity
 // example hierarchy that causes the diamond problem:
 //
-//     A      // base class
+//     a      // base class
 //    / \
-//   B   C    // both inherit from A
+//   b   c    // both inherit from a
 //    \ /
-//     D      // inherits from both B and C, creating two copies of A
+//     d      // inherits from both b and c, creating two copies of a
 //
 // this causes issues like:
-// - ambiguous member access (which A::member should D use?)
-// - duplicate data members from base class A
+// - ambiguous member access (which a::member should d use?)
+// - duplicate data members from base class a
 // - ambiguous virtual function calls
 // - complex construction and destruction order
 //
 // virtual inheritance solves this by ensuring only one copy of the base class exists
-// class B : virtual public A {}; // solution using virtual inheritance
+// class b : virtual public a {}; // solution using virtual inheritance
 
 // base class remains the same
 class PowerSource {
@@ -85,7 +85,7 @@ private:
 
 public:
     HybridEngine(int base_power, float voltage, float efficiency)
-        // cannot initialize PowerSource directly anymore due to ambiguity
+        // cannot initialize powersource directly anymore due to ambiguity
         : Electrical(base_power, voltage),
           Mechanical(base_power, efficiency),
           m_is_active(true) {
@@ -93,10 +93,10 @@ public:
             std::format("HybridEngine constructed with base power: {}", base_power));
     }
 
-    // now we have ambiguity! which PowerSource::getPower() do we use?
+    // now we have ambiguity! which powersource::getpower() do we use?
     [[nodiscard]] int getPower() const override {
         // this will cause a compilation error due to ambiguous access
-        // return m_power_level;  // which m_power_level? Electrical or Mechanical?
+        // return m_power_level;  // which m_power_level? electrical or mechanical?
 
         // need to explicitly specify which path to use
         const int electrical_power = Electrical::getPower();
@@ -112,11 +112,11 @@ int main() {
 
     // these lines now cause ambiguity errors, a while back compilers generally did not pick
     // these up, but g++ is so that's good, uncomment out, for example of issues, and/or see
-    // the above comments in Mechanical and Electrical classes for fix
+    // the above comments in mechanical and electrical classes for fix
 
-    // PowerSource* base_ptr = &engine;  // Error: ambiguous conversion
-    // engine.m_power_level;             // Error: ambiguous access
-    // engine.PowerSource::getPower();   // Error: ambiguous access
+    // powersource* base_ptr = &engine;  // error: ambiguous conversion
+    // engine.m_power_level;             // error: ambiguous access
+    // engine.powersource::getpower();   // error: ambiguous access
 
     // must explicitly specify the path:
     Logger::getInstance().log(LogLevel::INFO,
@@ -124,7 +124,7 @@ int main() {
     Logger::getInstance().log(LogLevel::INFO,
         std::format("Mechanical power path: {}", engine.Mechanical::getPower()));
 
-    // demonstrate the two separate PowerSource instances
+    // demonstrate the two separate powersource instances
     Logger::getInstance().log(LogLevel::INFO,
         std::format("Electrical source ID: {}",
             static_cast<Electrical&>(engine).m_source_id));
@@ -132,7 +132,7 @@ int main() {
         std::format("Mechanical source ID: {}",
             static_cast<Mechanical&>(engine).m_source_id));
 
-    // this will now create two separate PowerSource objects
+    // this will now create two separate powersource objects
     assert(&static_cast<Electrical*>(&engine)->PowerSource::m_power_level !=
            &static_cast<Mechanical*>(&engine)->PowerSource::m_power_level);
     Logger::getInstance().log(LogLevel::INFO, "Verified separate PowerSource instances");

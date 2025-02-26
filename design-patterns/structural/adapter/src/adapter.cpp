@@ -13,7 +13,7 @@
 
 #include "../../../../headers/project_utils.hpp"
 
-// Define file system concept
+// define file system concept
 template<typename TypeFileSystem>
 concept FileSystem = requires(TypeFileSystem file_system
     , std::string_view path, std::string_view source
@@ -25,7 +25,7 @@ concept FileSystem = requires(TypeFileSystem file_system
     { file_system.supportsPermissions() } -> std::same_as<bool>;
 };
 
-// Constants for invalid characters
+// constants for invalid characters
 namespace FileSystemConstants {
     constexpr std::string_view INVALID_WIN_CHARS{"<>:\"/\\|?*"};
     constexpr std::string_view SPECIAL_APFS_CHARS{"/\0:"};
@@ -33,7 +33,7 @@ namespace FileSystemConstants {
     constexpr size_t MAX_APFS_PATH{1024};
 }
 
-// Abstract interface for modern file system operations
+// abstract interface for modern file system operations
 class IFileSystem {
 public:
     virtual ~IFileSystem() noexcept = default;
@@ -44,14 +44,14 @@ public:
     [[nodiscard]] virtual constexpr bool supportsPermissions() = 0;
 };
 
-// APFS (Apple File System) implementation
+// apfs (apple file system) implementation
 class APFSSystem {
 private:
     [[maybe_unused]] bool m_caseSensitive{false};
     [[maybe_unused]] std::string m_volumeName{};
 
 public:
-    // APFS specific methods with its native format
+    // apfs specific methods with its native format
     [[nodiscard]] static bool createAPFSDirectory(std::string_view path, uint32_t permissions) {
         Logger::getInstance().log(LogLevel::INFO, std::format("creating apfs directory: {} with unix permissions: {:o}",
                                 path, permissions));
@@ -74,7 +74,7 @@ public:
     }
 };
 
-// FAT32 (Windows File System) implementation
+// fat32 (windows file system) implementation
 class FAT32System {
 private:
     char m_driveLetter{};
@@ -98,7 +98,7 @@ public:
     }
 };
 
-// Adapter for APFS to modern interface
+// adapter for apfs to modern interface
 class APFSAdapter : public IFileSystem {
 private:
     std::unique_ptr<APFSSystem> m_apfsSystem;
@@ -106,12 +106,12 @@ private:
     [[nodiscard]] static std::string sanitizeForAPFS(std::string_view filename) {
         std::string result{filename};
 
-        // Handle special APFS characters using ranges
+        // handle special apfs characters using ranges
         for (char specialChar : FileSystemConstants::SPECIAL_APFS_CHARS) {
             std::ranges::replace(result, specialChar, '_');
         }
 
-        // Check path length
+        // check path length
         if (result.length() > FileSystemConstants::MAX_APFS_PATH) {
             auto hash = std::hash<std::string_view>{}(filename);
             auto hashStr = std::to_string(hash).substr(0, 8);
@@ -119,7 +119,7 @@ private:
             result += '_' + hashStr;
         }
 
-        // Handle leading dots (hidden files in unix)
+        // handle leading dots (hidden files in unix)
         if (!result.empty() && result[0] == '.') {
             result = '_' + result;
         }
@@ -153,7 +153,7 @@ public:
     [[nodiscard]] constexpr bool supportsPermissions() override { return true; }
 };
 
-// Adapter for FAT32 to modern interface
+// adapter for fat32 to modern interface
 class FAT32Adapter : public IFileSystem {
 private:
     std::unique_ptr<FAT32System> m_fat32System;
@@ -161,15 +161,15 @@ private:
     [[nodiscard]] static std::string sanitizeForFAT32(std::string_view filename) {
         std::string result{filename};
 
-        // Remove invalid windows characters using ranges
+        // remove invalid windows characters using ranges
         for (char invalidChar : FileSystemConstants::INVALID_WIN_CHARS) {
             std::ranges::replace(result, invalidChar, '_');
         }
 
-        // Handle spaces
+        // handle spaces
         std::ranges::replace(result, ' ', '_');
 
-        // Check path length
+        // check path length
         if (result.length() > FileSystemConstants::MAX_WIN_PATH) {
             const auto hash = std::hash<std::string_view>{}(filename);
             const auto hashStr = std::to_string(hash).substr(0, 8);
@@ -186,7 +186,7 @@ private:
             result += '.' + std::string{filename.substr(dot + 1, 3)};
         }
 
-        // Convert to uppercase using ranges
+        // convert to uppercase using ranges
         std::ranges::transform(result, result.begin(), [](const char c) {
             return static_cast<char>(std::toupper(c));
         });
@@ -220,7 +220,7 @@ public:
     [[nodiscard]] constexpr bool supportsPermissions() override { return false; }
 };
 
-// File system operations manager
+// file system operations manager
 template <FileSystem TypeFileSystem>
 class FileOperationsManager {
 public:
@@ -282,7 +282,7 @@ int main() {
         }
     };
 
-    // test suite 1: FAT32 adapter tests
+    // test suite 1: fat32 adapter tests
     {
         Logger::getInstance().log(LogLevel::INFO, std::format("running fat32 adapter tests..."));
 
@@ -319,7 +319,7 @@ int main() {
         Logger::getInstance().log(LogLevel::INFO, std::format("fat32 adapter tests completed successfully"));
     }
 
-    // test suite 2: APFS adapter tests
+    // test suite 2: apfs adapter tests
     {
         Logger::getInstance().log(LogLevel::INFO, std::format("running apfs adapter tests..."));
 
@@ -339,7 +339,7 @@ int main() {
 
         // test case 3: long path handling
         auto longPathAdapter = std::make_unique<APFSAdapter>();
-        const std::string longPath(1100, 'a');  // path longer than APFS max
+        const std::string longPath(1100, 'a');  // path longer than apfs max
         const bool success = longPathAdapter->createDirectory(longPath);
         assert(success && "Long path should be handled");
 
@@ -357,7 +357,7 @@ int main() {
     {
         Logger::getInstance().log(LogLevel::INFO, std::format("running cross-system operation tests..."));
 
-        // test copying from APFS to FAT32
+        // test copying from apfs to fat32
         {
             Logger::getInstance().log(LogLevel::INFO, std::format("scenario 1: copying from apfs to fat32"));
             FileOperationsManager<FAT32Adapter> manager{std::make_unique<FAT32Adapter>()};
@@ -368,7 +368,7 @@ int main() {
             manager.performCrossSystemCopy(sourceFile, destFile);
         }
 
-        // test copying from FAT32 to APFS
+        // test copying from fat32 to apfs
         {
             Logger::getInstance().log(LogLevel::INFO, std::format("scenario 2: copying from fat32 to apfs"));
             FileOperationsManager<APFSAdapter> manager{std::make_unique<APFSAdapter>()};

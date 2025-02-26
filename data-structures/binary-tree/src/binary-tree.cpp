@@ -13,7 +13,7 @@
 // key properties:
 // - works with any type that supports operator< and operator==
 // - maintains bst invariants for arbitrary comparable types
-// - provides O(log n) search efficiency when balanced
+// - provides o(log n) search efficiency when balanced
 template<typename value_type>
 class BinaryTree {
 private:
@@ -25,7 +25,7 @@ private:
 
         // note std::move() vs const value_type data; this is better for heavy objects,
         // moving is typically much less expensive than copying.
-        // (std::string, classes, etc.), yes I know for primitive types (int, double, etc.),
+        // (std::string, classes, etc.), yes i know for primitive types (int, double, etc.),
         // move and copy operations are equivalent.
         explicit Node(value_type  data)
             : m_data(std::move(data)), m_left(nullptr), m_right(nullptr) {}
@@ -35,7 +35,7 @@ private:
     size_t m_size;
 
     // helper function to copy all nodes recursively
-    std::unique_ptr<Node> copyTree(const Node *node) {    // NOLINT(misc-no-recursion)
+    std::unique_ptr<Node> copyTree(const Node *node) {    // nolint(misc-no-recursion)
         if (!node) {
             return nullptr;
         }
@@ -45,10 +45,10 @@ private:
         return newNode;
     }
 
-    // helper function for BST insertion
-    // maintains BST property by recursively finding the correct position
+    // helper function for bst insertion
+    // maintains bst property by recursively finding the correct position
     // returns: updated node pointer after insertion
-    std::unique_ptr<Node>& insertHelper(std::unique_ptr<Node>& node, const value_type& value) {  // NOLINT(misc-no-recursion)
+    std::unique_ptr<Node>& insertHelper(std::unique_ptr<Node>& node, const value_type& value) {  // nolint(misc-no-recursion)
         if (!node) {
             node = std::make_unique<Node>(value);
             return node;
@@ -63,8 +63,8 @@ private:
     }
 
     // helper function for bst search
-    // uses bst property for O(log n) search
-    bool searchHelper(const Node* node, const value_type& value) const {  // NOLINT(misc-no-recursion)
+    // uses bst property for o(log n) search
+    bool searchHelper(const Node* node, const value_type& value) const {  // nolint(misc-no-recursion)
         if (!node) return false;
         if (!(node->m_data < value) && !(value < node->m_data)) return true; // equivalent to ==
         if (value < node->m_data) return searchHelper(node->m_left.get(), value);
@@ -73,9 +73,9 @@ private:
 
     // helper function to validate bst property
     // uses optional bounds to work with any comparable type
-    bool isValidBSTHelper(const Node* node, /* NOLINT(misc-no-recursion) */
+    bool isValidBSTHelper(const Node* node, /* nolint(misc-no-recursion) */
                          const std::optional<value_type>& min_value = std::nullopt,
-                         const std::optional<value_type>& max_value = std::nullopt) const {  // NOLINT(misc-no-recursion)
+                         const std::optional<value_type>& max_value = std::nullopt) const {  // nolint(misc-no-recursion)
         if (!node) {
             return true;
         }
@@ -133,7 +133,7 @@ public:
         return *this;
     }
 
-    // insert value into BST maintaining BST property
+    // insert value into bst maintaining bst property
     void insert(const value_type& value) {
         if (!search(value)) {  // only insert if value doesn't exist
             insertHelper(m_root, value);
@@ -141,7 +141,7 @@ public:
         }
     }
 
-    // search for value in BST, O(log n) when balanced
+    // search for value in bst, o(log n) when balanced
     [[nodiscard]] bool search(const value_type& value) const {
         return searchHelper(m_root.get(), value);
     }
@@ -164,15 +164,15 @@ public:
         return max_node->m_data;
     }
 
-    // inorder traversal visits nodes in ascending order for a BST
+    // inorder traversal visits nodes in ascending order for a bst
     // algorithm:
     // 1. create stack to track nodes during traversal
     // 2. traverse left subtree to its leftmost node, pushing each node to stack
     // 3. when leftmost reached, pop and process node, then traverse its right child
     // 4. continue until all nodes processed
     //
-    // time complexity: O(n) where n is number of nodes
-    // space complexity: O(h) where h is height of tree
+    // time complexity: o(n) where n is number of nodes
+    // space complexity: o(h) where h is height of tree
     //
     // parameters:
     //   visit_func - function pointer to process node values during traversal
@@ -182,7 +182,7 @@ public:
     //                   3     7
     //                  / \   / \
     //                 2   4 6   8
-    // output: 2 3 4 5 6 7 8 (sorted order for BST)
+    // output: 2 3 4 5 6 7 8 (sorted order for bst)
     void inOrderTraversal(const std::function<void(const value_type&)>& visit_func) const {
         std::stack<const Node *> stack_node;
         const Node *current = m_root.get();
@@ -211,8 +211,8 @@ public:
     //    - push left child (if exists)
     // 3. continue until stack empty
     //
-    // time complexity: O(n) where n is number of nodes
-    // space complexity: O(h) where h is height of tree
+    // time complexity: o(n) where n is number of nodes
+    // space complexity: o(h) where h is height of tree
     //
     // parameters:
     //   visit_func - function pointer to process node values during traversal
@@ -252,8 +252,8 @@ public:
     //    - push right child to s1 (if exists)
     // 4. process s2 to get postorder traversal
     //
-    // time complexity: O(n) where n is number of nodes
-    // space complexity: O(n) where n is number of nodes
+    // time complexity: o(n) where n is number of nodes
+    // space complexity: o(n) where n is number of nodes
     //
     // parameters:
     //   visit_func - function pointer to process node values during traversal
@@ -289,7 +289,7 @@ public:
 
     // utility methods
     [[nodiscard]] size_t size() const { return m_size; }
-    [[nodiscard]] bool empty() const { return m_size == 0; }  // NOLINT(readability-container-size-empty)
+    [[nodiscard]] bool empty() const { return m_size == 0; }  // nolint(readability-container-size-empty)
 
     // validates that the tree follows binary search tree properties where:
     //
@@ -305,8 +305,8 @@ public:
     //    - right children must be greater than parent
     //    - range narrows as we traverse down the tree
     //
-    // time complexity:  O(n) where n is number of nodes (visits each node once)
-    // space complexity: O(h) where h is height of tree (recursion stack)
+    // time complexity:  o(n) where n is number of nodes (visits each node once)
+    // space complexity: o(h) where h is height of tree (recursion stack)
     //
     // example of valid bst:    5           example of invalid bst:    5
     //                        /   \                                  /   \
@@ -328,7 +328,7 @@ public:
     }
 
 private:
-    int maxDepthHelper(const Node *node) const {  // NOLINT(misc-no-recursion)
+    int maxDepthHelper(const Node *node) const {  // nolint(misc-no-recursion)
         if (!node) return 0;
         return 1 + std::max(maxDepthHelper(node->m_left.get()), maxDepthHelper(node->m_right.get()));
     }
@@ -349,18 +349,18 @@ int main() {
     // test with integers
     BinaryTree<int> tree;
 
-    // note having been exposed to codebases that ship with asserts() I have found
-    // this "You shall not pass!" technique solid. e.g., fail at first error so you
+    // note having been exposed to codebases that ship with asserts() i have found
+    // this "you shall not pass!" technique solid. e.g., fail at first error so you
     // know exactly where you failed.
 
     // test an empty tree
     assert(tree.empty());
-    assert(tree.size() == 0);   // NOLINT(readability-container-size-empty)
+    assert(tree.size() == 0);   // nolint(readability-container-size-empty)
     assert(tree.maxDepth() == 0);
     assert(tree.isValidBST());
     logger.log(LogLevel::INFO, "empty tree tests passed!");
 
-    // test BST insertion and search
+    // test bst insertion and search
     tree.insert(5);  // root
     tree.insert(3);  // left of 5
     tree.insert(7);  // right of 5
@@ -369,7 +369,7 @@ int main() {
     tree.insert(6);  // left of 7
     tree.insert(8);  // right of 7
 
-    // verify BST property
+    // verify bst property
     assert(tree.isValidBST());
     logger.log(LogLevel::INFO, "BST property validation passed!");
 
@@ -413,7 +413,7 @@ int main() {
     tree.preOrderTraversal(capturePreorder);
     tree.postOrderTraversal(capturePostorder);
 
-    // verify inorder traversal (should be sorted for BST)
+    // verify inorder traversal (should be sorted for bst)
     const std::vector<int> expected_inorder = {2, 3, 4, 5, 6, 7, 8};
     assert(inorder_int_result == expected_inorder);
     logger.log(LogLevel::INFO, "inorder traversal verification passed!");

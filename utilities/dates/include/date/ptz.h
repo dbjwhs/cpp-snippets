@@ -1,65 +1,65 @@
 #ifndef PTZ_H
 #define PTZ_H
 
-// The MIT License (MIT)
+// the mit license (mit)
 //
-// Copyright (c) 2017 Howard Hinnant
+// copyright (c) 2017 howard hinnant
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "software"), to deal
+// in the software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
+// copies of the software, and to permit persons to whom the software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// the above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// the software is provided "as is", without warranty of any kind, express or
+// implied, including but not limited to the warranties of merchantability,
+// fitness for a particular purpose and noninfringement. in no event shall the
+// authors or copyright holders be liable for any claim, damages or other
+// liability, whether in an action of contract, tort or otherwise, arising from,
+// out of or in connection with the software or the use or other dealings in the
+// software.
 
-// This header allows Posix-style time zones as specified for TZ here:
-// http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap08.html#tag_08_03
+// this header allows posix-style time zones as specified for tz here:
+// http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/v1_chap08.html#tag_08_03
 //
-// Posix::time_zone can be constructed with a posix-style string and then used in
+// posix::time_zone can be constructed with a posix-style string and then used in
 // a zoned_time like so:
 //
-// zoned_time<system_clock::duration, Posix::time_zone> zt{"EST5EDT,M3.2.0,M11.1.0",
+// zoned_time<system_clock::duration, posix::time_zone> zt{"est5edt,m3.2.0,m11.1.0",
 //                                                         system_clock::now()};
 // or:
 //
-// Posix::time_zone tz{"EST5EDT,M3.2.0,M11.1.0"};
-// zoned_time<system_clock::duration, Posix::time_zone> zt{tz, system_clock::now()};
+// posix::time_zone tz{"est5edt,m3.2.0,m11.1.0"};
+// zoned_time<system_clock::duration, posix::time_zone> zt{tz, system_clock::now()};
 //
-// In C++17 CTAD simplifies this to:
+// in c++17 ctad simplifies this to:
 //
-// Posix::time_zone tz{"EST5EDT,M3.2.0,M11.1.0"};
+// posix::time_zone tz{"est5edt,m3.2.0,m11.1.0"};
 // zoned_time zt{tz, system_clock::now()};
 //
-// Extension to the Posix rules to allow a constant daylight saving offset:
+// extension to the posix rules to allow a constant daylight saving offset:
 //
-// If the rule set is missing (everything starting with ','), then
+// if the rule set is missing (everything starting with ','), then
 // there must be exactly one abbreviation (std or daylight) with
-// length 3 or greater, and that will be used as the constant offset. If
+// length 3 or greater, and that will be used as the constant offset. if
 // there are two, the std abbreviation is silently set to "", and the
-// result is constant daylight saving. If there are zero abbreviations
+// result is constant daylight saving. if there are zero abbreviations
 // with no rule set, an exception is thrown.
 //
-// Example:
-// "EST5" yields a constant offset of -5h with 0h save and "EST abbreviation.
-// "5EDT" yields a constant offset of -4h with 1h save and "EDT" abbreviation.
-// "EST5EDT" and "5EDT4" are both equal to "5EDT".
+// example:
+// "est5" yields a constant offset of -5h with 0h save and "est abbreviation.
+// "5edt" yields a constant offset of -4h with 1h save and "edt" abbreviation.
+// "est5edt" and "5edt4" are both equal to "5edt".
 //
-// Note, Posix-style time zones are not recommended for all of the reasons described here:
+// note, posix-style time zones are not recommended for all of the reasons described here:
 // https://stackoverflow.com/tags/timezone/info
 //
-// They are provided here as a non-trivial custom time zone example, and if you really
-// have to have Posix time zones, you're welcome to use this one.
+// they are provided here as a non-trivial custom time zone example, and if you really
+// have to have posix time zones, you're welcome to use this one.
 
 #include "date/tz.h"
 #include <algorithm>
@@ -77,11 +77,11 @@ namespace detail
 
 using string_t = std::string_view;
 
-#else  // !HAS_STRING_VIEW
+#else  // !has_string_view
 
 using string_t = std::string;
 
-#endif  // !HAS_STRING_VIEW
+#endif  // !has_string_view
 
 class rule;
 
@@ -909,7 +909,7 @@ read_unsigned(const string_t& s, unsigned i, unsigned limit, unsigned& u,
 
 }  // namespace detail
 
-}  // namespace Posix
+}  // namespace posix
 
 namespace date
 {
@@ -927,7 +927,7 @@ struct zoned_traits<Posix::time_zone>
         return Posix::time_zone{name};
     }
 
-#else  // !HAS_STRING_VIEW
+#else  // !has_string_view
 
     static
     Posix::time_zone
@@ -943,10 +943,10 @@ struct zoned_traits<Posix::time_zone>
         return Posix::time_zone{name};
     }
 
-#endif  // !HAS_STRING_VIEW
+#endif  // !has_string_view
 
 };
 
 }  // namespace date
 
-#endif  // PTZ_H
+#endif  // ptz_h

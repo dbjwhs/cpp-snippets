@@ -30,7 +30,7 @@
 // - pass implementations to hash table constructor
 // - allows switching hash functions without modifying table logic
 //
-// note I show three implementations:
+// note i show three implementations:
 // - std::hash wrapper (default c++ hash)
 // - fnv-1a (good for strings and small keys)
 // - murmur3 (excellent general-purpose hash)
@@ -46,15 +46,15 @@ public:
 template<typename KeyType>
 class StdHash final : public HashFunction<KeyType> {
 public:
-    // I want to call out a subtle piece of the code below, the uniform initialization
+    // i want to call out a subtle piece of the code below, the uniform initialization
     // with curly braces {}
     //
-    // std::hash<KeyType>{} is uniform initialization syntax (introduced in c++11)
-    // it creates a temporary instance of the std::hash class for KeyType
+    // std::hash<keytype>{} is uniform initialization syntax (introduced in c++11)
+    // it creates a temporary instance of the std::hash class for keytype
     //
     // can be written in older styles as:
-    // pre-c++11:  return std::hash<KeyType>()(key) % bucket_count;
-    // or:         std::hash<KeyType> hasher; return hasher(key) % bucket_count;
+    // pre-c++11:  return std::hash<keytype>()(key) % bucket_count;
+    // or:         std::hash<keytype> hasher; return hasher(key) % bucket_count;
     //
     // -------------------------------------------------
     //
@@ -170,7 +170,7 @@ public:
 
     // murmur3 magic constants:
     // these specially chosen prime numbers (c1=0xcc9e2d51, c2=0x1b873593) were selected by
-    // Austin Appleby through empirical testing to achieve key hash function properties:
+    // austin appleby through empirical testing to achieve key hash function properties:
     // - strong avalanche effect (changing 1 input bit changes ~50% of output bits)
     // - good bit distribution (hash outputs are uniformly distributed)
     // - low collision rates (different inputs rarely produce the same output)

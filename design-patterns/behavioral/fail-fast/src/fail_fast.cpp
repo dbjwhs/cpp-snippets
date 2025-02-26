@@ -51,7 +51,7 @@ private:
     // validates if the account is in a valid state for operations
     void validateState() const {
         if (!m_isActive) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO, std::format("Account validation failed: Account is inactive"));
             throw std::runtime_error("Account is inactive");
         }
@@ -65,7 +65,7 @@ public:
     // constructor enforcing initial valid state
     explicit FailFastAccount(const std::string& accountHolder) : m_accountHolder(accountHolder) {
         if (accountHolder.empty()) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO, std::format("Failed to create account: Empty account holder name"));
             throw std::invalid_argument("Account holder name cannot be empty");
         }
@@ -76,7 +76,7 @@ public:
     void deposit(double amount) {
         validateState();
         if (amount <= 0) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO, std::format("Invalid deposit amount: {}", amount));
             throw std::invalid_argument("Deposit amount must be positive");
         }
@@ -92,7 +92,7 @@ public:
             throw std::invalid_argument("Withdrawal amount must be positive");
         }
         if ((m_balance - amount) < m_minimumBalance) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO,
                 std::format("Insufficient funds: balance=${:.2f}, withdrawal=${:.2f}, minimum=${:.2f}", 
                     m_balance, amount, m_minimumBalance));
@@ -105,7 +105,7 @@ public:
     // close account, fails fast if already closed
     void closeAccount() {
         if (!m_isActive) {
-            // make this INFO since we have negative tests, but should be ERROR/CRITICAL
+            // make this info since we have negative tests, but should be error/critical
             Logger::getInstance().log(LogLevel::INFO, std::format("Cannot close already inactive account"));
             throw std::runtime_error("Account already inactive");
         }

@@ -211,9 +211,9 @@ int main() {
     // test 1: constructor and isempty
     {
         LinkedList<int> list;
-        // ReSharper disable CppDFAConstantConditions
+        // resharper disable cppdfaconstantconditions
         bool passed = list.isEmpty() && list.getSize() == 0;
-        // ReSharper restore CppDFAConstantConditions
+        // resharper restore cppdfaconstantconditions
         printTestResult("constructor and isempty", passed);
     }
 
@@ -343,9 +343,9 @@ int main() {
         list.add(2);
         list.add(3);
         list.clear();
-        // ReSharper disable CppDFAConstantConditions
+        // resharper disable cppdfaconstantconditions
         bool passed = list.isEmpty() && list.getSize() == 0;
-        // ReSharper restore CppDFAConstantConditions
+        // resharper restore cppdfaconstantconditions
         printTestResult("clear", passed);
     }
 

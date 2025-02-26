@@ -1,28 +1,28 @@
 //
 //  ios.h
-//  DateTimeLib
+//  datetimelib
 //
-// The MIT License (MIT)
+// the mit license (mit)
 //
-// Copyright (c) 2016 Alexander Kormanovsky
+// copyright (c) 2016 alexander kormanovsky
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "software"), to deal
+// in the software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
+// copies of the software, and to permit persons to whom the software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// the above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// the software is provided "as is", without warranty of any kind, express or
+// implied, including but not limited to the warranties of merchantability,
+// fitness for a particular purpose and noninfringement. in no event shall the
+// authors or copyright holders be liable for any claim, damages or other
+// liability, whether in an action of contract, tort or otherwise, arising from,
+// out of or in connection with the software or the use or other dealings in the
+// software.
 
 #ifndef ios_hpp
 #define ios_hpp
@@ -40,11 +40,11 @@
     std::string get_tzdata_path();
     std::string get_current_timezone();
 
-    }  // namespace iOSUtils
+    }  // namespace iosutils
     }  // namespace date
 
-# endif  // TARGET_OS_IPHONE
-#else   // !__APPLE__
+# endif  // target_os_iphone
+#else   // !__apple__
 # define TARGET_OS_IPHONE 0
-#endif  // !__APPLE__
+#endif  // !__apple__
 #endif // ios_hpp

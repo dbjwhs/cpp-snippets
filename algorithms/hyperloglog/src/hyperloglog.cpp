@@ -7,35 +7,35 @@
 #include <cmath>
 #include "../../../headers/project_utils.hpp"
 
-// HyperLogLog: A probabilistic data structure for estimating the cardinality (number of unique elements)
+// hyperloglog: a probabilistic data structure for estimating the cardinality (number of unique elements)
 // in a multiset with remarkable space efficiency
 //
-// Key Characteristics:
-// - Provides approximate count of unique elements
-// - Uses O(log(log(n))) memory space
-// - Trade-off between memory usage and accuracy
-// - Error rate typically around 2%
+// key characteristics:
+// - provides approximate count of unique elements
+// - uses o(log(log(n))) memory space
+// - trade-off between memory usage and accuracy
+// - error rate typically around 2%
 //
-// How it works:
-// 1. Hash input elements
-// 2. Count leading zeros in hash representation
-// 3. Use statistical properties to estimate unique count
+// how it works:
+// 1. hash input elements
+// 2. count leading zeros in hash representation
+// 3. use statistical properties to estimate unique count
 //
-// References:
-// - Wikipedia: https://en.wikipedia.org/wiki/HyperLogLog
-// - Original Paper: "HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm"
-//   by Flajolet et al. (2007)
-// - Google's Implementation: https://github.com/google/hyperloglog
+// references:
+// - wikipedia: https://en.wikipedia.org/wiki/hyperloglog
+// - original paper: "hyperloglog: the analysis of a near-optimal cardinality estimation algorithm"
+//   by flajolet et al. (2007)
+// - google's implementation: https://github.com/google/hyperloglog
 //
-// Typical use cases:
-// - Counting unique visitors on websites
-// - Analyzing large datasets
-// - Distributed systems for cardinality estimation
+// typical use cases:
+// - counting unique visitors on websites
+// - analyzing large datasets
+// - distributed systems for cardinality estimation
 //
-// Advantages over naive approaches:
-// - Much lower memory footprint compared to hash set
-// - Constant memory usage regardless of input size
-// - Fast estimation with minimal computational overhead
+// advantages over naive approaches:
+// - much lower memory footprint compared to hash set
+// - constant memory usage regardless of input size
+// - fast estimation with minimal computational overhead
 //
 class SimpleHyperLogLog {
 private:
@@ -100,7 +100,7 @@ private:
     std::random_device m_rd;
     std::mt19937 m_gen;
 
-    // Predefined word lists to create more meaningful duplicates
+    // predefined word lists to create more meaningful duplicates
     const std::vector<std::string> m_prefixes = {
         "super", "mega", "ultra", "hyper", "extra",
         "cool", "awesome", "great", "epic", "wild"
@@ -119,11 +119,11 @@ private:
 public:
     DuplicateStringGenerator() : m_gen(m_rd()) {}
 
-    // Generate a vector with a specified number of strings and duplicate frequency
+    // generate a vector with a specified number of strings and duplicate frequency
     std::vector<std::string> generate(
         const size_t m_total_elements,
         const double m_duplicate_ratio = 0.7,  // 70% chance of picking an existing string
-        const size_t m_unique_base_count = 500 // Number of unique base strings to generate
+        const size_t m_unique_base_count = 500 // number of unique base strings to generate
     ) {
         std::vector<std::string> elements;
         elements.reserve(m_total_elements);
@@ -134,7 +134,7 @@ public:
         std::uniform_int_distribution<> suffix_dist(0, m_suffixes.size() - 1);
         std::uniform_real_distribution<> duplicate_dist(0.0, 1.0);
 
-        // Generate a base set of unique strings
+        // generate a base set of unique strings
         std::unordered_map<std::string, size_t> string_counts;
         for (size_t i = 0; i < m_unique_base_count; ++i) {
             std::string unique_str = generateUniqueString(
@@ -145,11 +145,11 @@ public:
             string_counts[unique_str] = 0;
         }
 
-        // Fill the vector
+        // fill the vector
         for (size_t ndx = 0; ndx < m_total_elements; ++ndx) {
-            // Decide whether to duplicate an existing string
+            // decide whether to duplicate an existing string
             if (!string_counts.empty() && duplicate_dist(m_gen) < m_duplicate_ratio) {
-                // Pick a random existing string
+                // pick a random existing string
                 const auto it = std::next(string_counts.begin(),
                     std::uniform_int_distribution<>(0, string_counts.size() - 1)(m_gen));
                 elements.push_back(it->first);
@@ -170,7 +170,7 @@ public:
             }
         }
 
-        // Print some statistics
+        // print some statistics
         Logger::getInstance().log(LogLevel::INFO, std::format("Total unique strings: {}", string_counts.size()));
         Logger::getInstance().log(LogLevel::INFO, std::format("Duplicate string statistics:"));
 
@@ -198,7 +198,7 @@ public:
     }
 
 private:
-    // Generate a unique string by combining prefix, base, and suffix
+    // generate a unique string by combining prefix, base, and suffix
     static std::string generateUniqueString(
         const std::string& prefix,
         const std::string& base,
@@ -212,7 +212,7 @@ void testHyperLogLog() {
     DuplicateStringGenerator generator;
     auto elements = generator.generate(1'000'000);
 
-    // demonstrate HyperLogLog's unique counting
+    // demonstrate hyperloglog's unique counting
     SimpleHyperLogLog hll;
     for (const auto& elem : elements) {
         hll.add(elem);
@@ -221,7 +221,7 @@ void testHyperLogLog() {
     // get actual unique elements
     const std::unordered_set<std::string> uniqueSet(elements.begin(), elements.end());
 
-    // compare actual unique count with HyperLogLog estimate
+    // compare actual unique count with hyperloglog estimate
     Logger::getInstance().log(LogLevel::INFO, std::format("Actual unique elements: {}", uniqueSet.size()));
     Logger::getInstance().log(LogLevel::INFO, std::format("HyperLogLog estimate: {}", hll.uniqueCount()));
 }

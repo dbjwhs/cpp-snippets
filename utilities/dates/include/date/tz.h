@@ -1,47 +1,47 @@
 #ifndef TZ_H
 #define TZ_H
 
-// The MIT License (MIT)
+// the mit license (mit)
 //
-// Copyright (c) 2015, 2016, 2017 Howard Hinnant
-// Copyright (c) 2017 Jiangang Zhuang
-// Copyright (c) 2017 Aaron Bishop
-// Copyright (c) 2017 Tomasz Kamiński
+// copyright (c) 2015, 2016, 2017 howard hinnant
+// copyright (c) 2017 jiangang zhuang
+// copyright (c) 2017 aaron bishop
+// copyright (c) 2017 tomasz kamiński
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "software"), to deal
+// in the software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
+// copies of the software, and to permit persons to whom the software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// the above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// the software is provided "as is", without warranty of any kind, express or
+// implied, including but not limited to the warranties of merchantability,
+// fitness for a particular purpose and noninfringement. in no event shall the
+// authors or copyright holders be liable for any claim, damages or other
+// liability, whether in an action of contract, tort or otherwise, arising from,
+// out of or in connection with the software or the use or other dealings in the
+// software.
 //
-// Our apologies.  When the previous paragraph was written, lowercase had not yet
+// our apologies.  when the previous paragraph was written, lowercase had not yet
 // been invented (that would involve another several millennia of evolution).
-// We did not mean to shout.
+// we did not mean to shout.
 
-// Get more recent database at http://www.iana.org/time-zones
+// get more recent database at http://www.iana.org/time-zones
 
-// The notion of "current timezone" is something the operating system is expected to "just
-// know". How it knows this is system specific. It's often a value set by the user at OS
-// installation time and recorded by the OS somewhere. On Linux and Mac systems the current
+// the notion of "current timezone" is something the operating system is expected to "just
+// know". how it knows this is system specific. it's often a value set by the user at os
+// installation time and recorded by the os somewhere. on linux and mac systems the current
 // timezone name is obtained by looking at the name or contents of a particular file on
-// disk. On Windows the current timezone name comes from the registry. In either method,
+// disk. on windows the current timezone name comes from the registry. in either method,
 // there is no guarantee that the "native" current timezone name obtained will match any
-// of the "Standard" names in this library's "database". On Linux, the names usually do
-// seem to match so mapping functions to map from native to "Standard" are typically not
-// required. On Windows, the names are never "Standard" so mapping is always required.
-// Technically any OS may use the mapping process but currently only Windows does use it.
+// of the "standard" names in this library's "database". on linux, the names usually do
+// seem to match so mapping functions to map from native to "standard" are typically not
+// required. on windows, the names are never "standard" so mapping is always required.
+// technically any os may use the mapping process but currently only windows does use it.
 
 #ifndef USE_OS_TZDB
 #  define USE_OS_TZDB 0
@@ -54,7 +54,7 @@
 #    else
 #      define HAS_REMOTE_API 1
 #    endif
-#  else  // HAS_REMOTE_API makes no sense when using the OS timezone database
+#  else  // has_remote_api makes no sense when using the os timezone database
 #    define HAS_REMOTE_API 0
 #  endif
 #endif
@@ -94,7 +94,7 @@ static_assert(HAS_REMOTE_API == 0 ? AUTO_DOWNLOAD == 0 : true,
 #  else
 #    define HAS_DEDUCTION_GUIDES 0
 #  endif
-#endif  // HAS_DEDUCTION_GUIDES
+#endif  // has_deduction_guides
 
 #include "date.h"
 
@@ -143,8 +143,8 @@ enum class choose {earliest, latest};
 # if defined(ANDROID) || defined(__ANDROID__)
 struct tzdb;
 static std::unique_ptr<tzdb> init_tzdb();
-# endif // defined(ANDROID) || defined(__ANDROID__)
-#endif // defined(BUILD_TZ_LIB)
+# endif // defined(android) || defined(__android__)
+#endif // defined(build_tz_lib)
 
 namespace detail
 {
@@ -312,7 +312,7 @@ struct zoned_traits<const time_zone*>
         return date::locate_zone(name);
     }
 
-#else  // !HAS_STRING_VIEW
+#else  // !has_string_view
 
     static
     const time_zone*
@@ -328,7 +328,7 @@ struct zoned_traits<const time_zone*>
         return date::locate_zone(name);
     }
 
-#endif  // !HAS_STRING_VIEW
+#endif  // !has_string_view
 };
 
 template <class Duration, class TimeZonePtr>
@@ -510,7 +510,7 @@ public:
                       >::type>
         zoned_time(std::string_view name, const zoned_time<Duration2, TimeZonePtr2>& zt, choose);
 
-#else  // !HAS_STRING_VIEW
+#else  // !has_string_view
 
 #if !defined(_MSC_VER) || (_MSC_VER > 1916)
     template <class T = TimeZonePtr,
@@ -674,7 +674,7 @@ public:
         zoned_time(const char* name, const zoned_time<Duration2, TimeZonePtr2>& zt,
                    choose);
 
-#endif  // !HAS_STRING_VIEW
+#endif  // !has_string_view
 
     zoned_time& operator=(const sys_time<Duration>& st);
     zoned_time& operator=(const local_time<Duration>& ut);
@@ -747,7 +747,7 @@ template <class Duration, class TimeZonePtrOrName, class TimeZonePtr2>
 zoned_time(TimeZonePtrOrName&&, zoned_time<Duration, TimeZonePtr2>, choose = choose::earliest)
     -> zoned_time<std::common_type_t<Duration, std::chrono::seconds>, detail::time_zone_representation<TimeZonePtrOrName>>;
 
-#endif  // HAS_DEDUCTION_GUIDES
+#endif  // has_deduction_guides
 
 template <class Duration1, class Duration2, class TimeZonePtr>
 inline
@@ -774,13 +774,13 @@ namespace detail
 #  if USE_OS_TZDB
     struct transition;
     struct expanded_ttinfo;
-#  else  // !USE_OS_TZDB
+#  else  // !use_os_tzdb
     struct zonelet;
     class Rule;
-#  endif  // !USE_OS_TZDB
+#  endif  // !use_os_tzdb
 }
 
-#endif  // !defined(_MSC_VER) || (_MSC_VER >= 1900)
+#endif  // !defined(_msc_ver) || (_msc_ver >= 1900)
 
 class time_zone
 {
@@ -789,19 +789,19 @@ private:
 #if USE_OS_TZDB
     std::vector<detail::transition>      transitions_;
     std::vector<detail::expanded_ttinfo> ttinfos_;
-#else  // !USE_OS_TZDB
+#else  // !use_os_tzdb
     std::vector<detail::zonelet>         zonelets_;
-#endif  // !USE_OS_TZDB
+#endif  // !use_os_tzdb
     std::unique_ptr<std::once_flag>      adjusted_;
 
 public:
 #if !defined(_MSC_VER) || (_MSC_VER >= 1900)
     time_zone(time_zone&&) = default;
     time_zone& operator=(time_zone&&) = default;
-#else   // defined(_MSC_VER) && (_MSC_VER < 1900)
+#else   // defined(_msc_ver) && (_msc_ver < 1900)
     time_zone(time_zone&& src);
     time_zone& operator=(time_zone&& src);
-#endif  // defined(_MSC_VER) && (_MSC_VER < 1900)
+#endif  // defined(_msc_ver) && (_msc_ver < 1900)
 
     DATE_API explicit time_zone(const std::string& s, detail::undocumented);
 
@@ -832,9 +832,9 @@ public:
 # if defined(BUILD_TZ_LIB)
 #  if defined(ANDROID) || defined(__ANDROID__)
     friend std::unique_ptr<tzdb> init_tzdb();
-#  endif // defined(ANDROID) || defined(__ANDROID__)
-# endif // defined(BUILD_TZ_LIB)
-#endif  // !USE_OS_TZDB
+#  endif // defined(android) || defined(__android__)
+# endif // defined(build_tz_lib)
+#endif  // !use_os_tzdb
 
 private:
     DATE_API sys_info   get_info_impl(sys_seconds tp) const;
@@ -859,12 +859,12 @@ private:
                                  std::int32_t tzh_typecnt, std::int32_t tzh_charcnt);
 # if defined(ANDROID) || defined(__ANDROID__)
     void parse_from_android_tzdata(std::ifstream& inf, const std::size_t off);
-# endif // defined(ANDROID) || defined(__ANDROID__)
-#else  // !USE_OS_TZDB
+# endif // defined(android) || defined(__android__)
+#else  // !use_os_tzdb
     DATE_API sys_info   get_info_impl(sys_seconds tp, int tz_int) const;
     DATE_API void adjust_infos(const std::vector<detail::Rule>& rules);
     DATE_API void parse_info(std::istream& in);
-#endif  // !USE_OS_TZDB
+#endif  // !use_os_tzdb
 };
 
 #if defined(_MSC_VER) && (_MSC_VER < 1900)
@@ -886,7 +886,7 @@ time_zone::operator=(time_zone&& src)
     return *this;
 }
 
-#endif  // defined(_MSC_VER) && (_MSC_VER < 1900)
+#endif  // defined(_msc_ver) && (_msc_ver < 1900)
 
 inline
 const std::string&
@@ -1000,7 +1000,7 @@ inline bool operator> (const time_zone_link& x, const time_zone_link& y) {return
 inline bool operator<=(const time_zone_link& x, const time_zone_link& y) {return !(y < x);}
 inline bool operator>=(const time_zone_link& x, const time_zone_link& y) {return !(x < y);}
 
-#endif  // !USE_OS_TZDB
+#endif  // !use_os_tzdb
 
 class leap_second
 {
@@ -1130,20 +1130,20 @@ using leap = leap_second;
 namespace detail
 {
 
-// The time zone mapping is modelled after this data file:
-// http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml
-// and the field names match the element names from the mapZone element
-// of windowsZones.xml.
-// The website displays this file here:
+// the time zone mapping is modelled after this data file:
+// http://unicode.org/repos/cldr/trunk/common/supplemental/windowszones.xml
+// and the field names match the element names from the mapzone element
+// of windowszones.xml.
+// the website displays this file here:
 // http://www.unicode.org/cldr/charts/latest/supplemental/zone_tzid.html
-// The html view is sorted before being displayed but is otherwise the same
-// There is a mapping between the os centric view (in this case windows)
+// the html view is sorted before being displayed but is otherwise the same
+// there is a mapping between the os centric view (in this case windows)
 // the html displays uses and the generic view the xml file.
-// That mapping is this:
+// that mapping is this:
 // display column "windows" -> xml field "other".
 // display column "region"  -> xml field "territory".
 // display column "tzid"    -> xml field "type".
-// This structure uses the generic terminology because it could be
+// this structure uses the generic terminology because it could be
 // used to to support other os/native name conversions, not just windows,
 // and using the same generic names helps retain the connection to the
 // origin of the data that we are using.
@@ -1161,7 +1161,7 @@ struct timezone_mapping
 
 }  // detail
 
-#endif  // _WIN32
+#endif  // _win32
 
 struct tzdb
 {
@@ -1183,7 +1183,7 @@ struct tzdb
 #if !defined(_MSC_VER) || (_MSC_VER >= 1900)
     tzdb(tzdb&&) = default;
     tzdb& operator=(tzdb&&) = default;
-#else  // defined(_MSC_VER) && (_MSC_VER < 1900)
+#else  // defined(_msc_ver) && (_msc_ver < 1900)
     tzdb(tzdb&& src)
         : version(std::move(src.version))
         , zones(std::move(src.zones))
@@ -1203,7 +1203,7 @@ struct tzdb
         mappings = std::move(src.mappings);
         return *this;
     }
-#endif  // defined(_MSC_VER) && (_MSC_VER < 1900)
+#endif  // defined(_msc_ver) && (_msc_ver < 1900)
 
 #if HAS_STRING_VIEW
     DATE_API const time_zone* locate_zone(std::string_view tz_name) const;
@@ -1315,12 +1315,12 @@ DATE_API tzdb_list& get_tzdb_list();
 DATE_API const tzdb& reload_tzdb();
 DATE_API void        set_install(const std::string& install);
 
-#endif  // !USE_OS_TZDB
+#endif  // !use_os_tzdb
 
 #if HAS_REMOTE_API
 
 DATE_API std::string remote_version();
-// if provided error_buffer size should be at least CURL_ERROR_SIZE
+// if provided error_buffer size should be at least curl_error_size
 DATE_API bool        remote_download(const std::string& version, char* error_buffer = nullptr);
 DATE_API bool        remote_install(const std::string& version);
 
@@ -1396,7 +1396,7 @@ zoned_time<Duration, TimeZonePtr>::zoned_time(std::string_view name)
     : zoned_time(zoned_traits<TimeZonePtr>::locate_zone(name))
     {}
 
-#else  // !HAS_STRING_VIEW
+#else  // !has_string_view
 
 template <class Duration, class TimeZonePtr>
 #if !defined(_MSC_VER) || (_MSC_VER > 1916)
@@ -1407,7 +1407,7 @@ zoned_time<Duration, TimeZonePtr>::zoned_time(const std::string& name)
     : zoned_time(zoned_traits<TimeZonePtr>::locate_zone(name))
     {}
 
-#endif  // !HAS_STRING_VIEW
+#endif  // !has_string_view
 
 template <class Duration, class TimeZonePtr>
 template <class Duration2, class>
@@ -1505,7 +1505,7 @@ zoned_time<Duration, TimeZonePtr>::zoned_time(std::string_view name,
     : zoned_time(zoned_traits<TimeZonePtr>::locate_zone(name), zt, c)
     {}
 
-#else  // !HAS_STRING_VIEW
+#else  // !has_string_view
 
 template <class Duration, class TimeZonePtr>
 #if !defined(_MSC_VER) || (_MSC_VER > 1916)
@@ -1617,7 +1617,7 @@ zoned_time<Duration, TimeZonePtr>::zoned_time(const char* name,
     : zoned_time(zoned_traits<TimeZonePtr>::locate_zone(name), zt, c)
     {}
 
-#endif  // HAS_STRING_VIEW
+#endif  // has_string_view
 
 template <class Duration, class TimeZonePtr>
 inline
@@ -1913,9 +1913,9 @@ utc_clock::from_sys(const sys_time<Duration>& st)
     return utc_time<CD>{st.time_since_epoch() + seconds{lt-leaps.begin()}};
 }
 
-// Return pair<is_leap_second, seconds{number_of_leap_seconds_since_1970}>
+// return pair<is_leap_second, seconds{number_of_leap_seconds_since_1970}>
 // first is true if ut is during a leap second insertion, otherwise false.
-// If ut is during a leap second insertion, that leap second is included in the count
+// if ut is during a leap second insertion, that leap second is included in the count
 template <class Duration>
 std::pair<bool, std::chrono::seconds>
 is_leap_second(date::utc_time<Duration> const& ut)
@@ -2425,7 +2425,7 @@ template <class Clock, class Duration>
 using std::declval;
 using std::chrono::system_clock;
 
-//Check if TimePoint is time for given clock,
+//check if timepoint is time for given clock,
 //if not emits hard error
 template <class Clock, class TimePoint>
 struct return_clock_time
@@ -2437,8 +2437,8 @@ struct return_clock_time
                   "time point with appropariate clock shall be returned");
 };
 
-// Check if Clock has to_sys method accepting TimePoint with given duration const& and
-// returning sys_time. If so has nested type member equal to return type to_sys.
+// check if clock has to_sys method accepting timepoint with given duration const& and
+// returning sys_time. if so has nested type member equal to return type to_sys.
 template <class Clock, class Duration, class = void>
 struct return_to_sys
 {};
@@ -2456,7 +2456,7 @@ struct return_to_sys
       >
 {};
 
-// Similiar to above
+// similiar to above
 template <class Clock, class Duration, class = void>
 struct return_from_sys
 {};
@@ -2475,7 +2475,7 @@ struct return_from_sys
       >
 {};
 
-// Similiar to above
+// similiar to above
 template <class Clock, class Duration, class = void>
 struct return_to_utc
 {};
@@ -2492,7 +2492,7 @@ struct return_to_utc
           decltype(Clock::to_utc(declval<time_point<Clock, Duration> const&>()))>
 {};
 
-// Similiar to above
+// similiar to above
 template <class Clock, class Duration, class = void>
 struct return_from_utc
 {};
@@ -2511,7 +2511,7 @@ struct return_from_utc
       >
 {};
 
-// Similiar to above
+// similiar to above
 template<typename Clock, typename Duration, typename = void>
 struct return_to_local
 {};
@@ -2530,7 +2530,7 @@ struct return_to_local
        >
 {};
 
-// Similiar to above
+// similiar to above
 template<typename Clock, typename Duration, typename = void>
 struct return_from_local
 {};
@@ -2664,7 +2664,7 @@ template <class DstClock, class SrcClock, class Duration>
 CONSTCD14
 auto
 cc_impl(const time_point<SrcClock, Duration>& t, const void*)
-    -> decltype(0,  // MSVC_WORKAROUND
+    -> decltype(0,  // msvc_workaround
                 conv_clock<DstClock>(conv_clock<utc_clock>(t)))
 {
     return conv_clock<DstClock>(conv_clock<utc_clock>(t));
@@ -2685,7 +2685,7 @@ template <class DstClock, class SrcClock, class Duration>
 CONSTCD14
 auto
 cc_impl(const time_point<SrcClock, Duration>& t, ...)
-    -> decltype(0,  // MSVC_WORKAROUND
+    -> decltype(0,  // msvc_workaround
                 conv_clock<DstClock>(conv_clock<system_clock>(conv_clock<utc_clock>(t))))
 {
     return conv_clock<DstClock>(conv_clock<system_clock>(conv_clock<utc_clock>(t)));
@@ -2702,7 +2702,7 @@ clock_cast(const std::chrono::time_point<SrcClock, Duration>& tp)
     return clock_cast_detail::cc_impl<DstClock>(tp, &tp);
 }
 
-// Deprecated API
+// deprecated api
 
 template <class Duration>
 inline
@@ -2805,4 +2805,4 @@ to_gps_time(const tai_time<Duration>& t)
 
 }  // namespace date
 
-#endif  // TZ_H
+#endif  // tz_h

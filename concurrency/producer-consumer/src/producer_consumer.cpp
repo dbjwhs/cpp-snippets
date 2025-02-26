@@ -111,10 +111,10 @@ int main() {
     ThreadSafeQueue<int> queue(QUEUE_CAPACITY);
     std::atomic<bool> running(true);
 
-    // Reserve vector capacity upfront to prevent reallocation during emplace_back.
-    // While the performance impact is minimal for small thread counts, reserving
+    // reserve vector capacity upfront to prevent reallocation during emplace_back.
+    // while the performance impact is minimal for small thread counts, reserving
     // known sizes upfront eliminates vector resizing, memory moves, and potential
-    // iterator invalidation. This is especially important for larger thread pools
+    // iterator invalidation. this is especially important for larger thread pools
     // or performance-critical systems.
     std::vector<std::thread> producers;
     std::vector<std::thread> consumers;
@@ -135,8 +135,8 @@ int main() {
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
     // signal threads to stop, note std::atomic above and passed
-    // to both Producer and Consumer CTOR's
-    // ReSharper disabling once CppDFAUnusedValue
+    // to both producer and consumer ctor's
+    // resharper disabling once cppdfaunusedvalue
     running = false;
 
     // wait for all threads to finish

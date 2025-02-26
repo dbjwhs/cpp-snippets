@@ -31,7 +31,7 @@ public:
     [[nodiscard]] time_t getCreatedTime() const { return m_createdTime; }
     [[nodiscard]] time_t getModifiedTime() const { return m_modifiedTime; }
 
-    // ABC, pure virtual
+    // abc, pure virtual
     [[nodiscard]] virtual size_t getSize() const = 0;
 };
 
@@ -85,7 +85,7 @@ public:
         std::vector<std::string> names;
 
         names.reserve(m_children.size());
-        for (const auto& [name, node] : m_children) { // structured bindings more readable than std::pair IMHO
+        for (const auto& [name, node] : m_children) { // structured bindings more readable than std::pair imho
             names.push_back(name + (node->isDir() ? "/" : ""));
         }
         return names;

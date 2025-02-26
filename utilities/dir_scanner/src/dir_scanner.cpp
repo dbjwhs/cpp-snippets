@@ -21,7 +21,7 @@ std::string FileInfo::get_permission_string() const {
     std::string result;
     auto obj_permissions = static_cast<std::underlying_type_t<fs::perms>>(m_permissions);
 
-    // Format: rwxrwxrwx
+    // format: rwxrwxrwx
     result.reserve(9);
     for (int i = 8; i >= 0; --i) {
         if (i % 3 == 2) result += (obj_permissions & (1 << i)) ? 'r' : '-';
@@ -50,7 +50,7 @@ std::string DirectoryScanner::format_file_time(const fs::file_time_type& time) {
     return s_stream.str();
 }
 
-// helper function to get POSIX ownership information
+// helper function to get posix ownership information
 void DirectoryScanner::get_posix_ownership(const fs::path& path,
                                          std::string& owner,
                                          std::string& group) {
@@ -64,7 +64,7 @@ void DirectoryScanner::get_posix_ownership(const fs::path& path,
         group = gr ? gr->gr_name : std::to_string(st.st_gid);
     }
 #else
-    // on non-POSIX systems, leave empty
+    // on non-posix systems, leave empty
     owner = "";
     group = "";
 #endif
@@ -73,7 +73,7 @@ void DirectoryScanner::get_posix_ownership(const fs::path& path,
 // helper function to gather detailed file information
 FileInfo DirectoryScanner::get_file_info(const fs::directory_entry& entry) {
     FileInfo info;
-    std::error_code ec; // For error handling
+    std::error_code ec; // for error handling
 
     // basic path information
     info.m_path = entry.path();
@@ -91,7 +91,7 @@ FileInfo DirectoryScanner::get_file_info(const fs::directory_entry& entry) {
     // last write time
     info.m_last_write_time = format_file_time(entry.last_write_time(ec));
 
-    // get POSIX ownership information
+    // get posix ownership information
     get_posix_ownership(entry.path(), info.m_owner, info.m_group);
 
     return info;
@@ -194,7 +194,7 @@ int main() {
             std::cout << "Permissions: " << info.get_permission_string() << "\n";
             std::cout << "Last modified: " << info.m_last_write_time << "\n";
 
-            // print ownership information on POSIX systems
+            // print ownership information on posix systems
             if (!info.m_owner.empty()) {
                 std::cout << "Owner: " << info.m_owner << "\n";
                 std::cout << "Group: " << info.m_group << "\n";
@@ -205,7 +205,7 @@ int main() {
             }
         }
 
-        // example of filtering for large files (> 1MB)
+        // example of filtering for large files (> 1mb)
         std::cout << "\nLarge files (>1MB):\n";
         const auto large_files = scanner.scan_with_filter([](const FileInfo& info) {
             return !info.m_is_directory && info.m_file_size > 1024 * 1024;
@@ -216,7 +216,7 @@ int main() {
                      << (file.m_file_size / 1024.0 / 1024.0) << " MB\n";
         }
 
-        // Test pattern matching for specific file types
+        // test pattern matching for specific file types
         std::cout << "\nC++ source files (*.cpp):\n";
         auto cpp_files = scanner.scan_by_pattern_detailed("*.cpp");
         for (const auto& file : cpp_files) {

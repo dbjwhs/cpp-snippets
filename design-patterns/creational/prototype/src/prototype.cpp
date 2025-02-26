@@ -57,11 +57,11 @@
 //
 // 2. factory-based:
 //    combines with factory pattern
-//    factory.createProduct(type).clone()
+//    factory.createproduct(type).clone()
 //
 // 3. singleton registry:
 //    global access to prototype collection
-//    PrototypeRegistry::instance().getPrototype(key)
+//    prototyperegistry::instance().getprototype(key)
 //
 // implementation variants:
 // - deep vs shallow copying
@@ -90,25 +90,25 @@
 // - neglecting error handling
 //
 // example usage:
-// class ConcretePrototype : public Prototype {
+// class concreteprototype : public prototype {
 //     private:
 //         // resource handles, pointers, complex data
-//         std::unique_ptr<Resource> m_resource;
-//         std::vector<DataBlock> m_data;
+//         std::unique_ptr<resource> m_resource;
+//         std::vector<datablock> m_data;
 //
 //     public:
-//         std::unique_ptr<Prototype> clone() const override {
+//         std::unique_ptr<prototype> clone() const override {
 //             // deep copy implementation
-//             auto clone = std::make_unique<ConcretePrototype>();
-//             clone->m_resource = std::make_unique<Resource>(*m_resource);
+//             auto clone = std::make_unique<concreteprototype>();
+//             clone->m_resource = std::make_unique<resource>(*m_resource);
 //             clone->m_data = m_data;  // vector handles its own deep copy
 //             return clone;
 //         }
 // };
 //
 // complexity analysis:
-// - time: O(n) for deep copy, O(1) for shallow copy
-// - space: O(n) for deep copy, O(1) for shallow copy
+// - time: o(n) for deep copy, o(1) for shallow copy
+// - space: o(n) for deep copy, o(1) for shallow copy
 //   where n is the size/complexity of the object
 //
 // related patterns:
@@ -118,7 +118,7 @@
 // - command: can store prototypes for undo/redo
 //
 // this implementation:
-// class: Prototype
+// class: prototype
 // - uses unique_ptr for automatic resource management
 // - provides virtual interface for cloning
 // - implements basic attribute handling (name, price)
@@ -129,11 +129,11 @@
 // historical note on inheritance and object slicing:
 //
 // during the 1990s-2005 era, a common architectural pattern was to create
-// a single root/uber base class (similar to java's Object class) from which
+// a single root/uber base class (similar to java's object class) from which
 // all other classes would inherit. examples include:
-//   - microsoft's mfc cObject
-//   - borland's toObject
-//   - early game engines' gameObject
+//   - microsoft's mfc cobject
+//   - borland's toobject
+//   - early game engines' gameobject
 //
 // advantages of this approach:
 // - enabled polymorphic behavior across entire codebase
@@ -146,11 +146,11 @@
 // when passing derived objects by value instead of by pointer/reference,
 // the derived portion of the object gets "sliced off", leaving only the
 // base class portion. example:
-//   class Base { int x; };
-//   class Derived : public Base { int y; };
-//   void func(Base val) { ... }  // slicing occurs here
-//   Derived d;
-//   func(d);  // only Base::x is copied, Derived::y is lost
+//   class base { int x; };
+//   class derived : public base { int y; };
+//   void func(base val) { ... }  // slicing occurs here
+//   derived d;
+//   func(d);  // only base::x is copied, derived::y is lost
 //
 // modern best practices (2024):
 // - prefer composition over inheritance
@@ -159,7 +159,7 @@
 // - consider std::variant for type-safe polymorphism
 // - use references/pointers when polymorphism is needed
 // - explicitly delete copy operations if slicing is a concern:
-//   Base(const Base&) = delete;
+//   base(const base&) = delete;
 // ************************************************************************
 class Prototype {
 

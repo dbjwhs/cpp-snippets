@@ -7,27 +7,27 @@
 #include <cassert>
 
 /*
-Challenge:
-Design and implement a data structure for Least Recently Used(LRU) cache. (As stated above, feel free to make use of
-whatever language classes your language provides. If Python had a native LRUCache class, you could just use that
+challenge:
+design and implement a data structure for least recently used(lru) cache. (as stated above, feel free to make use of
+whatever language classes your language provides. if python had a native lrucache class, you could just use that
 (it does not!)
 
-Problem Note:
+problem note:
 
-The LRU Cache is initialized with a positive capacity
-Your data structure must support two operations: get() and put()
-get(key) : Finds and returns the value if the key exists in the cache. If the key is not present in the cache, get(key)
+the lru cache is initialized with a positive capacity
+your data structure must support two operations: get() and put()
+get(key) : finds and returns the value if the key exists in the cache. if the key is not present in the cache, get(key)
 returns -1
 
-put(key, value) : Inserts new key, if it is not present in the cache. If the cache is filled to capacity, it must remove
+put(key, value) : inserts new key, if it is not present in the cache. if the cache is filled to capacity, it must remove
 the least recently used entry.
 
-[NOTE] Try implementing both operations in O(1) time complexity
+[note] try implementing both operations in o(1) time complexity
 
-Input in this problem would be a series of function calls to get() and put()
-Example
+input in this problem would be a series of function calls to get() and put()
+example
 
-cache = LRUCache(3)
+cache = lrucache(3)
 cache.put(1,1)
 cache.put(2,2)
 cache.put(1,3)
@@ -36,13 +36,13 @@ cache.put(3,4)
 cache.put(4,3)  // removes key 2
 cache.get(2)    ---> returns -1
 
-Input Format:
+input format:
 
-First-line contains N and C , the total number of queries and the cache size.
-Each of the following N lines has a query of either type 1(put) or type 2(get).
-The query of type 1 is of format: 1 k v, where k is key and v is value
-The query of type 2 is of format: 2 k, where k is key whose value is to be fetched.
-For example, the input for the above example will be:
+first-line contains n and c , the total number of queries and the cache size.
+each of the following n lines has a query of either type 1(put) or type 2(get).
+the query of type 1 is of format: 1 k v, where k is key and v is value
+the query of type 2 is of format: 2 k, where k is key whose value is to be fetched.
+for example, the input for the above example will be:
 
 7 3
 1 1 1
@@ -74,7 +74,7 @@ private:
             std::cout << "DEBUG: Moving key " << iter->m_key << " (value: " << iter->m_value << ") to front" << std::endl;
         }
 
-        // JG this is why I wanted to use a std::list, b/c it has splice which transfers elements by repointing nodes
+        // jg this is why i wanted to use a std::list, b/c it has splice which transfers elements by repointing nodes
         // (no copying/moving) -> 0(1)
         m_cache_entry_list.splice(m_cache_entry_list.begin(), m_cache_entry_list, iter);
     }
@@ -92,7 +92,7 @@ private:
 public:
     explicit LRUCache(const int size) : m_capacity(size) {
         if (size <= 0) {
-            // ### what to do here? I guess throw?
+            // ### what to do here? i guess throw?
             throw std::invalid_argument("Cache capacity must greater than or equal to zero");
         }
         if (enable_debug) {
@@ -187,7 +187,7 @@ void run_tests() {
         }
 
         /*
-        cache = LRUCache(3)
+        cache = lrucache(3)
         cache.put(1,1)
         cache.put(2,2)
         cache.put(1,3)

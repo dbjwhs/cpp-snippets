@@ -1,31 +1,31 @@
 #ifndef JULIAN_H
 #define JULIAN_H
 
-// The MIT License (MIT)
+// the mit license (mit)
 //
-// Copyright (c) 2016 Howard Hinnant
+// copyright (c) 2016 howard hinnant
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "software"), to deal
+// in the software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
+// copies of the software, and to permit persons to whom the software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// the above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// the software is provided "as is", without warranty of any kind, express or
+// implied, including but not limited to the warranties of merchantability,
+// fitness for a particular purpose and noninfringement. in no event shall the
+// authors or copyright holders be liable for any claim, damages or other
+// liability, whether in an action of contract, tort or otherwise, arising from,
+// out of or in connection with the software or the use or other dealings in the
+// software.
 //
-// Our apologies.  When the previous paragraph was written, lowercase had not yet
+// our apologies.  when the previous paragraph was written, lowercase had not yet
 // been invented (that would involve another several millennia of evolution).
-// We did not mean to shout.
+// we did not mean to shout.
 
 #include "date.h"
 
@@ -160,7 +160,7 @@ CONSTCD11
 year_month_weekday_last
 operator/(const month_weekday_last& mwdl, int         y) NOEXCEPT;
 
-// Detailed interface
+// detailed interface
 
 // day
 
@@ -761,24 +761,24 @@ inline namespace literals
 CONSTCD11 julian::day  operator "" _d(unsigned long long d) NOEXCEPT;
 CONSTCD11 julian::year operator "" _y(unsigned long long y) NOEXCEPT;
 
-// CONSTDATA julian::month jan{1};
-// CONSTDATA julian::month feb{2};
-// CONSTDATA julian::month mar{3};
-// CONSTDATA julian::month apr{4};
-// CONSTDATA julian::month may{5};
-// CONSTDATA julian::month jun{6};
-// CONSTDATA julian::month jul{7};
-// CONSTDATA julian::month aug{8};
-// CONSTDATA julian::month sep{9};
-// CONSTDATA julian::month oct{10};
-// CONSTDATA julian::month nov{11};
-// CONSTDATA julian::month dec{12};
+// constdata julian::month jan{1};
+// constdata julian::month feb{2};
+// constdata julian::month mar{3};
+// constdata julian::month apr{4};
+// constdata julian::month may{5};
+// constdata julian::month jun{6};
+// constdata julian::month jul{7};
+// constdata julian::month aug{8};
+// constdata julian::month sep{9};
+// constdata julian::month oct{10};
+// constdata julian::month nov{11};
+// constdata julian::month dec{12};
 
 }  // inline namespace literals
-#endif // !defined(_MSC_VER) || (_MSC_VER >= 1900)
+#endif // !defined(_msc_ver) || (_msc_ver >= 1900)
 
 //----------------+
-// Implementation |
+// implementation |
 //----------------+
 
 // day
@@ -1345,7 +1345,7 @@ operator "" _y(unsigned long long y) NOEXCEPT
 {
     return julian::year(static_cast<int>(y));
 }
-#endif  // !defined(_MSC_VER) || (_MSC_VER >= 1900)
+#endif  // !defined(_msc_ver) || (_msc_ver >= 1900)
 
 CONSTDATA julian::last_spec last{};
 
@@ -3049,4 +3049,4 @@ operator/(const month_weekday_last& mwdl, int y) NOEXCEPT
 
 }  // namespace julian
 
-#endif  // JULIAN_H
+#endif  // julian_h

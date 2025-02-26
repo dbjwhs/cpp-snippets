@@ -17,7 +17,7 @@
 #include <filesystem>
 #include <iomanip>
 
-// Version information
+// version information
 #define PROJECT_VERSION_MAJOR 1
 #define PROJECT_VERSION_MINOR 0
 
@@ -94,7 +94,7 @@ class Logger {
         if (is_level_enabled(level)) {
             if ((level == LogLevel::CRITICAL || level == LogLevel::ERROR) && m_stderr_enabled) {
                 std::cerr << message;
-            } else { // INFO, NORMAL, DEBUG
+            } else { // info, normal, debug
                 std::cout << message;
             }
         }
@@ -111,7 +111,7 @@ class Logger {
     }
 
 public:
-    // RAII class for temporarily disabling stderr output
+    // raii class for temporarily disabling stderr output
     class StderrSuppressionGuard {
     public:
         StderrSuppressionGuard() : m_was_enabled(Logger::getInstance().isStderrEnabled()) {
@@ -139,7 +139,7 @@ public:
             throw std::runtime_error("Failed to open log file: " + path);
         }
 
-        // Initialize enabled levels - all levels enabled by default
+        // initialize enabled levels - all levels enabled by default
         for (int ndx = 0; ndx < static_cast<int>(LogLevel::CRITICAL) + 1; ++ndx) {
             m_enabled_levels[ndx] = true;
         }
@@ -153,7 +153,7 @@ public:
         return *m_instance;
     }
 
-    // custom path version of getInstance
+    // custom path version of getinstance
     static Logger& getInstance(const std::string& custom_path) {
         std::lock_guard<std::mutex> lock(m_instance_mutex);
         if (m_instance == nullptr) {
@@ -178,7 +178,7 @@ public:
     }
 
     // variadic template for logging, way better than overriding log() methods to except
-    // Primary template for logging without depth
+    // primary template for logging without depth
     template<typename... Args>
     void log(const LogLevel level, const Args&... args) {
         if (!is_level_enabled(level)) {
@@ -246,7 +246,7 @@ private:
     std::mutex m_mutex;
     std::atomic<bool> m_stderr_enabled{true};
     std::atomic<bool> m_file_output_enabled{true};
-    std::atomic<bool> m_enabled_levels[5]{true, true, true, true, true}; // One for each log level
+    std::atomic<bool> m_enabled_levels[5]{true, true, true, true, true}; // one for each log level
 
     // check if a level is enabled (internal helper)
     bool is_level_enabled(LogLevel level) const {
@@ -301,8 +301,8 @@ private:
     }
 };
 
-// Initialize static members
+// initialize static members
 Logger* Logger::m_instance = nullptr;
 std::mutex Logger::m_instance_mutex;
 
-#endif // PROJECT_UTILS_HPP
+#endif // project_utils_hpp

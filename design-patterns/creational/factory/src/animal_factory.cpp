@@ -14,7 +14,7 @@ public:
     virtual void move() = 0;
 };
 
-// concrete Products
+// concrete products
 class Dog final : public Animal {
 public:
     void makeSound() override {
@@ -48,7 +48,7 @@ public:
     }
 };
 
-// animal Factory with static method
+// animal factory with static method
 class AnimalFactory {
 public:
     // static factory method
@@ -77,7 +77,7 @@ public:
     [[nodiscard]] std::unique_ptr<Animal> createAnimal(const std::string& animalType) const {
         auto animal = AnimalFactory::createAnimal(animalType);
         if (makeNoisyAnimals) {
-            animal->makeSound(); // Animals make sound immediately when created
+            animal->makeSound(); // animals make sound immediately when created
         }
         return animal;
     }
@@ -110,12 +110,12 @@ int main() {
         std::cout << "Creating animals with noisy factory:" << std::endl;
         ConfigurableAnimalFactory noisyFactory(true);
         std::cout << "\nCreating dog:" << std::endl;
-        const auto noisyDog = noisyFactory.createAnimal("dog");  // Will make sound automatically
+        const auto noisyDog = noisyFactory.createAnimal("dog");  // will make sound automatically
         std::cout << "Making dog move:" << std::endl;
         noisyDog->move();
 
         std::cout << "\nCreating cat:" << std::endl;
-        const auto noisyCat = noisyFactory.createAnimal("cat");  // Will make sound automatically
+        const auto noisyCat = noisyFactory.createAnimal("cat");  // will make sound automatically
         std::cout << "Making cat move:" << std::endl;
         noisyCat->move();
 
@@ -123,13 +123,13 @@ int main() {
         std::cout << "\nCreating animals with quiet factory:" << std::endl;
         ConfigurableAnimalFactory quietFactory(false);
         std::cout << "\nCreating dog:" << std::endl;
-        auto quietDog = quietFactory.createAnimal("dog");  // Won't make sound automatically
+        auto quietDog = quietFactory.createAnimal("dog");  // won't make sound automatically
         std::cout << "Making dog move and sound explicitly:" << std::endl;
         quietDog->move();
         quietDog->makeSound();
 
         std::cout << "\nCreating cat:" << std::endl;
-        const auto quietCat = quietFactory.createAnimal("cat");  // Won't make sound automatically
+        const auto quietCat = quietFactory.createAnimal("cat");  // won't make sound automatically
         std::cout << "Making cat move and sound explicitly:" << std::endl;
         quietCat->move();
         quietCat->makeSound();

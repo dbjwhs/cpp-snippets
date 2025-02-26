@@ -121,10 +121,10 @@ private:
 
                 // first glance suggests !m_is_running would always evaluate to false, but that's not the case.
                 //
-                // processMethodQueue() processes the activation queue until a shutdown is requested (!m_is_running becomes true)
+                // processmethodqueue() processes the activation queue until a shutdown is requested (!m_is_running becomes true)
                 // the condition !m_is_running && m_activation_queue.empty() means:
                 // 1. we received a shutdown request (!m_is_running is true)
-                // 2. AND we've processed all remaining items in the queue (m_activation_queue.empty() is true)
+                // 2. and we've processed all remaining items in the queue (m_activation_queue.empty() is true)
                 // this ensures we:
                 //   - don't exit if there's still work to do during shutdown
                 //   - process all pending operations before shutting down
@@ -132,9 +132,9 @@ private:
                 // the check is needed because m_is_running starts as true (set in constructor) and becomes
                 // false when shutdown() is called, allowing for graceful completion of pending tasks
                 //
-                // ReSharper disable once CppDFAConstantConditions
+                // resharper disable once cppdfaconstantconditions
                 if (m_activation_queue.empty() && !m_is_running) {
-                    // ReSharper disable once CppDFAUnreachableCode
+                    // resharper disable once cppdfaunreachablecode
                     return;
                 }
 
@@ -209,7 +209,7 @@ private:
         void call() override {
             if (!isCancelled()) {
                 try {
-                    // Check for overflow in addition
+                    // check for overflow in addition
                     if ((m_x > 0 && m_y > std::numeric_limits<int>::max() - m_x) ||
                         (m_x < 0 && m_y < std::numeric_limits<int>::min() - m_x)) {
                         throw std::overflow_error("addition overflow");
@@ -237,7 +237,7 @@ private:
         void call() override {
             if (!isCancelled()) {
                 try {
-                    // Check for overflow in multiplication
+                    // check for overflow in multiplication
                     if (m_x != 0 && m_y != 0) {
                         if (m_x > std::numeric_limits<int>::max() / m_y ||
                             m_x < std::numeric_limits<int>::min() / m_y) {
@@ -264,7 +264,7 @@ int main() {
         Calculator calculator;
         logger.log(LogLevel::INFO, "=== Comprehensive Test Suite ===");
 
-        // 1. basic Operation Tests
+        // 1. basic operation tests
         logger.log(LogLevel::INFO, "1. Basic Operations:");
         {
             auto add = calculator.add(5, 3);
@@ -273,10 +273,10 @@ int main() {
             logger.log(LogLevel::INFO, "Multiply result (4*2): " + std::to_string(multiply->get()));
         }
 
-        // 2. priority Tests
+        // 2. priority tests
         logger.log(LogLevel::INFO, "2. Priority Handling:");
         {
-            // Queue multiple operations with different priorities
+            // queue multiple operations with different priorities
             std::vector<std::shared_ptr<MethodResult<int>>> results;
             results.push_back(calculator.add(1, 1, Priority::LOW));
             results.push_back(calculator.add(2, 2, Priority::MEDIUM));
@@ -292,7 +292,7 @@ int main() {
             logger.log(LogLevel::INFO, "Low priority multiply (2*2): " + std::to_string(results[3]->get()));
         }
 
-        // 3. timeout Tests
+        // 3. timeout tests
         logger.log(LogLevel::INFO, "3. Timeout Handling:");
         {
             // test immediate timeout
@@ -324,10 +324,10 @@ int main() {
             }
         }
 
-        // 4. cancellation Tests
+        // 4. cancellation tests
         logger.log(LogLevel::INFO, "4. Cancellation Handling:");
         {
-            // Test immediate cancellation
+            // test immediate cancellation
             auto immediateCancellation = calculator.add(7, 7);
             immediateCancellation->cancel();
             try {
@@ -361,10 +361,10 @@ int main() {
             }
         }
 
-        // 5. error Handling Tests
+        // 5. error handling tests
         logger.log(LogLevel::INFO, "5. Error Handling:");
         {
-            // Test integer overflow
+            // test integer overflow
             auto overflowTest = calculator.add(std::numeric_limits<int>::max(), 1);
             try {
                 overflowTest->get();
@@ -383,7 +383,7 @@ int main() {
             }
         }
 
-        // 6. mixed Operation Tests
+        // 6. mixed operation tests
         logger.log(LogLevel::INFO, "6. Mixed Operation Scenarios:");
         {
             // combine priorities, timeouts, and cancellations
@@ -407,7 +407,7 @@ int main() {
             logger.log(LogLevel::INFO, "Low priority result: " + std::to_string(lowPriorityOp->get()));
         }
 
-        // 7. stress Test with Mixed Operations
+        // 7. stress test with mixed operations
         logger.log(LogLevel::INFO, "7. Stress Test:");
         {
             constexpr int numOperations = 100;
@@ -415,7 +415,7 @@ int main() {
 
             // queue mix of operations with different priorities
             for (int ndx = 0; ndx < numOperations; ++ndx) {
-                auto priority = static_cast<Priority>(ndx % 3);  // Cycle through priorities
+                auto priority = static_cast<Priority>(ndx % 3);  // cycle through priorities
                 if (ndx % 2 == 0) {
                     results.push_back(calculator.add(ndx, ndx, priority));
                 } else {
@@ -423,7 +423,7 @@ int main() {
                 }
 
                 // randomly cancel some operations
-                if (ndx % 7 == 0) {  // Cancel ~14% of operations
+                if (ndx % 7 == 0) {  // cancel ~14% of operations
                     results.back()->cancel();
                 }
             }

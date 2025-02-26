@@ -53,30 +53,30 @@
 //
 // class hierarchy:
 //
-// IDataProcessor (interface)
+// idataprocessor (interface)
 // |-> defines interface for data processing operations
-// |-> pure virtual methods: processData(), getProcessedCount()
+// |-> pure virtual methods: processdata(), getprocessedcount()
 // |
-// |---> RealDataProcessor
+// |---> realdataprocessor
 // |     |-> concrete implementation that does actual data processing
 // |     |-> maintains count of processed items
 // |     |-> processes vector<string> data with detailed logging
 // |     |-> member variables:
-// |         |-> m_processedCount: tracks total items processed
+// |         |-> m_processedcount: tracks total items processed
 // |
-// |---> DataProcessorProxy
-//       |-> controls access to RealDataProcessor
+// |---> dataprocessorproxy
+//       |-> controls access to realdataprocessor
 //       |-> implements authentication checking
 //       |-> provides additional logging and access tracking
 //       |-> member variables:
-//           |-> m_realProcessor: unique_ptr to RealDataProcessor
-//           |-> m_isAuthenticated: tracks authentication state
-//           |-> m_accessCount: tracks number of access attempts
+//           |-> m_realprocessor: unique_ptr to realdataprocessor
+//           |-> m_isauthenticated: tracks authentication state
+//           |-> m_accesscount: tracks number of access attempts
 //
 // key relationships:
 // - proxy forwards authenticated requests to real processor
 // - proxy maintains sole ownership of real processor via unique_ptr
-// - both derived classes implement IDataProcessor interface
+// - both derived classes implement idataprocessor interface
 // - proxy adds authentication and logging without modifying real processor
 
 // interface for both a real subject and proxy

@@ -10,7 +10,7 @@ private:
     std::string text;
 
 public:
-    // constructor with UTF-8 example
+    // constructor with utf-8 example
     StringDemoSimple() : text("Hello! こんにちは 你好 안녕하세요") {}
 
     // basic string operations
@@ -29,13 +29,13 @@ public:
         std::cout << "First word: " << firstWord << std::endl;
 
         // append operation
-        text.append(" 🌟"); // Unicode emoji
+        text.append(" 🌟"); // unicode emoji
         std::cout << "After append: " << text << std::endl;
     }
 
     // modification operations
     void modificationDemo() {
-        // Insert
+        // insert
         text.insert(0, "Start: ");
         std::cout << "After insert: " << text << std::endl;
 
@@ -71,7 +71,7 @@ public:
         std::cout << "Ends with '🌟'? " << (text.ends_with("🌟") ? "Yes" : "No") << std::endl;
     }
 
-    // case conversion (Note: only affects ASCII characters)
+    // case conversion (note: only affects ascii characters)
     void caseDemo() {
         std::string ascii = "Hello, World!";
         std::transform(ascii.begin(), ascii.end(), ascii.begin(), ::toupper);
@@ -89,7 +89,7 @@ public:
         }
         std::cout << std::endl;
 
-        // Reverse iteration
+        // reverse iteration
         std::cout << "Reverse: ";
         for (auto it = text.rbegin(); it != text.rend(); ++it) {
             std::cout << *it;
@@ -102,7 +102,7 @@ public:
         const char* cstr = text.c_str();
         std::cout << "C-style string: " << cstr << std::endl;
 
-        // Get raw bytes
+        // get raw bytes
         const unsigned char* raw = reinterpret_cast<const unsigned char*>(text.data());
         std::cout << "First few bytes: ";
         for (size_t i = 0; i < 10; ++i) {
