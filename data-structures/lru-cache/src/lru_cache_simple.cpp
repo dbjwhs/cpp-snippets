@@ -269,7 +269,7 @@ void run_tests() {
     std::cout << "DEBUG: All tests passed!" << std::endl;
 }
 
-inline constexpr bool enable_cmd = true;
+inline constexpr bool enable_cmd = false;
 void run_cmd() {
     if (enable_cmd) {
         // 7 3
