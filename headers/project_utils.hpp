@@ -75,8 +75,8 @@ enum class LogLevel {
 
 class Logger {
 private:
-    // Changed from raw pointer to weak_ptr to implement shared_ptr singleton
-    inline static std::weak_ptr<Logger> m_instance;
+    // shared_ptr to maintain the singleton
+    inline static std::shared_ptr<Logger> m_instance;
     inline static std::mutex m_instance_mutex; // mutex for thread-safe initialization
 
     // helper method to handle the common logging logic
@@ -147,12 +147,10 @@ public:
     // Private method to get or create the instance
     static std::shared_ptr<Logger> getOrCreateInstance(const std::string& path = "../custom.log") {
         std::lock_guard<std::mutex> lock(m_instance_mutex);
-        std::shared_ptr<Logger> instance = m_instance.lock();
-        if (!instance) {
-            instance = std::shared_ptr<Logger>(new Logger(path));
-            m_instance = instance;
+        if (!m_instance) {
+            m_instance = std::shared_ptr<Logger>(new Logger(path));
         }
-        return instance;
+        return m_instance;
     }
 
     // Returns a reference for backward compatibility but uses shared_ptr internally
@@ -293,7 +291,7 @@ private:
 
         struct tm tm_buf;
 #ifdef _WIN32
-        // ### not tested (did work few years ago)
+        // ### not tested (did work a few years ago)
         gmtime_s(&tm_buf, &time);
 #else
         gmtime_r(&time, &tm_buf);
