@@ -1,15 +1,6 @@
 // MIT License
 // Copyright (c) 2025 dbjwhs
 
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <array>
-#include <chrono>
-#include <fstream>
-#include <vector>
-#include <memory>
-#include <random>
 #include "../../../headers/project_utils.hpp"
 
 // class representing a philosopher in the dining problem
