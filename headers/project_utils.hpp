@@ -109,7 +109,7 @@ private:
         return message;
     }
 
-    // Constructor is now private to control instantiation
+    // constructor is now private to control instantiation
     explicit Logger(const std::string& path) {
         if (!std::filesystem::exists(std::filesystem::path(path).parent_path())) {
             throw std::runtime_error("Invalid path provided: " + path);
@@ -144,7 +144,7 @@ public:
         bool m_was_enabled;
     };
 
-    // Private method to get or create the instance
+    // private method to get or create the instance
     static std::shared_ptr<Logger> getOrCreateInstance(const std::string& path = "../custom.log") {
         std::lock_guard<std::mutex> lock(m_instance_mutex);
         if (!m_instance) {
@@ -153,34 +153,34 @@ public:
         return m_instance;
     }
 
-    // Returns a reference for backward compatibility but uses shared_ptr internally
+    // returns a reference for backward compatibility but uses shared_ptr internally
     static Logger& getInstance() {
         return *getOrCreateInstance();
     }
 
-    // custom path version of getInstance
+    // custom path version of getinstance
     static Logger& getInstance(const std::string& custom_path) {
         return *getOrCreateInstance(custom_path);
     }
 
-    // New method for code that explicitly wants to manage the shared_ptr
+    // new method for code that explicitly wants to manage the shared_ptr
     static std::shared_ptr<Logger> getInstancePtr() {
         return getOrCreateInstance();
     }
 
-    // With custom path for the shared_ptr version
+    // with custom path for the shared_ptr version
     static std::shared_ptr<Logger> getInstancePtr(const std::string& custom_path) {
         return getOrCreateInstance(custom_path);
     }
 
-    // Destructor remains the same
+    // destructor remains the same
     ~Logger() {
         if (m_log_file.is_open()) {
             m_log_file.close();
         }
     }
 
-    // The rest of the methods remain unchanged
+    // the rest of the methods remain unchanged
     // variadic template for logging
     template<typename... Args>
     void log(const LogLevel level, const Args&... args) {
@@ -304,6 +304,6 @@ private:
     }
 };
 
-// No need to explicitly define static members when using inline
+// no need to explicitly define static members when using inline
 
 #endif // project_utils_hpp
