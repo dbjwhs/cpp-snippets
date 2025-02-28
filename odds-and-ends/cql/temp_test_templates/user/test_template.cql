@@ -1,5 +1,0 @@
-@language "C++"
-@description "test template"
-@variable "class_name" "DefaultClass"
-@context "Using ${class_name} for implementation"
-@test "Test ${class_name} constructor"
