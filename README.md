@@ -4,49 +4,6 @@
 
 A collection of self-contained C++ code snippets, examples, and mini-projects. Each snippet is independently buildable and includes its own CMake configuration.
 
-## Repository Structure Goal *(this is evolving)*
-
-```
-.
-├── algorithms/          # Algorithm implementations
-├── data-structures/     # Custom data structure implementations
-├── algorithms/          # Algorithm implementations
-├── data-structures/     # Custom data structure implementations
-├── design-patterns/     # Design pattern implementations
-│   ├── creational/      # Object creation patterns
-│   │   ├── abstract-factory/   # Creates families of related objects
-│   │   ├── builder/            # Separates object construction from representation
-│   │   ├── factory-method/     # Defines interface for creating objects
-│   │   ├── prototype/          # Creates objects by cloning existing ones
-│   │   └── singleton/          # Ensures a class has only one instance
-│   ├── structural/     # Object composition patterns
-│   │   ├── adapter/            # Makes incompatible interfaces compatible
-│   │   ├── bridge/             # Separates abstraction from implementation
-│   │   ├── composite/          # Composes objects into tree structures
-│   │   ├── decorator/          # Adds responsibilities to objects dynamically
-│   │   ├── facade/             # Provides unified interface to a set of interfaces
-│   │   ├── flyweight/          # Shares common state between multiple objects
-│   │   └── proxy/              # Provides surrogate for another object
-│   └── behavioral/     # Object communication patterns
-│       ├── chain-of-responsibility/  # Passes requests along a chain
-│       ├── command/                  # Encapsulates a request as an object
-│       ├── interpreter/              # Defines grammar for instructions
-│       ├── iterator/                 # Accesses elements sequentially
-│       ├── mediator/                 # Defines how objects interact
-│       ├── memento/                  # Captures and restores object state
-│       ├── observer/                 # Notifies dependents of changes
-│       ├── state/                    # Alters object behavior when state changes
-│       ├── strategy/                 # Encapsulates interchangeable algorithms
-│       ├── template-method/          # Defines skeleton of an algorithm
-│       └── visitor/                  # Separates algorithm from object structure
-├── concurrency/        # Threading and concurrency examples
-├── utilities/          # Helper functions and utility classes
-└── headers/            # Common code used throughout collection
-├── concurrency/        # Threading and concurrency examples
-└── utilities/          # Helper functions and utility classes
-└── headers/            # Common code used throughout collection
-```
-
 ## Building the Snippets
 
 Each snippet is contained in its own directory with a CMakeLists.txt file. To build a specific snippet:
@@ -99,32 +56,35 @@ Or you can elect to build everything at once.
 ### Design Patterns
 
 #### creational
-- [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern
-- [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern
-- [creational/factory/](design-patterns/creational/factory/) - Factory pattern
 - [creational/abstract-factory/](design-patterns/creational/abstract-factory/) - Abstract factory pattern
 - [creational/builder/](design-patterns/creational/builder/) - Builder factory pattern
+- [creational/factory/](design-patterns/creational/factory/) - Factory pattern
+- [creational/prototype/](design-patterns/creational/factory/) - Prototype pattern
+- [creational/singleton/](design-patterns/creational/factory/) - Singleton pattern
 
 #### structural
-- [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern
 - [structural/adapter/](design-patterns/structural/adapter/) - Adapter pattern
-- [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern
-- [structural/pimpl/](design-patterns/structural/pimpl/) - Pimpl (pointer to Implementation) pattern
-- [structural/composite/](design-patterns/structural/composite/) - Composite pattern
 - [structural/bridge/](design-patterns/structural/bridge/) - Bridge pattern
-- [structural/facade/](design-patterns/structural/facade/) - Facade pattern
+- [structural/composite/](design-patterns/structural/composite/) - Composite pattern
 - [structural/decorator/](design-patterns/structural/decorator/) - Decorator pattern
+- [structural/facade/](design-patterns/structural/facade/) - Facade pattern
+- [structural/flyweight/](design-patterns/structural/flyweight/) - Flyweight pattern
+- [structural/pimpl/](design-patterns/structural/pimpl/) - Pimpl (pointer to Implementation) pattern
+- [structural/proxy/](design-patterns/structural/proxy/) - Proxy pattern
 
 #### behavioral
-- [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
-- [behavioral/command/](design-patterns/behavioral/command/) - Command pattern
-- [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern
-- [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern
-- [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern
 - [behavioral/chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/) - Chain-of-responsibility pattern
+- [behavioral/command/](design-patterns/behavioral/command/) - Command pattern
 - [behavioral/fail-fast/](design-patterns/behavioral/fail-fast/) - Fail fast pattern
 - [behavioral/interpreter/](design-patterns/behavioral/interpreter/) - Interpreter pattern
 - [behavioral/iterator/](design-patterns/behavioral/iterator/) - Iterator pattern
+- [behavioral/mediator/](design-patterns/behavioral/mediator/) - Mediator pattern implementation
+- [behavioral/memento/](design-patterns/behavioral/memento/) - Memento pattern
+- [behavioral/observer/](design-patterns/behavioral/observer/) - Observer pattern implementation
+- [behavioral/state/](design-patterns/behavioral/state/) - State pattern
+- [behavioral/strategy/](design-patterns/behavioral/strategy/) - Strategy pattern
+- [behavioral/template-method/](design-patterns/behavioral/template-method/) - Template-method pattern
+- [behavioral/visitor/](design-patterns/behavioral/visitor/) - Strategy pattern
 
 ### Concurrency
 - [thread-pool/](concurrency/thread-pool/) - Thread pool implementation in C++
@@ -154,6 +114,7 @@ Or you can elect to build everything at once.
 ### Odds and Ends
 - [slicing/](odds-and-ends/slicing/) - Example of object slicing the has bit me in the past, simple but can be a pain in
 complex codebases.
+- [cql](odds-and-ends/cql/) - Claude query language (CQL)
 
 ### Tooling
 - [build_all.sh](tooling/build_all.sh/) - Builds all projects that contain CMake files
