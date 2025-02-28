@@ -1,4 +1,4 @@
-// MIY License
+// MIT License
 // Copyright (c) 2025 dbjwhs
 
 #include <vector>

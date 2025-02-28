@@ -365,17 +365,17 @@ int main() {
         mediator->registerColleague(colleagueB);
         mediator->registerColleague(colleagueC);
 
-        // send a message from A
+        // send a message from a
         colleagueA->send("Hello from A");
 
-        // verify that B and C received the message
+        // verify that b and c received the message
         assert(colleagueB->getLastMessage() == "Hello from A" && "B should receive message from A");
         assert(colleagueC->getLastMessage() == "Hello from A" && "C should receive message from A");
 
-        // send a message from B
+        // send a message from b
         colleagueB->send("Response from B");
 
-        // verify that A and C received the message
+        // verify that a and c received the message
         assert(colleagueA->getLastMessage() == "Response from B" && "A should receive message from B");
         assert(colleagueC->getLastMessage() == "Response from B" && "C should receive message from B");
 
@@ -401,16 +401,16 @@ int main() {
         mediator->registerColleague(colleagueC);
         mediator->registerColleague(colleagueD);
 
-        // set communication rules: A can talk to B and C, but not D
+        // set communication rules: a can talk to b and c, but not d
         mediator->setCommRules("A", {"B", "C"});
 
-        // set communication rules: B can talk only to D
+        // set communication rules: b can talk only to d
         mediator->setCommRules("B", {"D"});
 
-        // send a message from A
+        // send a message from a
         colleagueA->send("Message from A");
 
-        // verify that B and C received the message, but D did not
+        // verify that b and c received the message, but d did not
         assert(colleagueB->getLastMessage() == "Message from A" && "B should receive message from A");
         assert(colleagueC->getLastMessage() == "Message from A" && "C should receive message from A");
         assert(colleagueD->getLastMessage().empty() && "D should not receive message from A");
@@ -421,10 +421,10 @@ int main() {
         colleagueC->resetMessageFlag();
         colleagueD->resetMessageFlag();
 
-        // send a message from B
+        // send a message from b
         colleagueB->send("Message from B");
 
-        // verify that only D received the message
+        // verify that only d received the message
         assert(!colleagueA->hasNewMessage() && "A should not receive message from B");
         assert(!colleagueC->hasNewMessage() && "C should not receive message from B");
         assert(colleagueD->hasNewMessage() && "D should receive message from B");
@@ -435,10 +435,10 @@ int main() {
         colleagueC->resetMessageFlag();
         colleagueD->resetMessageFlag();
 
-        // send a message from C (no specific rules should go to all except C)
+        // send a message from c (no specific rules should go to all except c)
         colleagueC->send("Message from C");
 
-        // verify that A, B, and D received the message
+        // verify that a, b, and d received the message
         assert(colleagueA->hasNewMessage() && "A should receive message from C");
         assert(colleagueB->hasNewMessage() && "B should receive message from C");
         assert(colleagueD->hasNewMessage() && "D should receive message from C");
@@ -515,4 +515,4 @@ int main() {
     return 0;
 }
 
-#endif // MEDIATOR_PATTERN_HPP
+#endif // mediator_pattern_hpp

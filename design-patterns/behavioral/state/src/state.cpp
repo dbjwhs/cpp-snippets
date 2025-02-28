@@ -50,32 +50,32 @@
 //
 // ┌─────────────────────────────────────────────────────────────────────┐
 // │                                                                     │
-// │                            Document                                 │
-// │ (Context)                                                           │
+// │                            document                                 │
+// │ (context)                                                           │
 // │ ┌─────────────────────────────────────────────────────────────┐     │
-// │ │ - m_currentState: std::unique_ptr<DocumentState>            │     │
+// │ │ - m_currentstate: std::unique_ptr<documentstate>            │     │
 // │ │ - m_content: std::string                                    │     │
 // │ │ - m_author: std::string                                     │     │
-// │ │ - m_reviewComments: std::vector<std::string>                │     │
+// │ │ - m_reviewcomments: std::vector<std::string>                │     │
 // │ ├─────────────────────────────────────────────────────────────┤     │
 // │ │ + draft()                                                    │    │
 // │ │ + review()                                                   │    │
 // │ │ + approve()                                                  │    │
 // │ │ + reject()                                                   │    │
-// │ │ + changeState(std::unique_ptr<DocumentState>)                │    │
+// │ │ + changestate(std::unique_ptr<documentstate>)                │    │
 // │ └──────────────────────────────────────────────────────────────┘    │
 // │                             │                                       │
 // │                             │ has-a                                 │
 // │                             ▼                                       │
 // │  ┌───────────────────────────────────────────────────────────┐      │
 // │  │                     <<interface>>                         │      │
-// │  │                     DocumentState                         │      │
+// │  │                     documentstate                         │      │
 // │  ├───────────────────────────────────────────────────────────┤      │
-// │  │ + draft(Document&)                                        │      │
-// │  │ + review(Document&)                                       │      │
-// │  │ + approve(Document&)                                      │      │
-// │  │ + reject(Document&)                                       │      │
-// │  │ + getName(): std::string                                  │      │
+// │  │ + draft(document&)                                        │      │
+// │  │ + review(document&)                                       │      │
+// │  │ + approve(document&)                                      │      │
+// │  │ + reject(document&)                                       │      │
+// │  │ + getname(): std::string                                  │      │
 // │  └───────────────────────────────────────────────────────────┘      │
 // │                             ▲                                       │
 // │                             │ implements                            │
@@ -84,7 +84,7 @@
 // │  │                    │                 │                 │         │
 // │  ▼                    ▼                 ▼                 ▼         │
 // │ ┌────────────┐ ┌────────────┐ ┌─────────────────┐ ┌─────────────┐   │
-// │ │ DraftState │ │ReviewState │ │ ApprovedState   │ │RejectedState│   │
+// │ │ draftstate │ │reviewstate │ │ approvedstate   │ │rejectedstate│   │
 // │ └────────────┘ └────────────┘ └─────────────────┘ └─────────────┘   │
 // │                                                                     │
 // └─────────────────────────────────────────────────────────────────────┘
@@ -93,7 +93,7 @@
 //
 // ┌─────────────┐  review()   ┌─────────────┐ approve() ┌─────────────┐
 // │             │------------>│             │---------->│             │
-// │  DraftState │             │ ReviewState │           │ApprovedState│
+// │  draftstate │             │ reviewstate │           │approvedstate│
 // │             │<------------|             │<----------|             │
 // └─────────────┘   draft()   └─────────────┘  review() └─────────────┘
 //       ▲                      /     ▲                      │
@@ -105,7 +105,7 @@
 //       │                ▼           │                      │
 //       │         ┌─────────────┐    │                      │
 //       │         │             │    │                      │
-//       └---------|RejectedState|<---┘                      │
+//       └---------|rejectedstate|<---┘                      │
 //         draft() │             │<--------------------------┘
 //                 └─────────────┘    reject()
 //
@@ -478,4 +478,4 @@ int main() {
     return 0;
 }
 
-#endif // STATE_PATTERN_HPP
+#endif // state_pattern_hpp
