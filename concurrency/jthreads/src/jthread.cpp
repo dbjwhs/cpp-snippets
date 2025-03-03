@@ -5,6 +5,7 @@
 #include <cassert>
 #include <atomic>
 #include <mutex>
+#include <format>
 #include "../../../headers/project_utils.hpp"
 
 // simplified stop token mechanism
