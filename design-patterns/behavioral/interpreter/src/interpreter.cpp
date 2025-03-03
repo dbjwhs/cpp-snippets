@@ -4,9 +4,12 @@
 #include <memory>
 #include <string>
 #include <cassert>
+#include <format>
 #include <stdexcept>
 #include <sstream>
 #include <thread>
+#include <unordered_map>
+
 #include "../../../../headers/project_utils.hpp"
 
 // interpreter pattern overview
