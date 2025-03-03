@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <format>
+#include <algorithm>
 #include "../../../../headers/project_utils.hpp"
 
 // facade pattern implementation
