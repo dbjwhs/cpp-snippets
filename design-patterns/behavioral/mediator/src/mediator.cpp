@@ -5,6 +5,8 @@
 #define MEDIATOR_PATTERN_HPP
 
 #include <cassert>
+#include <format>
+#include <unordered_map>
 #include "../../../../headers/project_utils.hpp"
 
 // mediator pattern - history and usage
