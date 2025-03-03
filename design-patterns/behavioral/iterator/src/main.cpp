@@ -4,6 +4,7 @@
 #include <vector>
 #include <cassert>
 #include <format>
+#include <functional>
 #include "../header/iterator.hpp"
 
 int main() {
