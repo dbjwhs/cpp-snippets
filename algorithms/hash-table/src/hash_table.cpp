@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <cassert>
+#include <format>
 #include "../../../headers/project_utils.hpp"
 
 // hash function interface class
