@@ -3,6 +3,8 @@
 
 #include <cassert>
 #include <string>
+#include <algorithm>
+#include <format>
 #include "../../../../headers/project_utils.hpp"
 
 // bridge design pattern
