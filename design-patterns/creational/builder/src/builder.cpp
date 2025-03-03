@@ -4,6 +4,7 @@
 #include <string>
 #include <cassert>
 #include <stdexcept>
+#include <format>
 #include "../../../../headers/project_utils.hpp"
 
 // the builder pattern: history, problems solved, and real-world applications
