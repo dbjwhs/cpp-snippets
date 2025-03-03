@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include <stdexcept>
+#include <format>
 #include "../../../headers/project_utils.hpp"
 
 // negative space programming is a coding philosophy that emerged from multiple disciplines:
