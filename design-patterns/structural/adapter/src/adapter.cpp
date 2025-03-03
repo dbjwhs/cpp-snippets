@@ -7,6 +7,7 @@
 #include <vector>
 #include <cassert>
 #include <format>
+#include <algorithm>
 #if defined(__linux__) || defined(__linux) || defined(linux)
     #include <bits/ranges_algo.h>
 #endif
