@@ -6,6 +6,7 @@
 
 #include <cmath>    // M_PI
 #include <cassert>
+#include <format>
 #include "../../../../headers/project_utils.hpp"
 
 // visitor design pattern
