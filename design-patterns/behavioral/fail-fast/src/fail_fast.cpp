@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <cassert>
+#include <format>
 #include "../../../../headers/project_utils.hpp"
 
 // fail-fast pattern emerged in the 1970s alongside defensive programming practices
