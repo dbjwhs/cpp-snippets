@@ -156,8 +156,8 @@ int main() {
         {200000.0, "new satellite office"}
     };
 
-    constexpr std::string approved("APPROVED");
-    constexpr std::string rejected("REJECTED");
+    const std::string approved = "APPROVED";
+    const std::string rejected = "REJECTED";
     logger.log(LogLevel::INFO, "expense approval chain of responsibility - test cases");
     logger.log(LogLevel::INFO, "-------------------");
     logger.log(LogLevel::INFO, "test case 1: standard approval chain");
