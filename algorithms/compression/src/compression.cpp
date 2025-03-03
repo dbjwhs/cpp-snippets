@@ -8,7 +8,12 @@
 #include <unordered_map>
 #include <fstream>
 #include <cassert>
+#include <algorithm>
+#include <ranges>
 #include "../../../headers/project_utils.hpp"
+#if defined(__linux__) || defined(__linux) || defined(linux)
+    #include <bits/ranges_algo.h>
+#endif
 
 // node structure for a huffman tree
 struct HuffmanNode {
@@ -459,8 +464,8 @@ public:
 void run_tests() {
     Logger& logger = Logger::getInstance();
     CompressionAlgorithms compressor;
-    constexpr std::string passed = "PASSED";
-    constexpr std::string failed = "FAILED";
+    const std::string passed = "PASSED";
+    const std::string failed = "FAILED";
 
     // test 1: run length encoding with repeated characters
     {
