@@ -6,6 +6,8 @@
 #include <string>
 #include <cassert>
 #include <fstream>
+#include <algorithm>
+#include <format>
 #include "../../../../headers/project_utils.hpp"
 
 // proxy_pattern.cpp
