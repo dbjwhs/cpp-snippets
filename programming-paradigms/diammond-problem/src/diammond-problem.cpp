@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <string>
+#include <format>
 #include "../../../headers/project_utils.hpp"
 
 // the diamond problem occurs in c++ when a derived class inherits from two classes that share a common base class
