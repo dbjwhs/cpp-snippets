@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include <cassert>
+#include <format>
+#include <algorithm>
 #include "../../../../headers/project_utils.hpp"
 
 // composite pattern
