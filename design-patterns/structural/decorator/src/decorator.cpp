@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cassert>
+#include <format>
 #include "../../../../headers/project_utils.hpp"
 
 // decorator pattern history and usage:
