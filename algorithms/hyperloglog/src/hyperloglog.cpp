@@ -3,8 +3,12 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <unordered_set>
 #include <cmath>
+#include <format>
+#include <algorithm>
+#include <ranges>
 #include "../../../headers/project_utils.hpp"
 
 // hyperloglog: a probabilistic data structure for estimating the cardinality (number of unique elements)
