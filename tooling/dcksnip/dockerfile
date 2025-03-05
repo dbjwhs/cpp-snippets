@@ -1,0 +1,103 @@
+FROM ubuntu:22.04
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    wget \
+    ninja-build \
+    pkg-config \
+    libssl-dev \
+    libcurl4-openssl-dev  # Add CURL development libraries
+
+# Add repository for latest GCC
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
+    apt-get update
+
+# Install GCC-13 for better C++20 support including <format>
+RUN apt-get install -y gcc-13 g++-13 && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+
+# Add LLVM repository for latest clang
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+    echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main" >> /etc/apt/sources.list && \
+    apt-get update
+
+# Install clang-16 (C++20 compatible)
+RUN apt-get install -y clang-16 libc++-16-dev libc++abi-16-dev
+
+# Set clang-16 as an alternative compiler (GCC-13 is now default)
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-16 100 && \
+    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-16 100
+
+# Remove the default cmake
+RUN apt-get remove --purge --auto-remove cmake -y
+
+# Install dependencies for building CMake
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    wget
+
+# Download and install CMake 3.30.0
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.30.0/cmake-3.30.0.tar.gz && \
+    tar -zxvf cmake-3.30.0.tar.gz && \
+    cd cmake-3.30.0 && \
+    ./bootstrap && \
+    make -j$(nproc) && \
+    make install && \
+    cd .. && \
+    rm -rf cmake-3.30.0 cmake-3.30.0.tar.gz
+
+# Verify CMake installation
+RUN cmake --version
+
+# Install {fmt} library as a fallback option
+RUN cd /tmp && \
+    git clone https://github.com/fmtlib/fmt.git && \
+    cd fmt && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make && \
+    make install && \
+    cd / && \
+    rm -rf /tmp/fmt
+
+# Install VS Code server
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+# Configure code-server
+RUN mkdir -p ~/.config/code-server && \
+    echo "bind-addr: 0.0.0.0:8080" > ~/.config/code-server/config.yaml && \
+    echo "auth: password" >> ~/.config/code-server/config.yaml && \
+    echo "password: <add your password here>" >> ~/.config/code-server/config.yaml && \
+    echo "cert: false" >> ~/.config/code-server/config.yaml
+
+# Install OpenSSH server
+RUN apt-get install -y openssh-server && \
+    mkdir -p /var/run/sshd && \
+    echo 'root:<add your password here>' | chpasswd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+
+# Create a workspace directory
+RUN mkdir -p /cppsnip-dev
+
+# Set working directory
+WORKDIR /cppsnip-dev
+
+# Expose ports for VS Code server and SSH
+EXPOSE 8080 22
+
+# Create an entrypoint script to start both services
+RUN echo '#!/bin/bash\nservice ssh start\ncode-server --bind-addr 0.0.0.0:8080 --auth password' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+# Use the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]

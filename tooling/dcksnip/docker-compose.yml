@@ -1,0 +1,10 @@
+services:
+  cpp-dev:
+    build: .
+    ports:
+      - "8080:8080"
+      - "2222:22" 
+    volumes:
+      - ~/docker_win_ng:/docker_win_ng
+      - ~/.ssh:/root/.ssh:ro
+    restart: unless-stopped
