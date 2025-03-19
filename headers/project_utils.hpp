@@ -16,6 +16,7 @@
 #include <sstream>
 #include <filesystem>
 #include <iomanip>
+#include <format>
 
 // version information
 #define PROJECT_VERSION_MAJOR 1
@@ -68,6 +69,7 @@ public:
 enum class LogLevel {
     INFO,
     NORMAL,
+    WARNING,
     DEBUG,
     ERROR,
     CRITICAL
@@ -272,6 +274,8 @@ private:
                 return "INFO";
             case LogLevel::NORMAL:
                 return "NORMAL";
+            case LogLevel::WARNING:
+                return "WARNING";
             case LogLevel::DEBUG:
                 return "DEBUG";
             case LogLevel::ERROR:
