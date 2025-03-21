@@ -1,0 +1,23 @@
+## Next Steps
+1. Complete extraction of remaining classes:
+   - Create appropriate header files
+   - Implement each class in its own file
+   - Update CMakeLists.txt
+   - Remove classes from original proactor.cpp
+   - Test functionality
+   - Remove original proactor.cpp from build
+
+2. Improve test coverage:
+   - Implement tests for the proactor pattern
+   - Exercise asynchronous operationss
+1. Complete extraction of remaining classes:
+   - Create appropriate header files
+   - Implement each class in its own file
+   - Update CMakeLists.txt
+   - Remove classes from original proactor.cpp
+   - Test functionality
+   - Remove original proactor.cpp from build
+
+2. Improve test coverage:
+   - Implement tests for the proactor pattern
+   - Exercise asynchronous operations
