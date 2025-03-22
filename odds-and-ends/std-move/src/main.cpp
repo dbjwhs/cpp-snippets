@@ -75,8 +75,8 @@ public:
         // perform deep copy
         if (other.m_data) {
             m_data = new int[m_size];
-            for (size_t i = 0; i < m_size; ++i) {
-                m_data[i] = other.m_data[i];
+            for (size_t ndx = 0; ndx < m_size; ++ndx) {
+                m_data[ndx] = other.m_data[ndx];
             }
         } else {
             m_data = nullptr;
@@ -162,7 +162,6 @@ public:
     
     // get the size of the managed resource
     [[nodiscard]] size_t size() const {
-        Logger::getInstance().log(LogLevel::INFO, std::format("!!! size is {}", m_size));
         return m_size;
     }
     
@@ -208,8 +207,8 @@ public:
     }
 };
 
-// initialize static counter
-int ResourceManager::s_counter = 0;
+// initialize static counter, note static's init as 0 per C specification
+int ResourceManager::s_counter;
 
 // function that returns by value, allowing for move semantics
 ResourceManager createResourceManager(size_t size) {
