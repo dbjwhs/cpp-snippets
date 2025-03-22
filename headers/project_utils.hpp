@@ -255,8 +255,8 @@ private:
 
     // check if a level is enabled (internal helper)
     bool is_level_enabled(LogLevel level) const {
-        int levelIndex = static_cast<int>(level);
-        if (levelIndex >= 0 && levelIndex <= static_cast<int>(LogLevel::CRITICAL)) {
+        if (const int levelIndex = static_cast<int>(level);
+          levelIndex >= 0 && levelIndex <= static_cast<int>(LogLevel::CRITICAL)) {
             return m_enabled_levels[levelIndex];
         }
         return false;
