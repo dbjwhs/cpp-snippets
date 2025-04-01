@@ -164,7 +164,7 @@ void testPaginationWithExamples() {
         assert(result == expected);
     }
     
-    // test case 6: both ellipses, later in list
+    // test case 6: both ellipses, later in a list
     {
         std::string expected = "1 ... 20 21 22 23 [24] 25 26 27 28 ... 30";
         std::string result = paginate(24, 30, 11);
