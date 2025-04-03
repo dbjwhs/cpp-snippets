@@ -136,20 +136,20 @@ void test_class_template() {
 
     // create a pair of integer and string
     Pair<int, std::string> person(42, "Alice");
-    Logger::getInstance().log(LogLevel::INFO, std::format("person: id = {}, name = {}",
+    LOG_INFO(std::format("person: id = {}, name = {}",
         person.get_first(), person.get_second()));
 
     // modify the pair
     person.set_first(100);
     person.set_second("Bob");
-    Logger::getInstance().log(LogLevel::INFO, std::format("modified person: id = {}, name = {}",
+    LOG_INFO(std::format("modified person: id = {}, name = {}",
         person.get_first(), person.get_second()));
     assert(person.get_first() == 100 && person.get_second() == "Bob" && "Pair modification failed");
 
     // create another pair and swap
     Pair<int, std::string> another_person(200, "Charlie");
     person.swap(another_person);
-    Logger::getInstance().log(LogLevel::INFO, std::format("after swap: person1 = ({}, {}), person2 = ({}, {})",
+    LOG_INFO(std::format("after swap: person1 = ({}, {}), person2 = ({}, {})",
         person.get_first(), person.get_second(), another_person.get_first(), another_person.get_second()));
     assert(person.get_first() == 200 && person.get_second() == "Charlie" &&
            another_person.get_first() == 100 && another_person.get_second() == "Bob" &&
@@ -158,24 +158,24 @@ void test_class_template() {
     // different type combinations
     // Different type combinations
     Pair<double, int> measurement(98.6, 42);
-    Logger::getInstance().log(LogLevel::INFO, std::format("measurement: temperature = {}, pulse = {}",
+    LOG_INFO(std::format("measurement: temperature = {}, pulse = {}",
         measurement.get_first(), measurement.get_second()));
 
     // Modify the measurement
     measurement.set_first(99.2);
     measurement.set_second(78);
-    Logger::getInstance().log(LogLevel::INFO, std::format("updated measurement: temperature = {}, pulse = {}",
+    LOG_INFO(std::format("updated measurement: temperature = {}, pulse = {}",
         measurement.get_first(), measurement.get_second()));
 
     // Test with another different type pair
     Pair<std::string, std::string> full_name("John", "Doe");
-    Logger::getInstance().log(LogLevel::INFO, std::format("name: first = {}, last = {}",
+    LOG_INFO(std::format("name: first = {}, last = {}",
         full_name.get_first(), full_name.get_second()));
 
     // We could even swap between different instances of the same template types
     Pair<std::string, std::string> another_name("Jane", "Smith");
     full_name.swap(another_name);
-    Logger::getInstance().log(LogLevel::INFO, std::format("after swap: first name = {}, last name = {}",
+    LOG_INFO(std::format("after swap: first name = {}, last name = {}",
         full_name.get_first(), full_name.get_second()));
     LOG_INFO("class template test passed");
 }
@@ -696,7 +696,7 @@ public:
     // default implementation for displaying shape info
     void display() const {
         const auto* derived = static_cast<const Derived*>(this);
-        Logger::getInstance().log(LogLevel::INFO, std::format("{}: area = {:.2f}, perimeter = {:.2f}",
+        LOG_INFO(std::format("{}: area = {:.2f}, perimeter = {:.2f}",
             derived->name(), derived->area(), derived->perimeter()));
     }
 };
@@ -831,7 +831,7 @@ void print_fold(Ts... values) {
     }
 
     // Log the final string
-    Logger::getInstance().log(LogLevel::INFO, result);
+    LOG_INFO(result);
 }
 
 // test function for fold expressions
@@ -941,7 +941,7 @@ template <Printable T>
 void print_value(const T& value) {
     std::stringstream ss;
     ss << "Value: " << value;
-    Logger::getInstance().log(LogLevel::INFO, ss.str());
+    LOG_INFO(ss.str());
 }
 #else
 // for pre-c++20, use sfinae to simulate concepts

@@ -234,7 +234,7 @@ public:
 Document::Document(std::string author) : m_author(std::move(author)) {
     // initialize with draft state
     m_currentState = std::make_unique<DraftState>();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Document created by {}, initial state: {}",
+    LOG_INFO(std::format("Document created by {}, initial state: {}",
                                                         m_author, m_currentState->getName()));
 }
 
@@ -277,7 +277,7 @@ const std::vector<std::string>& Document::getReviewComments() const {
 
 // document state management implementation
 void Document::changeState(std::unique_ptr<DocumentState> newState) {
-    Logger::getInstance().log(LogLevel::INFO, std::format("State changing from {} to {}", 
+    LOG_INFO(std::format("State changing from {} to {}", 
                                                         m_currentState->getName(), newState->getName()));
     m_currentState = std::move(newState);
 }
@@ -414,7 +414,7 @@ int main() {
     doc.setContent("This is a sample document for testing the State Pattern.");
     doc.review();
     assert(doc.getCurrentStateName() == "Review");
-    Logger::getInstance().log(LogLevel::INFO, std::format("After adding content and reviewing, state: {}", 
+    LOG_INFO(std::format("After adding content and reviewing, state: {}", 
                                                         doc.getCurrentStateName()));
     
     // add review comments
@@ -446,7 +446,7 @@ int main() {
     // test returning to draft from rejected
     doc.draft();
     assert(doc.getCurrentStateName() == "Draft");
-    Logger::getInstance().log(LogLevel::INFO, std::format("After returning to draft, state: {}", 
+    LOG_INFO(std::format("After returning to draft, state: {}", 
                                                         doc.getCurrentStateName()));
     
     // comprehensive workflow test

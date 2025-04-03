@@ -187,7 +187,7 @@ void testBasicProperties() {
         assert(tree.getLeafCount() == 1);
         assert(tree.verifyData("test data"));
         assert(!tree.verifyData("wrong data"));
-        Logger::getInstance().log(LogLevel::INFO, std::format(
+        LOG_INFO(std::format(
             "single node tree test passed, hash: {}",
             tree.getRootHash()
         ));
@@ -230,7 +230,7 @@ void testComplexTree() {
     constexpr size_t num_elements = 1000;
     constexpr size_t str_length = 50;
 
-    Logger::getInstance().log(LogLevel::INFO, std::format(
+    LOG_INFO(std::format(
         "generating {} random strings of length {}",
         num_elements,
         str_length
@@ -267,7 +267,7 @@ void testComplexTree() {
     assert(!modified_tree.verifyData(large_dataset[num_elements/2]));
     assert(modified_tree.verifyData("modified_data"));
 
-    Logger::getInstance().log(LogLevel::INFO, std::format(
+    LOG_INFO(std::format(
         "complex tree tests passed, "
         "original root hash: {}, "
         "modified root hash: {}",
@@ -288,7 +288,7 @@ void testComplexTree() {
         MerkleTree tree(data);
         assert(tree.getLeafCount() == size);
 
-        Logger::getInstance().log(LogLevel::INFO, std::format(
+        LOG_INFO(std::format(
             "tree with {} leaves created successfully",
             size
         ));
@@ -309,7 +309,7 @@ int main() {
         return 0;
 
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::CRITICAL, std::format(
+        LOG_CRITICAL(std::format(
             "test execution failed: {}",
             e.what()
         ));

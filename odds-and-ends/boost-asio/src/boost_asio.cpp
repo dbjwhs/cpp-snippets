@@ -100,8 +100,7 @@ void basicSynchronousTcpClient() {
             boost::asio::buffers_begin(m_response.data()) + m_response.size());
 
         // log first 100 characters of response
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Received {} bytes. Response starts with: {}",
+        LOG_INFO(std::format("Received {} bytes. Response starts with: {}",
                         m_bytesRead,
                         m_responseStr.substr(0, 100)));
 
@@ -110,8 +109,7 @@ void basicSynchronousTcpClient() {
             runTest(true, "Received data from server");
             runTest(m_responseStr.find("HTTP/1.1") != std::string::npos, "Valid HTTP response");
         } else {
-            Logger::getInstance().log(LogLevel::WARNING,
-                "Network request failed to receive data - this is common in test environments");
+            LOG_WARNING("Network request failed to receive data - this is common in test environments");
             // Skip tests that would fail due to network issues
         }
 
@@ -137,8 +135,7 @@ public:
 
     // start the asynchronous connection process
     void connect(const std::string& host, const std::string& port) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Connecting to {}:{}", host, port));
+        LOG_INFO(std::format("Connecting to {}:{}", host, port));
 
         // asynchronously resolve the host name
         m_resolver.async_resolve(
@@ -153,8 +150,7 @@ public:
 
     // send data asynchronously
     void send(const std::string& message) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Sending message: {}", message));
+        LOG_INFO(std::format("Sending message: {}", message));
 
         m_request = message;
 
@@ -215,8 +211,7 @@ private:
                 }
             );
         } else {
-            Logger::getInstance().log(LogLevel::ERROR,
-                std::format("Resolve error: {}", ec.message()));
+            LOG_ERROR(std::format("Resolve error: {}", ec.message()));
         }
     }
 
@@ -224,38 +219,33 @@ private:
     void onConnect(const boost::system::error_code& ec,
                   const boost::asio::ip::tcp::endpoint& endpoint) {
         if (!ec) {
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Connected to {}:{}",
+            LOG_INFO(std::format("Connected to {}:{}",
                            endpoint.address().to_string(),
                            endpoint.port()));
 
             // once connected, send an http request
             send("GET / HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n");
         } else {
-            Logger::getInstance().log(LogLevel::ERROR,
-                std::format("Connect error: {}", ec.message()));
+            LOG_ERROR(std::format("Connect error: {}", ec.message()));
         }
     }
 
     // callback for when write operation completes
     void onWrite(const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (!ec) {
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Sent {} bytes", bytes_transferred));
+            LOG_INFO(std::format("Sent {} bytes", bytes_transferred));
 
             // after sending data, start reading the response
             read();
         } else {
-            Logger::getInstance().log(LogLevel::ERROR,
-                std::format("Write error: {}", ec.message()));
+            LOG_ERROR(std::format("Write error: {}", ec.message()));
         }
     }
 
     // callback for when read operation completes
     void onRead(const boost::system::error_code& ec, std::size_t bytes_transferred) {
         if (!ec || ec == boost::asio::error::eof) {
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Received {} bytes", bytes_transferred));
+            LOG_INFO(std::format("Received {} bytes", bytes_transferred));
 
             // if end of a file, the connection is done
             if (ec == boost::asio::error::eof) {
@@ -266,8 +256,7 @@ private:
                 read();
             }
         } else {
-            Logger::getInstance().log(LogLevel::ERROR,
-                std::format("Read error: {}", ec.message()));
+            LOG_ERROR(std::format("Read error: {}", ec.message()));
         }
     }
 
@@ -294,8 +283,7 @@ public:
 
     // start handling the client connection
     void start() {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Connection established with {}",
+        LOG_INFO(std::format("Connection established with {}",
                       m_socket.remote_endpoint().address().to_string()));
 
         // simple echo server - read from a client
@@ -318,8 +306,7 @@ private:
                 if (!ec) {
                     // log what we received
                     std::string received(m_buffer.begin(), m_buffer.begin() + bytes_transferred);
-                    Logger::getInstance().log(LogLevel::INFO,
-                        std::format("Received from client: {}", received));
+                    LOG_INFO(std::format("Received from client: {}", received));
 
                     // echo back to a client
                     asyncWrite(bytes_transferred);
@@ -341,8 +328,7 @@ private:
                     // continue reading after successful writing
                     asyncRead();
                 } else if (ec != boost::asio::error::operation_aborted) {
-                    Logger::getInstance().log(LogLevel::ERROR,
-                        std::format("Write error: {}", ec.message()));
+                    LOG_ERROR(std::format("Write error: {}", ec.message()));
                 }
             }
         );
@@ -360,8 +346,7 @@ public:
         : m_acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
           m_io_context(io_context) {
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Server started on port {}", port));
+        LOG_INFO(std::format("Server started on port {}", port));
 
         // start accepting connections
         startAccept();
@@ -379,8 +364,7 @@ private:
                     // if accepted without error, start handling the connection
                     newConnection->start();
                 } else {
-                    Logger::getInstance().log(LogLevel::ERROR,
-                        std::format("Accept error: {}", ec.message()));
+                    LOG_ERROR(std::format("Accept error: {}", ec.message()));
                 }
 
                 // continue accepting more connections
@@ -466,8 +450,7 @@ private:
             // Get elapsed time for detailed logging
             double elapsed = getElapsedTimeSeconds();
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 1 expired after {:.2f}s - count is now {}", elapsed, m_count));
+            LOG_INFO(std::format("Timer 1 expired after {:.2f}s - count is now {}", elapsed, m_count));
 
             // test that count is within the expected range
             testCondition(m_count > 0, "Count is positive");
@@ -483,8 +466,7 @@ private:
             if (ec == boost::asio::error::operation_aborted) {
                 LOG_INFO("Timer 1 was cancelled");
             } else {
-                Logger::getInstance().log(LogLevel::ERROR,
-                    std::format("Timer 1 error: {}", ec.message()));
+                LOG_ERROR(std::format("Timer 1 error: {}", ec.message()));
             }
         }
     }
@@ -495,8 +477,7 @@ private:
             m_timer2_fired = true;
             double elapsed = getElapsedTimeSeconds();
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 2 expired after {:.2f}s - count is {}", elapsed, m_count));
+            LOG_INFO(std::format("Timer 2 expired after {:.2f}s - count is {}", elapsed, m_count));
 
             // Test that count is reasonable based on elapsed time
             // At 2 seconds with 500 ms intervals, we expect around 3-4 counts
@@ -505,8 +486,7 @@ private:
             if (ec == boost::asio::error::operation_aborted) {
                 LOG_INFO("Timer 2 was cancelled");
             } else {
-                Logger::getInstance().log(LogLevel::ERROR,
-                    std::format("Timer 2 error: {}", ec.message()));
+                LOG_ERROR(std::format("Timer 2 error: {}", ec.message()));
             }
         }
     }
@@ -516,11 +496,9 @@ private:
         m_totalTests++;
         if (condition) {
             m_passedTests++;
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Test passed: {}", testName));
+            LOG_INFO(std::format("Test passed: {}", testName));
         } else {
-            Logger::getInstance().log(LogLevel::ERROR,
-                std::format("Test FAILED: {}", testName));
+            LOG_ERROR(std::format("Test FAILED: {}", testName));
         }
     }
 
@@ -578,14 +556,12 @@ private:
         if (!ec) {
             // increment the counter
             ++m_counter;
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 1 expired - counter: {}", m_counter));
+            LOG_INFO(std::format("Timer 1 expired - counter: {}", m_counter));
 
             // Convert thread id to string first to avoid formatter issues
             std::stringstream ss;
             ss << std::this_thread::get_id();
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 1 thread id: {}", ss.str()));
+            LOG_INFO(std::format("Timer 1 thread id: {}", ss.str()));
 
             // reset the timer
             m_timer1.expires_after(boost::asio::chrono::milliseconds(100));
@@ -604,14 +580,12 @@ private:
         if (!ec) {
             // increment the counter
             ++m_counter;
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 2 expired - counter: {}", m_counter));
+            LOG_INFO(std::format("Timer 2 expired - counter: {}", m_counter));
 
             // Convert thread id to string first to avoid formatter issues
             std::stringstream ss;
             ss << std::this_thread::get_id();
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 2 thread id: {}", ss.str()));
+            LOG_INFO(std::format("Timer 2 thread id: {}", ss.str()));
 
             // reset the timer
             m_timer2.expires_after(boost::asio::chrono::milliseconds(200));
@@ -653,16 +627,14 @@ int main() {
 
             // check that we got a valid response
             std::string response = client.getResponse();
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Final response size: {} bytes", response.size()));
+            LOG_INFO(std::format("Final response size: {} bytes", response.size()));
 
             // test that we got a valid http response, but don't fail if the network is unavailable
             if (!response.empty()) {
                 runTest(response.find("HTTP/1.1") != std::string::npos,
                        "Async client received valid HTTP response");
             } else {
-                Logger::getInstance().log(LogLevel::WARNING,
-                    "Async client network request didn't receive data - common in test environments");
+                LOG_WARNING("Async client network request didn't receive data - common in test environments");
             }
         }
 
@@ -681,8 +653,7 @@ int main() {
 
             // note: in a real scenario, you would connect clients and test
             // for simplicity, we'll just log that the server is ready
-            Logger::getInstance().log(LogLevel::INFO,
-                "TCP Server ready (not testing client connections in this example)");
+            LOG_INFO("TCP Server ready (not testing client connections in this example)");
 
             // give it a moment to run, then stop
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -725,12 +696,10 @@ int main() {
             io_thread.join();
 
             // Report detailed results
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer example complete - Timer 1 fired {} times over {:.2f} seconds",
+            LOG_INFO(std::format("Timer example complete - Timer 1 fired {} times over {:.2f} seconds",
                           timers.getCount(), timers.getElapsedTimeSeconds()));
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Timer 2 fired: {}", timers.timer2Fired() ? "yes" : "no"));
+            LOG_INFO(std::format("Timer 2 fired: {}", timers.timer2Fired() ? "yes" : "no"));
 
             // Verify results
             runTest(timers.allTestsPassed(), "All timer tests passed");
@@ -767,8 +736,7 @@ int main() {
             }
 
             // check that the counter was incremented
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Final counter value: {}", strands.getCounter()));
+            LOG_INFO(std::format("Final counter value: {}", strands.getCounter()));
             runTest(strands.getCounter() > 0, "Strand counter was incremented");
         }
 
@@ -776,8 +744,7 @@ int main() {
         return 0;
     }
     catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR,
-            std::format("Exception in main: {}", e.what()));
+        LOG_ERROR(std::format("Exception in main: {}", e.what()));
         return 1;
     }
 }

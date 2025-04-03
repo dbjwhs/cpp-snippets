@@ -321,7 +321,7 @@ void runTests() {
     // test each feature
     for (const auto & feature : features) {
         const bool supported = tester.isFeatureSupported(feature);
-        Logger::getInstance().log(LogLevel::INFO, std::format("test report: {} is {}", 
+        LOG_INFO(std::format("test report: {} is {}", 
                                  feature, supported ? "supported" : "not supported"));
                                  
         // we can't assert on support as it depends on the compiler
@@ -358,7 +358,7 @@ int main() {
     #endif
     
     #ifdef __GNUC__
-    Logger::getInstance().log(LogLevel::INFO, std::format("gcc version: {}.{}.{}", 
+    LOG_INFO(std::format("gcc version: {}.{}.{}", 
                              __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
     #endif
     
@@ -367,7 +367,7 @@ int main() {
     #endif
     
     #ifdef __clang__
-    Logger::getInstance().log(LogLevel::INFO, std::format("clang version: {}.{}.{}", 
+    LOG_INFO(std::format("clang version: {}.{}.{}", 
                              __clang_major__, __clang_minor__, __clang_patchlevel__));
     #endif
     

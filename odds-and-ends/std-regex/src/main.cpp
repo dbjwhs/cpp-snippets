@@ -63,7 +63,7 @@ void print_matches(const std::string& label, const std::smatch& matches) {
 template<typename T, typename U>
 void test_equal(const T& actual, const U& expected, const std::string& test_name) {
     // Output debug info before assertion
-    Logger::getInstance().log(LogLevel::INFO, std::format("Testing: {} - Actual: {}, Expected: {}",
+    LOG_INFO(std::format("Testing: {} - Actual: {}, Expected: {}",
                                test_name, actual, expected));
     assert(actual == expected);
     LOG_INFO(std::format("✓ {} passed", test_name));
@@ -72,7 +72,7 @@ void test_equal(const T& actual, const U& expected, const std::string& test_name
 // Specialized version for string literals and std::string
 void test_equal(const std::string& actual, const char* expected, const std::string& test_name) {
     // Output debug info before assertion
-    Logger::getInstance().log(LogLevel::INFO, std::format("Testing: {} - Actual: '{}', Expected: '{}'",
+    LOG_INFO(std::format("Testing: {} - Actual: '{}', Expected: '{}'",
                                test_name, actual, expected));
     assert(actual == expected);
     LOG_INFO(std::format("✓ {} passed", test_name));
@@ -81,7 +81,7 @@ void test_equal(const std::string& actual, const char* expected, const std::stri
 // Specialized version for comparing with size_t to avoid warnings
 void test_equal(const size_t actual, const int expected, const std::string& test_name) {
     // Output debug info before assertion
-    Logger::getInstance().log(LogLevel::INFO, std::format("Testing: {} - Actual: {}, Expected: {}",
+    LOG_INFO(std::format("Testing: {} - Actual: {}, Expected: {}",
                                test_name, actual, expected));
     assert(actual == static_cast<size_t>(expected));
     LOG_INFO(std::format("✓ {} passed", test_name));
@@ -259,7 +259,7 @@ int main() {
 
         for (const auto& pwd : passwords) {
             bool is_strong = std::regex_match(pwd, strong_pwd_pattern);
-            Logger::getInstance().log(LogLevel::INFO, std::format("Password: {} is {}",
+            LOG_INFO(std::format("Password: {} is {}",
                                      pwd, (is_strong ? "strong" : "weak")));
         }
         LOG_INFO("");
@@ -307,7 +307,7 @@ int main() {
         // Match percentages with their preceding word
         std::regex percentage_pattern(R"((\w+):\s+(\d+)%)");
         if (std::regex_search(text, matches, percentage_pattern)) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("Found percentage: {}: {}%",
+            LOG_INFO(std::format("Found percentage: {}: {}%",
                                     matches[1].str(), matches[2].str()));
             test_equal(matches[1].str(), "Discount", "Percentage label is 'Discount'");
             test_equal(matches[2].str(), "20", "Percentage value is 20");
@@ -360,7 +360,7 @@ int main() {
             if (tag == "p") p_count++;
         }
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("Tag counts - div: {}, h1: {}, p: {}",
+        LOG_INFO(std::format("Tag counts - div: {}, h1: {}, p: {}",
                                 div_count, h1_count, p_count));
 
         // Only test that we found some kind of tags, without specific assertions

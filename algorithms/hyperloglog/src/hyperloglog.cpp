@@ -194,7 +194,7 @@ public:
 
         LOG_INFO(std::format("Top 10 most duplicated strings:"));
         for (size_t ndx = 0; ndx < std::min(static_cast<size_t>(10), sorted_counts.size()); ++ndx) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("\t{}: {} times"
+            LOG_INFO(std::format("\t{}: {} times"
                 , sorted_counts[ndx].first, sorted_counts[ndx].second));
         }
 

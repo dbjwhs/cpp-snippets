@@ -62,7 +62,7 @@ private:
         }
 
         // eating process
-        Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " is eating meal ", m_mealsEaten + 1);
+        LOG_INFO("Philosopher ", m_id, " is eating meal ", m_mealsEaten + 1);
         std::this_thread::sleep_for(std::chrono::seconds(random.getNumber() % 3 + 1));
         m_mealsEaten++;
 

@@ -28,12 +28,37 @@ def replace_logger_calls(content):
     replacement1 = r'LOG_\1("\2");'
     content = re.sub(pattern1, replacement1, content)
     
-    # Pattern 2: Logger calls with std::format
-    # Logger::getInstance().log(LogLevel::INFO, std::format("message {}"), arg1);
-    pattern2 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+), std::format\((.*?)\)(.*?)\);'
+    # Pattern 2: Format-handling with two approaches: 
+    # 2a - Simple std::format cases where format is at end of line
+    def format_replacer_single_line(match):
+        level = match.group(1)
+        format_str = match.group(2)
+        return f'LOG_{level}(std::format({format_str}));'
     
-    def format_replacer(match):
-        """Handle the formatting of the replacement string for the second pattern."""
+    content = re.sub(
+        r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+),\s*std::format\((.*?)\)\);', 
+        format_replacer_single_line, 
+        content
+    )
+    
+    # Pattern 3: Complex multi-line format calls with trailing arguments
+    # First, identify multiline Logger calls that span multiple lines
+    pattern3 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+), std::format\((.*?)\)\);'
+    
+    def multiline_format_replacer(match):
+        level = match.group(1)
+        format_content = match.group(2)
+        return f'LOG_{level}(std::format({format_content}));'
+    
+    # Use re.DOTALL to make the dot character match newlines
+    content = re.sub(pattern3, multiline_format_replacer, content, flags=re.DOTALL)
+    
+    # Pattern 4: More complex cases with std::format and arguments
+    # This more carefully handles multiline std::format calls with args
+    pattern4 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+),\s*std::format\((.*?)\)(.*?)\);'
+    
+    def format_replacer_complex(match):
+        """Handle the formatting of the replacement string for complex format patterns."""
         level = match.group(1)
         format_str = match.group(2)
         args = match.group(3)
@@ -50,7 +75,42 @@ def replace_logger_calls(content):
         else:
             return f'LOG_{level}(std::format({format_str}));'
     
-    content = re.sub(pattern2, format_replacer, content)
+    # Use re.DOTALL to make the dot character match newlines
+    content = re.sub(pattern4, format_replacer_complex, content, flags=re.DOTALL)
+    
+    # Pattern 5: Simple string messages with commas or special characters
+    # This pattern is less strict about the message content to catch more cases
+    pattern5 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+), (["](.*?)["]\));'
+    replacement5 = r'LOG_\1(\2);'
+    content = re.sub(pattern5, replacement5, content)
+    
+    # Pattern 6: Handle the indented/multi-line format cases
+    # This finds Logger::getInstance across multiple lines with indentation
+    pattern6 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+),\s*\n\s*(.*?)\);'
+    
+    def multiline_replacer(match):
+        level = match.group(1)
+        content_text = match.group(2).strip()
+        return f'LOG_{level}({content_text});'
+    
+    content = re.sub(pattern6, multiline_replacer, content, flags=re.DOTALL)
+    
+    # Pattern 7: Logger calls with string message and additional arguments (like exception message)
+    # Example: Logger::getInstance().log(LogLevel::INFO, "Test passed: Empty account holder name rejected", e.what());
+    pattern7 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+), "(.*?)", (.*?)\);'
+    replacement7 = r'LOG_\1("\2", \3);'
+    content = re.sub(pattern7, replacement7, content)
+    
+    # Pattern 8: Complex multi-line format with multiple parameters and nested braces
+    # This is a catch-all pattern for complex log statements that weren't caught by other patterns
+    pattern8 = r'Logger::getInstance\(\)\.log\(LogLevel::([A-Z]+),(.*?)\);'
+    
+    def complex_replacer(match):
+        level = match.group(1)
+        args_text = match.group(2).strip()
+        return f'LOG_{level}({args_text});'
+    
+    content = re.sub(pattern8, complex_replacer, content, flags=re.DOTALL)
     
     return content
 
@@ -80,14 +140,22 @@ def process_file(file_path):
     return False
 
 def main():
-    """Main function to process files in the given directory."""
-    # Get directory from command line argument or use current directory
-    target_dir = sys.argv[1] if len(sys.argv) > 1 else "."
+    """Main function to process files in the given directory or a specific file."""
+    # Get argument from command line or use current directory
+    target = sys.argv[1] if len(sys.argv) > 1 else "."
     
-    print(f"Scanning for .cpp files in {target_dir}...")
+    # Check if the target is a file or directory
+    target_path = Path(target)
+    cpp_files = []
     
-    # Find all .cpp files
-    cpp_files = list(Path(target_dir).rglob("*.cpp"))
+    if target_path.is_file() and target_path.suffix == '.cpp':
+        # If it's a direct cpp file
+        print(f"Processing single file: {target_path}")
+        cpp_files = [target_path]
+    else:
+        # Treat as directory
+        print(f"Scanning for .cpp files in {target}...")
+        cpp_files = list(Path(target).rglob("*.cpp"))
     
     if not cpp_files:
         print("No .cpp files found.")

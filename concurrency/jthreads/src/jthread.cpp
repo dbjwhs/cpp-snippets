@@ -175,8 +175,7 @@ void testVectorProcessing() {
         size_t processed = queue.getProcessedCount();
         size_t remaining = queue.getCurrentQueueSize();
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("processed {} items, {} remaining", processed, remaining));
+        LOG_INFO(std::format("processed {} items, {} remaining", processed, remaining));
 
         assert(processed == 3 && "basic processing failed");
         assert(remaining == 0 && "queue should be empty");

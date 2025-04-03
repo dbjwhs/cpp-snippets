@@ -50,7 +50,7 @@ void demonstrate_basic_const()
     // proving const reference doesn't prevent changing the original variable
     mutable_value = 101;
     assert(kRefToValue == 101);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Original value changed to {}, const reference shows {}",
+    LOG_INFO(std::format("Original value changed to {}, const reference shows {}",
                                                          mutable_value, kRefToValue));
 
     // const pointers vs. pointers to const
@@ -157,7 +157,7 @@ void demonstrate_const_functions()
     }
 
     assert(kConstWithMutable.get_access_count() == 5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Access count on const object: {}",
+    LOG_INFO(std::format("Access count on const object: {}",
                                                          kConstWithMutable.get_access_count()));
 
     LOG_INFO("Const function tests passed");
@@ -190,7 +190,7 @@ void demonstrate_basic_constexpr()
     constexpr double kPi = 3.14159265358979323846;
     constexpr bool kIsDebug = false;
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("kSquareOfFive = {}, runtime square = {}",
+    LOG_INFO(std::format("kSquareOfFive = {}, runtime square = {}",
                                                          kSquareOfFive, sq));
     LOG_INFO("Basic constexpr tests passed");
 }

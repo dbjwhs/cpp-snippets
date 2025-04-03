@@ -69,7 +69,7 @@ public:
 
     // copy constructor
     ResourceManager(const ResourceManager& other) : m_size(other.m_size), m_id(++s_counter) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("copy constructor called, copying from id {} to new id {}"
+        LOG_INFO(std::format("copy constructor called, copying from id {} to new id {}"
             , other.m_id, m_id));
 
         // perform deep copy
@@ -85,7 +85,7 @@ public:
 
     // move constructor
     ResourceManager(ResourceManager&& other) noexcept : m_data(nullptr), m_size(0), m_id(++s_counter) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("move constructor called, moving from id {} to new id {}"
+        LOG_INFO(std::format("move constructor called, moving from id {} to new id {}"
             , other.m_id, m_id));
 
         // steal resources from other
@@ -100,7 +100,7 @@ public:
 
     // copy assignment operator
     ResourceManager& operator=(const ResourceManager& other) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("copy assignment called, copying from id {} to id {}"
+        LOG_INFO(std::format("copy assignment called, copying from id {} to id {}"
             , other.m_id, m_id));
 
         // guard against self-assignment
@@ -126,7 +126,7 @@ public:
 
     // move assignment operator
     ResourceManager& operator=(ResourceManager&& other) noexcept {
-        Logger::getInstance().log(LogLevel::INFO, std::format("move assignment called, moving from id {} to id {}"
+        LOG_INFO(std::format("move assignment called, moving from id {} to id {}"
             , other.m_id, m_id));
 
         // guard against self-assignment

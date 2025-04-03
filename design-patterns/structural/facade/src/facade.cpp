@@ -354,8 +354,7 @@ int main() {
     bool const initResult = gameSys->initialize();
     assert(initResult && "facade initialization failed");
     if (!initResult) {
-        Logger::getInstance().log(LogLevel::ERROR,
-            std::format("initialization failed with error: {}", gameSys->getLastError().message()));
+        LOG_ERROR(std::format("initialization failed with error: {}", gameSys->getLastError().message()));
         return 1;
     }
     LOG_INFO(std::format("test 2: initialization successful"));

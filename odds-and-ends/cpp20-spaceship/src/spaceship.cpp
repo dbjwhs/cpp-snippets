@@ -211,7 +211,7 @@ void testStudentComparisons() {
     // Print the students before sorting
     LOG_INFO("Students before sorting:");
     for (int ndx = 0; ndx < students.size(); ndx++) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("  {}: {} (ID: {})", ndx, 
+        LOG_INFO(std::format("  {}: {} (ID: {})", ndx, 
             students[ndx].toString(), students[ndx].id()));
     }
     
@@ -235,7 +235,7 @@ void testStudentComparisons() {
     // expect order: s2 (3.9), s1 (3.8, "Alice"), s4 (3.8, "Alice"), s3 (3.8, "Charlie")
     LOG_INFO("Sorted students (by GPA desc, then name asc):");
     for (int ndx = 0; ndx < students.size(); ndx++) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("  {}: {} (ID: {})", ndx, 
+        LOG_INFO(std::format("  {}: {} (ID: {})", ndx, 
             students[ndx].toString(), students[ndx].id()));
     }
 

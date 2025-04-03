@@ -92,16 +92,14 @@ public:
     // add a child component
     void add(const ComponentPtr& component) override {
         m_children.push_back(component);
-        Logger::getInstance().log(LogLevel::INFO, 
-            std::format("Added component {} to {}", component->getName(), m_name));
+        LOG_INFO(std::format("Added component {} to {}", component->getName(), m_name));
     }
 
     // remove a child component
     void remove(const ComponentPtr& component) override {
         if (const auto it = std::find(m_children.begin(), m_children.end(), component); it != m_children.end()) {
             m_children.erase(it);
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Removed component {} from {}", component->getName(), m_name));
+            LOG_INFO(std::format("Removed component {} from {}", component->getName(), m_name));
         }
     }
 
@@ -167,8 +165,7 @@ int main() {
         test_composite_pattern();
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, 
-            std::format("Test failed with error: {}", e.what()));
+        LOG_ERROR(std::format("Test failed with error: {}", e.what()));
         return 1;
     }
 }

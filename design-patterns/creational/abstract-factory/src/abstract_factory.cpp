@@ -80,8 +80,7 @@ public:
         m_theme = "light";
     }
     void render() const override {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("rendering light button with text: {}", m_text));
+        LOG_INFO(std::format("rendering light button with text: {}", m_text));
     }
 };
 
@@ -90,12 +89,10 @@ public:
     LightCheckbox() { m_theme = "light"; }
     void toggle() override {
         m_checked = !m_checked;
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("light checkbox toggled to: {}", m_checked));
+        LOG_INFO(std::format("light checkbox toggled to: {}", m_checked));
     }
     void render() const override {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("rendering light checkbox, checked: {}", m_checked));
+        LOG_INFO(std::format("rendering light checkbox, checked: {}", m_checked));
     }
 };
 
@@ -106,8 +103,7 @@ public:
         m_theme = "dark";
     }
     void render() const override {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("rendering dark button with text: {}", m_text));
+        LOG_INFO(std::format("rendering dark button with text: {}", m_text));
     }
 };
 
@@ -118,12 +114,10 @@ public:
     }
     void toggle() override {
         m_checked = !m_checked;
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("dark checkbox toggled to: {}", m_checked));
+        LOG_INFO(std::format("dark checkbox toggled to: {}", m_checked));
     }
     void render() const override {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("rendering dark checkbox, checked: {}", m_checked));
+        LOG_INFO(std::format("rendering dark checkbox, checked: {}", m_checked));
     }
 };
 
@@ -171,8 +165,7 @@ public:
 void testThemeConsistency(const UIFactory& factory, const Button& button, const Checkbox& checkbox) {
     assert(factory.getTheme() == button.getTheme() && "button theme must match factory theme");
     assert(factory.getTheme() == checkbox.getTheme() && "checkbox theme must match factory theme");
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("theme consistency verified for {} theme", factory.getTheme()));
+    LOG_INFO(std::format("theme consistency verified for {} theme", factory.getTheme()));
 }
 
 int main() {

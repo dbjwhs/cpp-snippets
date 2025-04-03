@@ -232,8 +232,7 @@ private:
     void rehash() {
         size_t newBucketCount = m_bucketCount * 2;
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("rehashing: old bucket count={}, new bucket count={}",
+        LOG_INFO(std::format("rehashing: old bucket count={}, new bucket count={}",
                        m_bucketCount, newBucketCount));
 
         // create new buckets
@@ -262,8 +261,7 @@ public:
           m_bucketCount(initialBucketCount),
           m_loadFactorThreshold(loadFactorThreshold),
           m_hashFunc(std::move(hashFunc)) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("hash table created with {} buckets using {}",
+        LOG_INFO(std::format("hash table created with {} buckets using {}",
                        initialBucketCount, m_hashFunc->name()));
     }
 
@@ -290,8 +288,7 @@ public:
         m_buckets[index].push_back(HashNode(key, value));
         m_size++;
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("inserted key={}, bucket={}", key, index));
+        LOG_INFO(std::format("inserted key={}, bucket={}", key, index));
     }
 
     // search operation - o(1) average case, o(n) worst case
@@ -301,14 +298,12 @@ public:
         for (const auto& node : m_buckets[index]) {
             if (node.m_key == key) {
                 value = node.m_value;
-                Logger::getInstance().log(LogLevel::INFO,
-                    std::format("found key={} in bucket={}", key, index));
+                LOG_INFO(std::format("found key={} in bucket={}", key, index));
                 return true;
             }
         }
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("key={} not found", key));
+        LOG_INFO(std::format("key={} not found", key));
         return false;
     }
 
@@ -321,14 +316,12 @@ public:
             if (it->m_key == key) {
                 bucket.erase(it);
                 m_size--;
-                Logger::getInstance().log(LogLevel::INFO,
-                    std::format("removed key={} from bucket={}", key, index));
+                LOG_INFO(std::format("removed key={} from bucket={}", key, index));
                 return true;
             }
         }
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("key={} not found for removal", key));
+        LOG_INFO(std::format("key={} not found for removal", key));
         return false;
     }
 
@@ -341,8 +334,7 @@ public:
 };
 
 void runHashTableTests(const std::shared_ptr<HashFunction<int>>& hashFunc) {
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("\n=== Testing with {} ===\n", hashFunc->name()));
+    LOG_INFO(std::format("\n=== Testing with {} ===\n", hashFunc->name()));
 
     // create hash table with initial bucket count of 4 for testing
     HashTable<int, std::string> hashTable(hashFunc, 4, 0.75);
@@ -389,11 +381,9 @@ void runHashTableTests(const std::shared_ptr<HashFunction<int>>& hashFunc) {
         assert(hashTable.search(i, value) && value == std::to_string(i));
     }
 
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("final load factor: {}", hashTable.loadFactor()));
+    LOG_INFO(std::format("final load factor: {}", hashTable.loadFactor()));
 
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("=== Completed {} tests successfully! ===\n", hashFunc->name()));
+    LOG_INFO(std::format("=== Completed {} tests successfully! ===\n", hashFunc->name()));
 }
 
 int main() {

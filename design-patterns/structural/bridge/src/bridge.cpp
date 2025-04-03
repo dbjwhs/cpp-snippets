@@ -85,14 +85,12 @@ public:
 
     virtual void setPower(bool state) {
         m_powered = state;
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Device power state changed to: {}", m_powered));
+        LOG_INFO(std::format("Device power state changed to: {}", m_powered));
     }
 
     virtual void setVolumeLevel(int volume) {
         m_volume = std::clamp(volume, 0, 100);
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Device volume set to: {}", m_volume));
+        LOG_INFO(std::format("Device volume set to: {}", m_volume));
     }
 
     [[nodiscard]] virtual bool getPowerState() const { return m_powered; }
@@ -104,8 +102,7 @@ class TvDevice final : public DeviceImplementation {
 public:
     void setPower(bool state) override {
         DeviceImplementation::setPower(state);
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("TV specific power handling: {}", state));
+        LOG_INFO(std::format("TV specific power handling: {}", state));
     }
 };
 
@@ -114,8 +111,7 @@ class RadioDevice final : public DeviceImplementation {
 public:
     void setVolumeLevel(int volume) override {
         DeviceImplementation::setVolumeLevel(volume);
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Radio specific volume handling: {}", volume));
+        LOG_INFO(std::format("Radio specific volume handling: {}", volume));
     }
 };
 
@@ -202,8 +198,7 @@ int main() {
         runTests();
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR,
-            std::format("Test failed with exception: {}", e.what()));
+        LOG_ERROR(std::format("Test failed with exception: {}", e.what()));
         return 1;
     }
 }

@@ -94,8 +94,7 @@ public:
         }
         if ((m_balance - amount) < m_minimumBalance) {
             // make this info since we have negative tests, but should be error/critical
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("Insufficient funds: balance=${:.2f}, withdrawal=${:.2f}, minimum=${:.2f}", 
+            LOG_INFO(std::format("Insufficient funds: balance=${:.2f}, withdrawal=${:.2f}, minimum=${:.2f}", 
                     m_balance, amount, m_minimumBalance));
             throw std::runtime_error("Insufficient funds");
         }
@@ -135,7 +134,7 @@ int main() {
             FailFastAccount invalidAccount("");
             assert(false && "Should have thrown exception");
         } catch (const std::invalid_argument& e) {
-            Logger::getInstance().log(LogLevel::INFO, "Test passed: Empty account holder name rejected", e.what());
+            LOG_INFO("Test passed: Empty account holder name rejected", e.what());
         }
 
         // test 3: valid deposit
@@ -147,7 +146,7 @@ int main() {
             account.deposit(-100.0);
             assert(false && "Should have thrown exception");
         } catch (const std::invalid_argument& e) {
-            Logger::getInstance().log(LogLevel::INFO, "Test passed: Negative deposit rejected", e.what());
+            LOG_INFO("Test passed: Negative deposit rejected", e.what());
         }
 
         // test 5: valid withdrawal
@@ -159,7 +158,7 @@ int main() {
             account.withdraw(2000.0);
             assert(false && "Should have thrown exception");
         } catch (const std::runtime_error& e) {
-            Logger::getInstance().log(LogLevel::INFO, "Test passed: Excessive withdrawal rejected", e.what());
+            LOG_INFO("Test passed: Excessive withdrawal rejected", e.what());
         }
 
         // test 7: account closure
@@ -171,7 +170,7 @@ int main() {
             account.deposit(100.0);
             assert(false && "Should have thrown exception");
         } catch (const std::runtime_error& e) {
-            Logger::getInstance().log(LogLevel::INFO, "Test passed: Operation on closed account rejected", e.what());
+            LOG_INFO("Test passed: Operation on closed account rejected", e.what());
         }
 
         // test 9: double closure
@@ -179,7 +178,7 @@ int main() {
             account.closeAccount();
             assert(false && "Should have thrown exception");
         } catch (const std::runtime_error& e) {
-            Logger::getInstance().log(LogLevel::INFO, "Test passed: Double closure rejected", e.what());
+            LOG_INFO("Test passed: Double closure rejected", e.what());
         }
 
         LOG_INFO("All tests completed successfully");

@@ -32,8 +32,7 @@ public:
     // search returns index of found item or -1 if not found
     int search(const ElementType& target) const {
         if (m_data.empty()) {
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("binary search called on empty container"));
+            LOG_INFO(std::format("binary search called on empty container"));
             return -1;
         }
 
@@ -47,14 +46,12 @@ public:
             int mid = left + (right - left) / 2;
 
             // log the current search window
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("searching window [{}, {}], checking index {}",
+            LOG_INFO(std::format("searching window [{}, {}], checking index {}",
                            left, right, mid));
 
             // found exact match
             if (!m_comparator(m_data[mid], target) && !m_comparator(target, m_data[mid])) {
-                Logger::getInstance().log(LogLevel::INFO,
-                    std::format("found target at index {} in {} passes", mid, m_last_search_passes));
+                LOG_INFO(std::format("found target at index {} in {} passes", mid, m_last_search_passes));
                 return mid;
             }
 
@@ -66,8 +63,7 @@ public:
             }
         }
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("target not found after {} passes", m_last_search_passes));
+        LOG_INFO(std::format("target not found after {} passes", m_last_search_passes));
         return -1;
     }
 
@@ -104,8 +100,7 @@ void simple_tests() {
         assert(bs.search("zebra") == -1);
         assert(bs.search("") == -1);
 
-        Logger::getInstance().log(LogLevel::INFO,
-            "completed string comparison test suite with default comparator");
+        LOG_INFO("completed string comparison test suite with default comparator");
     }
 
     // test suite 2: string comparisons with custom case-insensitive comparator
@@ -136,8 +131,7 @@ void simple_tests() {
         assert(charlie_idx != -1 && case_insensitive_less("Charlie", words[charlie_idx]) == false
                && case_insensitive_less(words[charlie_idx], "Charlie") == false);
 
-        Logger::getInstance().log(LogLevel::INFO,
-            "completed string comparison test suite with case-insensitive comparator");
+        LOG_INFO("completed string comparison test suite with case-insensitive comparator");
     }
 
     // test suite 3: edge cases
@@ -192,8 +186,7 @@ void deeper_tests() {
 
         BinarySearch<int> bs(data);
 
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("testing with {} elements", size));
+        LOG_INFO(std::format("testing with {} elements", size));
 
         // test cases for timing:
         // 1. best case (middle element)
@@ -210,8 +203,7 @@ void deeper_tests() {
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("best case (middle element) search took {} ns and {} passes",
+            LOG_INFO(std::format("best case (middle element) search took {} ns and {} passes",
                            duration.count(), bs.get_last_search_passes()));
             assert(result != -1 && data[result] == mid_value);
         }
@@ -224,8 +216,7 @@ void deeper_tests() {
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("worst case (first element) search took {} ns and {} passes",
+            LOG_INFO(std::format("worst case (first element) search took {} ns and {} passes",
                            duration.count(), bs.get_last_search_passes()));
             assert(result != -1 && data[result] == first_value);
         }
@@ -251,8 +242,7 @@ void deeper_tests() {
                 assert(result != -1 && data[result] == target_value);
             }
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("random existing elements: avg search time {} ns, avg passes {}",
+            LOG_INFO(std::format("random existing elements: avg search time {} ns, avg passes {}",
                            total_time / 10, total_passes / 10));
         }
 
@@ -273,8 +263,7 @@ void deeper_tests() {
                 assert(result == -1);
             }
 
-            Logger::getInstance().log(LogLevel::INFO,
-                std::format("non-existing elements: avg search time {} ns, avg passes {}",
+            LOG_INFO(std::format("non-existing elements: avg search time {} ns, avg passes {}",
                            total_time / 10, total_passes / 10));
         }
     }

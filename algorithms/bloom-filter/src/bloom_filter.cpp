@@ -74,8 +74,7 @@ private:
     [[nodiscard]] static size_t calculateSize(size_t expectedElements, double falsePositiveRate) {
         // validate input parameters to prevent calculation errors
         if (expectedElements == 0 || falsePositiveRate <= 0 || falsePositiveRate >= 1) {
-            Logger::getInstance().log(LogLevel::CRITICAL,
-                std::format("invalid parameters for bloom filter, using default size. "
+            LOG_CRITICAL(std::format("invalid parameters for bloom filter, using default size. "
                             "elements: {}, false positive rate: {}",
                             expectedElements, falsePositiveRate));
             return 1024; // default fallback size
@@ -95,8 +94,7 @@ private:
     static size_t calculateHashCount(const size_t m, const size_t n) {
         // handle edge cases to prevent division by zero or invalid calculations
         if (n == 0) {
-            Logger::getInstance().log(LogLevel::CRITICAL,
-                "zero expected elements, defaulting to single hash function");
+            LOG_CRITICAL("zero expected elements, defaulting to single hash function");
             return 1;
         }
 
@@ -112,8 +110,7 @@ public:
         : m_size(calculateSize(expectedElements, falsePositiveRate)),
           m_hashCount(calculateHashCount(m_size, expectedElements)),
           m_bitArray(m_size, false) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("bloom filter initialized: size={}, hash_functions={}",
+        LOG_INFO(std::format("bloom filter initialized: size={}, hash_functions={}",
                         m_size, m_hashCount));
     }
 
@@ -123,8 +120,7 @@ public:
             size_t index = hash(item, i);
             m_bitArray[index] = true;
         }
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("added item to bloom filter: {}", item));
+        LOG_INFO(std::format("added item to bloom filter: {}", item));
     }
 
     // check if an item might be in the set
@@ -148,8 +144,7 @@ public:
         }
 
         // log detailed bloom filter statistics
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("bloom filter statistics:"
+        LOG_INFO(std::format("bloom filter statistics:"
                         "  bit array size: {} bits, "
                         "  hash function count: {}, "
                         "  bits set: {} ({:.2f}%)",
@@ -173,11 +168,9 @@ int main() {
         bloom.add("cherry");
 
         // test membership
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("'apple' in bloom: {}",
+        LOG_INFO(std::format("'apple' in bloom: {}",
                         bloom.contains("apple") ? "true" : "false"));
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("'grape' in bloom: {}",
+        LOG_INFO(std::format("'grape' in bloom: {}",
                         bloom.contains("grape") ? "true" : "false"));
 
         // demonstrate potential false positives
@@ -186,22 +179,19 @@ int main() {
 
         for (const auto& element : testElements) {
             if (bloom.contains(element)) {
-                Logger::getInstance().log(LogLevel::CRITICAL,
-                    std::format("possible false positive: {}", element));
+                LOG_CRITICAL(std::format("possible false positive: {}", element));
                 ++falsePositives;
             }
         }
 
         // log false positive count
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("false positive count: {}", falsePositives));
+        LOG_INFO(std::format("false positive count: {}", falsePositives));
 
         // print bloom filter statistics
         bloom.printStats();
 
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::CRITICAL,
-            std::format("exception occurred: {}", e.what()));
+        LOG_CRITICAL(std::format("exception occurred: {}", e.what()));
         return 1;
     }
 

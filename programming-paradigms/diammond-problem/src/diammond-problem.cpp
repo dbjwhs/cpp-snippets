@@ -34,8 +34,7 @@ public:
 public:
     PowerSource(const int power, std::string id)
         : m_power_level(power), m_source_id(std::move(id)) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("PowerSource constructed with id: {}", m_source_id));
+        LOG_INFO(std::format("PowerSource constructed with id: {}", m_source_id));
     }
 
     [[nodiscard]] virtual int getPower() const {
@@ -53,8 +52,7 @@ protected:
 public:
     Electrical(int power, float voltage)
         : PowerSource(power, "ELEC"), m_voltage(voltage) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Electrical constructed with voltage: {}", m_voltage));
+        LOG_INFO(std::format("Electrical constructed with voltage: {}", m_voltage));
     }
 
     [[nodiscard]] int getPower() const override {
@@ -70,8 +68,7 @@ protected:
 public:
     Mechanical(const int power, const float efficiency)
         : PowerSource(power, "MECH"), m_efficiency(efficiency) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Mechanical constructed with efficiency: {}", m_efficiency));
+        LOG_INFO(std::format("Mechanical constructed with efficiency: {}", m_efficiency));
     }
 
     [[nodiscard]] int getPower() const override {
@@ -90,8 +87,7 @@ public:
         : Electrical(base_power, voltage),
           Mechanical(base_power, efficiency),
           m_is_active(true) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("HybridEngine constructed with base power: {}", base_power));
+        LOG_INFO(std::format("HybridEngine constructed with base power: {}", base_power));
     }
 
     // now we have ambiguity! which powersource::getpower() do we use?
@@ -120,17 +116,13 @@ int main() {
     // engine.powersource::getpower();   // error: ambiguous access
 
     // must explicitly specify the path:
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("Electrical power path: {}", engine.Electrical::getPower()));
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("Mechanical power path: {}", engine.Mechanical::getPower()));
+    LOG_INFO(std::format("Electrical power path: {}", engine.Electrical::getPower()));
+    LOG_INFO(std::format("Mechanical power path: {}", engine.Mechanical::getPower()));
 
     // demonstrate the two separate powersource instances
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("Electrical source ID: {}",
+    LOG_INFO(std::format("Electrical source ID: {}",
             static_cast<Electrical&>(engine).m_source_id));
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("Mechanical source ID: {}",
+    LOG_INFO(std::format("Mechanical source ID: {}",
             static_cast<Mechanical&>(engine).m_source_id));
 
     // this will now create two separate powersource objects

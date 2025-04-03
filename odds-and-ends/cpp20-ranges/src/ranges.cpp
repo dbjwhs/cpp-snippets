@@ -27,7 +27,7 @@ private:
 public:
     // constructor taking a vector of integers
     explicit RangesExample(std::vector<int> data) : m_data(std::move(data)) {
-        Logger::getInstance().log(LogLevel::INFO, "ranges example created with {} elements", m_data.size());
+        LOG_INFO("ranges example created with {} elements", m_data.size());
     }
 
     // method to demonstrate basic ranges views
@@ -215,7 +215,7 @@ public:
         
         LOG_INFO("demonstrating ranges::find to locate element 5");
         if (it != m_data.end()) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("found element 5 at position {}", 
+            LOG_INFO(std::format("found element 5 at position {}", 
                 std::distance(m_data.begin(), it)));
         } else {
             LOG_INFO("element 5 not found");
@@ -238,8 +238,7 @@ public:
         // ranges::count_if algorithm
         int even_count = std::ranges::count_if(m_data, [](int n) { return n % 2 == 0; });
         
-        Logger::getInstance().log(LogLevel::INFO, 
-            std::format("demonstrating ranges::count_if to count even numbers: {}", even_count));
+        LOG_INFO(std::format("demonstrating ranges::count_if to count even numbers: {}", even_count));
         
         // test count_if
         int manual_count = 0;

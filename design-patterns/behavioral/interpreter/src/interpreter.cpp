@@ -88,8 +88,7 @@ public:
     [[nodiscard]] virtual int interpret(const Context& context) const = 0;
     [[nodiscard]] virtual std::string toString() const = 0;
     virtual void debugPrint(const int depth = 0) const {
-        Logger::getInstance().log_with_depth(LogLevel::DEBUG, depth
-            , std::format("Expression: {}", this->toString()));
+        Logger::getInstance().log_with_depth(LogLevel::DEBUG, depth, std::format("Expression: {}", this->toString()));
     }
 };
 
@@ -107,8 +106,7 @@ public:
 
     void setVariable(const std::string& name, int value) {
         m_variables[name] = value;
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("Context: Setting variable '{}' to {}", name, value));
+        LOG_DEBUG(std::format("Context: Setting variable '{}' to {}", name, value));
     }
 
     int getVariable(const std::string& name) const {
@@ -116,15 +114,13 @@ public:
         if (it == m_variables.end()) {
             throw std::runtime_error("Variable not found: " + name);
         }
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("Context: Retrieved variable '{}' = {}", name, it->second));
+        LOG_DEBUG(std::format("Context: Retrieved variable '{}' = {}", name, it->second));
         return it->second;
     }
 
     void incrementOperations() const {
         m_operationCount++;
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("Context: Operation count: {}", m_operationCount));
+        LOG_DEBUG(std::format("Context: Operation count: {}", m_operationCount));
     }
 
     int getOperationCount() const {
@@ -139,14 +135,12 @@ private:
 
 public:
     explicit NumberExpression(int number) : m_number(number) {
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("Creating NumberExpression with value {}", m_number));
+        LOG_DEBUG(std::format("Creating NumberExpression with value {}", m_number));
     }
 
     [[nodiscard]] int interpret(const Context& context) const override {
         context.incrementOperations();
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("NumberExpression: Interpreting constant {}", m_number));
+        LOG_DEBUG(std::format("NumberExpression: Interpreting constant {}", m_number));
         return m_number;
     }
 
@@ -162,15 +156,13 @@ private:
 
 public:
     explicit VariableExpression(std::string name) : m_name(std::move(name)) {
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("Creating VariableExpression for '{}'", m_name));
+        LOG_DEBUG(std::format("Creating VariableExpression for '{}'", m_name));
     }
 
     [[nodiscard]] int interpret(const Context& context) const override {
         context.incrementOperations();
         int value = context.getVariable(m_name);
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("VariableExpression: Retrieved '{}' = {}", m_name, value));
+        LOG_DEBUG(std::format("VariableExpression: Retrieved '{}' = {}", m_name, value));
         return value;
     }
 
@@ -191,8 +183,7 @@ public:
         : m_left(std::move(left))
         , m_right(std::move(right))
         , m_operatorSymbol(std::move(op)) {
-            Logger::getInstance().log(LogLevel::DEBUG,
-                std::format("Creating BinaryExpression with operator '{}'", m_operatorSymbol));
+            LOG_DEBUG(std::format("Creating BinaryExpression with operator '{}'", m_operatorSymbol));
     }
 
     void debugPrint(const int depth = 0) const override {
@@ -215,8 +206,7 @@ public:
     [[nodiscard]] int interpret(const Context& context) const override {
         context.incrementOperations();
         int result = m_left->interpret(context) + m_right->interpret(context);
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("AddExpression: {} = {}", this->toString(), result));
+        LOG_DEBUG(std::format("AddExpression: {} = {}", this->toString(), result));
         return result;
     }
 };
@@ -230,8 +220,7 @@ public:
     [[nodiscard]] int interpret(const Context& context) const override {
         context.incrementOperations();
         int result = m_left->interpret(context) - m_right->interpret(context);
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("SubtractExpression: {} = {}", this->toString(), result));
+        LOG_DEBUG(std::format("SubtractExpression: {} = {}", this->toString(), result));
         return result;
     }
 };
@@ -245,8 +234,7 @@ public:
     [[nodiscard]] int interpret(const Context& context) const override {
         context.incrementOperations();
         int result = m_left->interpret(context) * m_right->interpret(context);
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("MultiplyExpression: {} = {}", this->toString(), result));
+        LOG_DEBUG(std::format("MultiplyExpression: {} = {}", this->toString(), result));
         return result;
     }
 };
@@ -266,8 +254,7 @@ public:
             throw std::runtime_error("Division by zero");
         }
         int result = m_left->interpret(context) / rightValue;
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("DivideExpression: {} = {}", this->toString(), result));
+        LOG_DEBUG(std::format("DivideExpression: {} = {}", this->toString(), result));
         return result;
     }
 };
@@ -286,8 +273,7 @@ public:
             throw std::runtime_error("Modulo by zero");
         }
         int result = m_left->interpret(context) % rightValue;
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("ModuloExpression: {} = {}", this->toString(), result));
+        LOG_DEBUG(std::format("ModuloExpression: {} = {}", this->toString(), result));
         return result;
     }
 };
@@ -310,8 +296,7 @@ public:
         for (int ndx = 0; ndx < exponent; ++ndx) {
             result *= base;
         }
-        Logger::getInstance().log(LogLevel::DEBUG,
-            std::format("PowerExpression: {} = {}", this->toString(), result));
+        LOG_DEBUG(std::format("PowerExpression: {} = {}", this->toString(), result));
         return result;
     }
 };
@@ -420,8 +405,7 @@ void runTests() {
             result = expr1->interpret(context);
             assert(false && "Should have thrown division by zero exception");
         } catch (const std::runtime_error& e) {
-            Logger::getInstance().log(LogLevel::INFO
-                , "Test 5a: Division by zero exception caught correctly {} result {}", e.what(), result);
+            LOG_INFO("Test 5a: Division by zero exception caught correctly {} result {}", e.what(), result);
         }
 
         // test undefined variable
@@ -434,8 +418,7 @@ void runTests() {
             // ### make this info since we have tests for it, but this should be an error
             LOG_INFO(std::format("Context: {}", e.what()));
 
-            Logger::getInstance().log(LogLevel::INFO
-                , "Test 5b: Undefined variable exception caught correctly, interpret result: {}", result);
+            LOG_INFO("Test 5b: Undefined variable exception caught correctly, interpret result: {}", result);
         }
     }
 
@@ -465,8 +448,7 @@ void runTests() {
         // 3 for number expressions (2, 3, and 4)
         // total: 5 operations
         assert(context.getOperationCount() == 5);
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("Test 6: Operation counting passed. Total operations: {}, interpret result: {}"
+        LOG_INFO(std::format("Test 6: Operation counting passed. Total operations: {}, interpret result: {}"
                 , context.getOperationCount(), result));
     }
 }

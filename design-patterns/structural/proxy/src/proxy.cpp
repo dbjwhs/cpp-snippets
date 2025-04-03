@@ -99,8 +99,7 @@ public:
         m_processedCount += data.size();
 
         // log processing activity
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("processing {} items in real processor", data.size()));
+        LOG_INFO(std::format("processing {} items in real processor", data.size()));
 
         // simulate processing
         for (const auto& item : data) {
@@ -138,8 +137,7 @@ public:
         }
 
         // log proxy access
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("proxy: forwarding {} items to real processor", data.size()));
+        LOG_INFO(std::format("proxy: forwarding {} items to real processor", data.size()));
 
         // forward request to real processor
         m_realProcessor->processData(data);
@@ -197,8 +195,7 @@ std::vector<std::string> readFileToVector(const std::string& filename) {
         lines.push_back(line);
     }
 
-    Logger::getInstance().log(LogLevel::INFO,
-        std::format("read {} lines from file: {}", lines.size(), filename));
+    LOG_INFO(std::format("read {} lines from file: {}", lines.size(), filename));
 
     return lines;
 }
@@ -256,8 +253,7 @@ int main() {
         LOG_INFO("all tests completed successfully");
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::INFO,
-            std::format("error during testing: {}", e.what()));
+        LOG_INFO(std::format("error during testing: {}", e.what()));
         return 1;
     }
 }

@@ -101,12 +101,10 @@ void testDecorator(const std::string& testName, const TextComponent& decorator, 
     const std::string actual = decorator.render();
     const bool passed = (actual == expected);
     
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Test {}: {}", testName, passed ? "PASSED" : "FAILED"));
+    LOG_INFO(std::format("Test {}: {}", testName, passed ? "PASSED" : "FAILED"));
     
     if (!passed) {
-        Logger::getInstance().log(LogLevel::ERROR,
-            std::format("Expected: {}, Actual: {}", expected, actual));
+        LOG_ERROR(std::format("Expected: {}, Actual: {}", expected, actual));
     }
     assert(actual == expected);
 }

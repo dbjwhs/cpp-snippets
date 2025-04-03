@@ -175,14 +175,14 @@ public:
     // implementation for Circle
     void visit(const Circle& circle) override {
         m_area = M_PI * circle.getRadius() * circle.getRadius();
-        Logger::getInstance().log(LogLevel::INFO, std::format("Calculated area of {} with radius {}: {}", 
+        LOG_INFO(std::format("Calculated area of {} with radius {}: {}", 
                                   circle.getName(), circle.getRadius(), m_area));
     }
     
     // implementation for Square
     void visit(const Square& square) override {
         m_area = square.getSide() * square.getSide();
-        Logger::getInstance().log(LogLevel::INFO, std::format("Calculated area of {} with side {}: {}", 
+        LOG_INFO(std::format("Calculated area of {} with side {}: {}", 
                                   square.getName(), square.getSide(), m_area));
     }
     
@@ -196,8 +196,7 @@ public:
             * (semi_perimeter - triangle.getB())
             * (semi_perimeter - triangle.getC()));
         
-        Logger::getInstance().log(LogLevel::INFO, 
-                                  std::format("Calculated area of {} with sides {}, {}, {}: {}", 
+        LOG_INFO(std::format("Calculated area of {} with sides {}, {}, {}: {}", 
                                   triangle.getName(), triangle.getA(), triangle.getB(), triangle.getC(), m_area));
     }
 };
@@ -222,22 +221,21 @@ public:
     // implementation for Circle
     void visit(const Circle& circle) override {
         m_perimeter = 2.0 * M_PI * circle.getRadius();
-        Logger::getInstance().log(LogLevel::INFO, std::format("Calculated perimeter of {} with radius {}: {}", 
+        LOG_INFO(std::format("Calculated perimeter of {} with radius {}: {}", 
                                   circle.getName(), circle.getRadius(), m_perimeter));
     }
     
     // implementation for Square
     void visit(const Square& square) override {
         m_perimeter = 4.0 * square.getSide();
-        Logger::getInstance().log(LogLevel::INFO, std::format("Calculated perimeter of {} with side {}: {}", 
+        LOG_INFO(std::format("Calculated perimeter of {} with side {}: {}", 
                                   square.getName(), square.getSide(), m_perimeter));
     }
     
     // implementation for Triangle
     void visit(const Triangle& triangle) override {
         m_perimeter = triangle.getA() + triangle.getB() + triangle.getC();
-        Logger::getInstance().log(LogLevel::INFO, 
-                                  std::format("Calculated perimeter of {} with sides {}, {}, {}: {}", 
+        LOG_INFO(std::format("Calculated perimeter of {} with sides {}, {}, {}: {}", 
                                   triangle.getName(), triangle.getA(), triangle.getB(), triangle.getC(), m_perimeter));
     }
 };
@@ -394,7 +392,7 @@ int main() {
         shape->accept(descriptionVisitor);
         
         // log results
-        Logger::getInstance().log(LogLevel::INFO, std::format("Results for {}: Area = {}, Perimeter = {}, Description = '{}'",
+        LOG_INFO(std::format("Results for {}: Area = {}, Perimeter = {}, Description = '{}'",
                                   shape->getName(), areaVisitor.getArea(), perimeterVisitor.getPerimeter(), 
                                   descriptionVisitor.getDescription()));
     }

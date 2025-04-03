@@ -9,7 +9,7 @@ protected:
 public:
     Base() : baseData("Base data") {}
     virtual void print() {
-        Logger::getInstance().log(LogLevel::INFO, "Base with: " + baseData);
+        LOG_INFO("Base with: " + baseData);
     }
     virtual ~Base() = default;
 };
@@ -22,7 +22,7 @@ public:
         baseData = "Modified base data";
     }
     void print() override {
-        Logger::getInstance().log(LogLevel::INFO, "Derived with: " + baseData + " and " + derivedData);
+        LOG_INFO("Derived with: " + baseData + " and " + derivedData);
     }
 };
 

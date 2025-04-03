@@ -336,11 +336,11 @@ private:
 
 // test implementation with multiple types
 void printInt(const int& value) {
-    Logger::getInstance().log(LogLevel::INFO, std::to_string(value) + " ");
+    LOG_INFO(std::to_string(value) + " ");
 }
 
 void printString(const std::string& value) {
-    Logger::getInstance().log(LogLevel::INFO, value + " ");
+    LOG_INFO(value + " ");
 }
 
 int main() {

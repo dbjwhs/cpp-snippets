@@ -54,14 +54,14 @@ private:
 public:
     // apfs specific methods with its native format
     [[nodiscard]] static bool createAPFSDirectory(std::string_view path, uint32_t permissions) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("creating apfs directory: {} with unix permissions: {:o}",
+        LOG_INFO(std::format("creating apfs directory: {} with unix permissions: {:o}",
                                 path, permissions));
         return true;
     }
 
     [[nodiscard]] static bool copyAPFSFile(std::string_view source, std::string_view dest,
                                    bool preserveMetadata) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("copying apfs file with metadata preservation: {}",
+        LOG_INFO(std::format("copying apfs file with metadata preservation: {}",
                                 preserveMetadata ? "yes" : "no"));
         LOG_INFO(std::format("source: {}dest: {}", source, dest));
         return true;
@@ -69,7 +69,7 @@ public:
 
     [[nodiscard]] static std::vector<std::string> getAPFSContents(std::string_view path,
                                                           const bool includeHidden) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("listing apfs directory contents{}",
+        LOG_INFO(std::format("listing apfs directory contents{}",
                                 includeHidden ? " (including hidden files)" : ""));
         return {"file1.txt", ".ds_store", "folder1"};
     }

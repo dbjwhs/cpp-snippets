@@ -278,7 +278,7 @@ public:
     // method to send a private message to a specific user
     void sendPrivate(const std::string& message, const std::string& receiverName) {
         if (m_mediator) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("User {} sends private message to {}: {}",
+            LOG_INFO(std::format("User {} sends private message to {}: {}",
                 m_name, receiverName, message));
             m_mediator->sendPrivateMessage(message, shared_from_this(), receiverName);
         }
@@ -337,7 +337,7 @@ public:
         // check if the receiver exists
         if (m_users.contains(receiverId)) {
             const std::string formattedMsg = std::format("[Private from {}]: {}", sender->getName(), message);
-            Logger::getInstance().log(LogLevel::INFO, std::format("ChatRoom: Delivering private message from {} to {}",
+            LOG_INFO(std::format("ChatRoom: Delivering private message from {} to {}",
                 sender->getName(), receiverId));
             m_users[receiverId]->receive(formattedMsg);
         } else {
