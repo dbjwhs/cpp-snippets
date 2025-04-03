@@ -418,7 +418,7 @@ void runTests() {
             // ### make this info since we have tests for it, but this should be an error
             LOG_INFO(std::format("Context: {}", e.what()));
 
-            LOG_INFO("Test 5b: Undefined variable exception caught correctly, interpret result: {}", result);
+            LOG_INFO(std::format("Test 5b: Undefined variable exception caught correctly, interpret result: {}", result));
         }
     }
 
