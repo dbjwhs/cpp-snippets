@@ -49,76 +49,76 @@ public:
         m_instanceCount++;
         
         // log construction of the tester object
-        Logger::getInstance().log(LogLevel::INFO, "constructing feature tester object");
+        LOG_INFO("constructing feature tester object");
         
         // check for concept support
         #ifdef __cpp_concepts
         m_hasConceptsSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("concepts supported: {}", __cpp_concepts));
+        LOG_INFO(std::format("concepts supported: {}", __cpp_concepts));
         #else
         m_hasConceptsSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "concepts not supported");
+        LOG_INFO("concepts not supported");
         #endif
 
         // check for range support
         #ifdef __cpp_lib_ranges
         m_hasRangesSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("ranges supported: {}", __cpp_lib_ranges));
+        LOG_INFO(std::format("ranges supported: {}", __cpp_lib_ranges));
         #else
         m_hasRangesSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "ranges not supported");
+        LOG_INFO("ranges not supported");
         #endif
 
         // check for coroutines support
         #ifdef __cpp_coroutines
         m_hasCoroutinesSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("coroutines supported: {}", __cpp_coroutines));
+        LOG_INFO(std::format("coroutines supported: {}", __cpp_coroutines));
         #else
         m_hasCoroutinesSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "coroutines not supported");
+        LOG_INFO("coroutines not supported");
         #endif
 
         // check for std::format support
         #ifdef __cpp_lib_format
         m_hasFormatSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("std::format supported: {}", __cpp_lib_format));
+        LOG_INFO(std::format("std::format supported: {}", __cpp_lib_format));
         #else
         m_hasFormatSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "std::format not supported");
+        LOG_INFO("std::format not supported");
         #endif
 
         // check for std::span support
         #ifdef __cpp_lib_span
         m_hasSpanSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("std::span supported: {}", __cpp_lib_span));
+        LOG_INFO(std::format("std::span supported: {}", __cpp_lib_span));
         #else
         m_hasSpanSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "std::span not supported");
+        LOG_INFO("std::span not supported");
         #endif
 
         // check for module support
         #ifdef __cpp_modules
         m_hasModulesSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("modules supported: {}", __cpp_modules));
+        LOG_INFO(std::format("modules supported: {}", __cpp_modules));
         #else
         m_hasModulesSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "modules not supported");
+        LOG_INFO("modules not supported");
         #endif
 
         // check for three-way comparison support (spaceship operator)
         #ifdef __cpp_impl_three_way_comparison
         m_hasThreeWayComparisonSupport = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("three-way comparison supported: {}", __cpp_impl_three_way_comparison));
+        LOG_INFO(std::format("three-way comparison supported: {}", __cpp_impl_three_way_comparison));
         #else
         m_hasThreeWayComparisonSupport = false;
-        Logger::getInstance().log(LogLevel::INFO, "three-way comparison not supported");
+        LOG_INFO("three-way comparison not supported");
         #endif
     }
 
     // destructor
     ~FeatureTester() {
         // log destruction of the tester object
-        Logger::getInstance().log(LogLevel::INFO, "destroying feature tester object");
+        LOG_INFO("destroying feature tester object");
         
         // decrement instance counter
         m_instanceCount--;
@@ -126,7 +126,7 @@ public:
 
     // method to demonstrate conditional compilation based on feature availability
     static void demonstrateFeatures() {
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating detected c++20 features");
+        LOG_INFO("demonstrating detected c++20 features");
 
         // demonstrate concepts if available
         demonstrateConcepts();
@@ -157,7 +157,7 @@ public:
         if (featureName == "three-way-comparison") return m_hasThreeWayComparisonSupport;
         
         // unknown feature
-        Logger::getInstance().log(LogLevel::INFO, std::format("unknown feature requested: {}", featureName));
+        LOG_INFO(std::format("unknown feature requested: {}", featureName));
         return false;
     }
 
@@ -165,15 +165,15 @@ private:
     // helper method to demonstrate concepts feature
     static void demonstrateConcepts() {
         #ifdef __cpp_concepts
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating concepts feature");
+        LOG_INFO("demonstrating concepts feature");
         
         // define a simple concept for numeric types
         auto testConcept = []<typename T>() {
             if constexpr (std::integral<T>) {
-                Logger::getInstance().log(LogLevel::INFO, "type is integral");
+                LOG_INFO("type is integral");
                 return true;
             } else {
-                Logger::getInstance().log(LogLevel::INFO, "type is not integral");
+                LOG_INFO("type is not integral");
                 return false;
             }
         };
@@ -186,16 +186,16 @@ private:
         assert(intResult == true);
         assert(doubleResult == false);
         
-        Logger::getInstance().log(LogLevel::INFO, "concepts demonstration completed");
+        LOG_INFO("concepts demonstration completed");
         #else
-        Logger::getInstance().log(LogLevel::INFO, "skipping concepts demonstration (not supported)");
+        LOG_INFO("skipping concepts demonstration (not supported)");
         #endif
     }
 
     // helper method to demonstrate ranges feature
     static void demonstrateRanges() {
         #ifdef __cpp_lib_ranges
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating ranges feature");
+        LOG_INFO("demonstrating ranges feature");
         
         // create a simple vector for demonstration
         std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -210,9 +210,9 @@ private:
                           });
         
         // output the results
-        Logger::getInstance().log(LogLevel::INFO, "even squares from ranges:");
+        LOG_INFO("even squares from ranges:");
         for (int ndx = 0; auto val : evenSquares) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("  [{}]: {}", ndx++, val));
+            LOG_INFO(std::format("  [{}]: {}", ndx++, val));
             
             // verify results with assertions (4, 16, 36, 64, 100)
             switch(ndx-1) {
@@ -225,16 +225,16 @@ private:
             }
         }
         
-        Logger::getInstance().log(LogLevel::INFO, "ranges demonstration completed");
+        LOG_INFO("ranges demonstration completed");
         #else
-        Logger::getInstance().log(LogLevel::INFO, "skipping ranges demonstration (not supported)");
+        LOG_INFO("skipping ranges demonstration (not supported)");
         #endif
     }
 
     // helper method to demonstrate three-way comparison operator
     static void demonstrateThreeWayComparison() {
         #ifdef __cpp_impl_three_way_comparison
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating three-way comparison feature");
+        LOG_INFO("demonstrating three-way comparison feature");
         
         // define a class that uses the three-way comparison operator
         struct Point {
@@ -255,25 +255,25 @@ private:
         bool less = (p1 < p3);
         
         // log and verify results
-        Logger::getInstance().log(LogLevel::INFO, std::format("p1 == p2: {}", equal));
-        Logger::getInstance().log(LogLevel::INFO, std::format("p1 != p3: {}", notEqual));
-        Logger::getInstance().log(LogLevel::INFO, std::format("p1 < p3: {}", less));
+        LOG_INFO(std::format("p1 == p2: {}", equal));
+        LOG_INFO(std::format("p1 != p3: {}", notEqual));
+        LOG_INFO(std::format("p1 < p3: {}", less));
         
         // verify with assertions
         assert(equal);
         assert(notEqual);
         assert(less);
         
-        Logger::getInstance().log(LogLevel::INFO, "three-way comparison demonstration completed");
+        LOG_INFO("three-way comparison demonstration completed");
         #else
-        Logger::getInstance().log(LogLevel::INFO, "skipping three-way comparison demonstration (not supported)");
+        LOG_INFO("skipping three-way comparison demonstration (not supported)");
         #endif
     }
 
     // helper method to demonstrate std::format feature
     static void demonstrateFormat() {
         #ifdef __cpp_lib_format
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating std::format feature");
+        LOG_INFO("demonstrating std::format feature");
         
         // demonstrate different format specifiers
         std::string formatted1 = std::format("Integer: {:d}", 42);
@@ -282,10 +282,10 @@ private:
         std::string formatted4 = std::format("Multiple values: {}, {}, {}", "hello", 123, true);
         
         // log the formatted strings
-        Logger::getInstance().log(LogLevel::INFO, std::format("Format result 1: {}", formatted1));
-        Logger::getInstance().log(LogLevel::INFO, std::format("Format result 2: {}", formatted2));
-        Logger::getInstance().log(LogLevel::INFO, std::format("Format result 3: {}", formatted3));
-        Logger::getInstance().log(LogLevel::INFO, std::format("Format result 4: {}", formatted4));
+        LOG_INFO(std::format("Format result 1: {}", formatted1));
+        LOG_INFO(std::format("Format result 2: {}", formatted2));
+        LOG_INFO(std::format("Format result 3: {}", formatted3));
+        LOG_INFO(std::format("Format result 4: {}", formatted4));
         
         // verify with assertions
         assert(formatted1 == "Integer: 42");
@@ -293,9 +293,9 @@ private:
         assert(formatted3 == "Float with precision: 3.14");
         assert(formatted4 == "Multiple values: hello, 123, true");
         
-        Logger::getInstance().log(LogLevel::INFO, "std::format demonstration completed");
+        LOG_INFO("std::format demonstration completed");
         #else
-        Logger::getInstance().log(LogLevel::INFO, "skipping std::format demonstration (not supported)");
+        LOG_INFO("skipping std::format demonstration (not supported)");
         #endif
     }
 };
@@ -305,7 +305,7 @@ int FeatureTester::m_instanceCount = 0;
 
 // function to run comprehensive tests
 void runTests() {
-    Logger::getInstance().log(LogLevel::INFO, "starting feature detection tests");
+    LOG_INFO("starting feature detection tests");
     
     // create a feature tester instance
     FeatureTester tester;
@@ -343,18 +343,18 @@ void runTests() {
     // verify the second instance was cleaned up
     assert(FeatureTester::getInstanceCount() == 1);
     
-    Logger::getInstance().log(LogLevel::INFO, "all tests completed successfully");
+    LOG_INFO("all tests completed successfully");
 }
 
 // main entry point
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "starting c++20 feature detection demo");
+    LOG_INFO("starting c++20 feature detection demo");
     
     // output compiler information
     #ifdef __cplusplus
-    Logger::getInstance().log(LogLevel::INFO, std::format("c++ standard version: {}", __cplusplus));
+    LOG_INFO(std::format("c++ standard version: {}", __cplusplus));
     #else
-    Logger::getInstance().log(LogLevel::INFO, "c++ standard version: unknown");
+    LOG_INFO("c++ standard version: unknown");
     #endif
     
     #ifdef __GNUC__
@@ -363,7 +363,7 @@ int main() {
     #endif
     
     #ifdef _MSC_VER
-    Logger::getInstance().log(LogLevel::INFO, std::format("msvc version: {}", _MSC_VER));
+    LOG_INFO(std::format("msvc version: {}", _MSC_VER));
     #endif
     
     #ifdef __clang__
@@ -375,49 +375,49 @@ int main() {
     runTests();
     
     // summary of feature detection macros
-    Logger::getInstance().log(LogLevel::INFO, "summary of c++20 feature detection macros:");
+    LOG_INFO("summary of c++20 feature detection macros:");
     
     #ifdef __cpp_concepts
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_concepts: {}", __cpp_concepts));
+    LOG_INFO(std::format("__cpp_concepts: {}", __cpp_concepts));
     #endif
     
     #ifdef __cpp_lib_concepts
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_lib_concepts: {}", __cpp_lib_concepts));
+    LOG_INFO(std::format("__cpp_lib_concepts: {}", __cpp_lib_concepts));
     #endif
     
     #ifdef __cpp_lib_ranges
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_lib_ranges: {}", __cpp_lib_ranges));
+    LOG_INFO(std::format("__cpp_lib_ranges: {}", __cpp_lib_ranges));
     #endif
     
     #ifdef __cpp_coroutines
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_coroutines: {}", __cpp_coroutines));
+    LOG_INFO(std::format("__cpp_coroutines: {}", __cpp_coroutines));
     #endif
     
     #ifdef __cpp_lib_coroutine
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_lib_coroutine: {}", __cpp_lib_coroutine));
+    LOG_INFO(std::format("__cpp_lib_coroutine: {}", __cpp_lib_coroutine));
     #endif
     
     #ifdef __cpp_lib_format
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_lib_format: {}", __cpp_lib_format));
+    LOG_INFO(std::format("__cpp_lib_format: {}", __cpp_lib_format));
     #endif
     
     #ifdef __cpp_lib_span
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_lib_span: {}", __cpp_lib_span));
+    LOG_INFO(std::format("__cpp_lib_span: {}", __cpp_lib_span));
     #endif
     
     #ifdef __cpp_modules
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_modules: {}", __cpp_modules));
+    LOG_INFO(std::format("__cpp_modules: {}", __cpp_modules));
     #endif
     
     #ifdef __cpp_impl_three_way_comparison
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_impl_three_way_comparison: {}", __cpp_impl_three_way_comparison));
+    LOG_INFO(std::format("__cpp_impl_three_way_comparison: {}", __cpp_impl_three_way_comparison));
     #endif
     
     #ifdef __cpp_lib_three_way_comparison
-    Logger::getInstance().log(LogLevel::INFO, std::format("__cpp_lib_three_way_comparison: {}", __cpp_lib_three_way_comparison));
+    LOG_INFO(std::format("__cpp_lib_three_way_comparison: {}", __cpp_lib_three_way_comparison));
     #endif
     
-    Logger::getInstance().log(LogLevel::INFO, "program completed successfully");
+    LOG_INFO("program completed successfully");
     
     return 0;
 }

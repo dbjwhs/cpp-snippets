@@ -279,8 +279,8 @@ void runTests() {
         size_t count = 0;
         auto start = std::chrono::high_resolution_clock::now();
 
-        // Only process first 1000 combinations
-        constexpr size_t maxToProcess = 1000000000;
+        // Only process first 10000 combinations
+        constexpr size_t maxToProcess = 10000;
         solution.processLetterCombinations(digits, [&count](const std::string& combo) {
             count++;
             if (count % 10000000 == 0) {

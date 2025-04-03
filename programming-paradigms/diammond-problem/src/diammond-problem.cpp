@@ -107,7 +107,7 @@ public:
 };
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting diamond problem demonstration");
+    LOG_INFO("Starting diamond problem demonstration");
 
     HybridEngine engine(100, 1.5f, 0.8f);
 
@@ -136,7 +136,7 @@ int main() {
     // this will now create two separate powersource objects
     assert(&static_cast<Electrical*>(&engine)->PowerSource::m_power_level !=
            &static_cast<Mechanical*>(&engine)->PowerSource::m_power_level);
-    Logger::getInstance().log(LogLevel::INFO, "Verified separate PowerSource instances");
+    LOG_INFO("Verified separate PowerSource instances");
 
     return 0;
 }

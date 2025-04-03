@@ -167,7 +167,7 @@ void simple_tests() {
         const int three_idx = dupe_bs.search("three");
         assert(three_idx != -1 && with_dupes[three_idx] == "three");
 
-        Logger::getInstance().log(LogLevel::INFO, "completed edge cases test suite");
+        LOG_INFO("completed edge cases test suite");
     }
 }
 
@@ -281,13 +281,13 @@ void deeper_tests() {
 }
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "starting simple tests...");
+    LOG_INFO("starting simple tests...");
     simple_tests();
-    Logger::getInstance().log(LogLevel::INFO, "simple tests completed successfully");
+    LOG_INFO("simple tests completed successfully");
 
-    Logger::getInstance().log(LogLevel::INFO, "starting deeper tests...");
+    LOG_INFO("starting deeper tests...");
     deeper_tests();
-    Logger::getInstance().log(LogLevel::INFO, "deeper tests completed successfully");
+    LOG_INFO("deeper tests completed successfully");
 
     return 0;
 }

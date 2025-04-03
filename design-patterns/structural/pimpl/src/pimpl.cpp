@@ -111,55 +111,55 @@ bool StringWrapper::empty() const {
 
 // main.cpp
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "testing stringwrapper implementation...\n");
+    LOG_INFO("testing stringwrapper implementation...\n");
 
     // test default constructor
     const StringWrapper empty;
     assert(empty.empty());
     assert(empty.empty());
-    Logger::getInstance().log(LogLevel::INFO, "default constructor: passed");
+    LOG_INFO("default constructor: passed");
 
     // test parameterized constructor
     const StringWrapper hello("hello");
     assert(!hello.empty());
     assert(hello.length() == 5);
     assert(hello.get() == "hello");
-    Logger::getInstance().log(LogLevel::INFO, "parameterized constructor: passed");
+    LOG_INFO("parameterized constructor: passed");
 
     // test append
     hello.append(" world");
     assert(hello.length() == 11);
     assert(hello.get() == "hello world");
-    Logger::getInstance().log(LogLevel::INFO, "append: passed");
+    LOG_INFO("append: passed");
 
     // test copy constructor
     StringWrapper copy(hello);
     assert(copy.get() == hello.get());
-    Logger::getInstance().log(LogLevel::INFO, "copy constructor: passed");
+    LOG_INFO("copy constructor: passed");
 
     // test copy assignment
     StringWrapper assigned;
     assigned = hello;
     assert(assigned.get() == hello.get());
-    Logger::getInstance().log(LogLevel::INFO, "copy assignment: passed");
+    LOG_INFO("copy assignment: passed");
 
     // test move constructor
     StringWrapper moved(std::move(copy));
     assert(moved.get() == "hello world");
-    Logger::getInstance().log(LogLevel::INFO, "move constructor: passed");
+    LOG_INFO("move constructor: passed");
 
     // test move assignment
     StringWrapper move_assigned;
     move_assigned = std::move(moved);
     assert(move_assigned.get() == "hello world");
-    Logger::getInstance().log(LogLevel::INFO, "move assignment: passed");
+    LOG_INFO("move assignment: passed");
 
     // test clear
     move_assigned.clear();
     assert(move_assigned.empty());
     assert(move_assigned.empty());
-    Logger::getInstance().log(LogLevel::INFO, "clear: passed");
+    LOG_INFO("clear: passed");
 
-    Logger::getInstance().log(LogLevel::INFO, "all tests passed successfully!");
+    LOG_INFO("all tests passed successfully!");
     return 0;
 }

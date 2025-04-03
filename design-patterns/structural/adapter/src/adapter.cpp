@@ -63,7 +63,7 @@ public:
                                    bool preserveMetadata) {
         Logger::getInstance().log(LogLevel::INFO, std::format("copying apfs file with metadata preservation: {}",
                                 preserveMetadata ? "yes" : "no"));
-        Logger::getInstance().log(LogLevel::INFO, std::format("source: {}dest: {}", source, dest));
+        LOG_INFO(std::format("source: {}dest: {}", source, dest));
         return true;
     }
 
@@ -83,18 +83,18 @@ private:
 
 public:
     [[nodiscard]] static bool makeFAT32Dir(std::string_view path) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("creating fat32 directory: {}", path));
+        LOG_INFO(std::format("creating fat32 directory: {}", path));
         return true;
     }
 
     [[nodiscard]] static bool copyFAT32(std::string_view source, std::string_view dest) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("copying fat32 file (8.3 filename format)"));
-        Logger::getInstance().log(LogLevel::INFO, std::format("source: {} dest: {}", source, dest));
+        LOG_INFO("copying fat32 file (8.3 filename format");
+        LOG_INFO(std::format("source: {} dest: {}", source, dest));
         return true;
     }
 
     [[nodiscard]] static std::vector<std::string> scanFAT32Dir(std::string_view path) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("scanning fat32 directory contents (8.3 format)"));
+        LOG_INFO("scanning fat32 directory contents (8.3 format");
         return {"FILE1.TXT", "FOLDER1"};
     }
 };
@@ -231,33 +231,33 @@ public:
         : m_fileSystem{std::move(fs)} {}
 
     void performCrossSystemCopy(std::string_view source, std::string_view dest) {
-        Logger::getInstance().log(LogLevel::INFO, "performing cross-system copy operation...");
+        LOG_INFO("performing cross-system copy operation...");
 
         if (m_fileSystem->supportsSymlinks()) {
-            Logger::getInstance().log(LogLevel::INFO, "symlinks will be preserved");
+            LOG_INFO("symlinks will be preserved");
         }
 
         if (m_fileSystem->supportsPermissions()) {
-            Logger::getInstance().log(LogLevel::INFO, "file permissions will be preserved");
+            LOG_INFO("file permissions will be preserved");
         }
 
         if (m_fileSystem->createDirectory(dest)) {
-            Logger::getInstance().log(LogLevel::INFO, "destination directory created successfully");
+            LOG_INFO("destination directory created successfully");
         }
 
         if (m_fileSystem->copyFile(source, dest)) {
-            Logger::getInstance().log(LogLevel::INFO, "files copied successfully");
+            LOG_INFO("files copied successfully");
         }
 
-        Logger::getInstance().log(LogLevel::INFO, "destination contents:");
+        LOG_INFO("destination contents:");
         for (const auto& file : m_fileSystem->listFiles(dest)) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("- {}", file));
+            LOG_INFO(std::format("- {}", file));
         }
     }
 };
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "testing file system adapters with invalid characters and assertions...");
+    LOG_INFO("testing file system adapters with invalid characters and assertions...");
 
     // test helper for verifying sanitized filenames
     auto testSanitization = []<FileSystem T>(std::unique_ptr<T> fs, std::string_view input,
@@ -275,7 +275,7 @@ int main() {
             success = manager.m_fileSystem->copyFile(testFile, expectedPath);
             assert(success && "File copy should succeed");
 
-            Logger::getInstance().log(LogLevel::INFO, std::format("test passed for input: {}", input));
+            LOG_INFO(std::format("test passed for input: {}", input));
             return true;
         } catch (const std::exception& e) {
             std::cerr << std::format("test failed: {}", e.what());
@@ -285,7 +285,7 @@ int main() {
 
     // test suite 1: fat32 adapter tests
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("running fat32 adapter tests..."));
+        LOG_INFO(std::format("running fat32 adapter tests..."));
 
         // test case 1: invalid windows characters
         bool test1 = testSanitization(
@@ -317,12 +317,12 @@ int main() {
         );
         assert(test4 && "Multiple invalid characters test failed");
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("fat32 adapter tests completed successfully"));
+        LOG_INFO(std::format("fat32 adapter tests completed successfully"));
     }
 
     // test suite 2: apfs adapter tests
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("running apfs adapter tests..."));
+        LOG_INFO(std::format("running apfs adapter tests..."));
 
         // test case 1: hidden files
         assert(testSanitization(
@@ -351,16 +351,16 @@ int main() {
             "_hidden_file_with_special_chars.txt"
         ) && "Combined special cases test failed");
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("apfs adapter tests completed successfully"));
+        LOG_INFO(std::format("apfs adapter tests completed successfully"));
     }
 
     // test suite 3: cross-system operations
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("running cross-system operation tests..."));
+        LOG_INFO(std::format("running cross-system operation tests..."));
 
         // test copying from apfs to fat32
         {
-            Logger::getInstance().log(LogLevel::INFO, std::format("scenario 1: copying from apfs to fat32"));
+            LOG_INFO(std::format("scenario 1: copying from apfs to fat32"));
             FileOperationsManager<FAT32Adapter> manager{std::make_unique<FAT32Adapter>()};
 
             std::string_view sourceFile = "/Users/john/Documents/my:project*.txt";
@@ -371,7 +371,7 @@ int main() {
 
         // test copying from fat32 to apfs
         {
-            Logger::getInstance().log(LogLevel::INFO, std::format("scenario 2: copying from fat32 to apfs"));
+            LOG_INFO(std::format("scenario 2: copying from fat32 to apfs"));
             FileOperationsManager<APFSAdapter> manager{std::make_unique<APFSAdapter>()};
 
             constexpr std::string_view sourceFile = "D:\\DOCS\\PRO:J*.TXT";
@@ -383,7 +383,7 @@ int main() {
 
     // test suite 4: edge cases
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("running edge case tests..."));
+        LOG_INFO(std::format("running edge case tests..."));
         const auto fat32Adapter = std::make_unique<FAT32Adapter>();
         const auto apfsAdapter = std::make_unique<APFSAdapter>();
 
@@ -401,10 +401,10 @@ int main() {
         const bool success = fat32Adapter->copyFile(unicodePath, "OUTPUT.TXT");
         assert(success && "Unicode handling should not fail");
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("edge case tests completed successfully"));
+        LOG_INFO(std::format("edge case tests completed successfully"));
     }
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("all file system adapter tests completed successfully!"));
+    LOG_INFO(std::format("all file system adapter tests completed successfully!"));
 
     return 0;
 }

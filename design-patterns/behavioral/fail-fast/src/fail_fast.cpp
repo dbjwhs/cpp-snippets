@@ -53,11 +53,11 @@ private:
     void validateState() const {
         if (!m_isActive) {
             // make this info since we have negative tests, but should be error/critical
-            Logger::getInstance().log(LogLevel::INFO, std::format("Account validation failed: Account is inactive"));
+            LOG_INFO(std::format("Account validation failed: Account is inactive"));
             throw std::runtime_error("Account is inactive");
         }
         if (m_accountHolder.empty()) {
-            Logger::getInstance().log(LogLevel::ERROR, std::format("Account validation failed: Invalid account holder"));
+            LOG_ERROR(std::format("Account validation failed: Invalid account holder"));
             throw std::runtime_error("Invalid account holder");
         }
     }
@@ -67,10 +67,10 @@ public:
     explicit FailFastAccount(const std::string& accountHolder) : m_accountHolder(accountHolder) {
         if (accountHolder.empty()) {
             // make this info since we have negative tests, but should be error/critical
-            Logger::getInstance().log(LogLevel::INFO, std::format("Failed to create account: Empty account holder name"));
+            LOG_INFO(std::format("Failed to create account: Empty account holder name"));
             throw std::invalid_argument("Account holder name cannot be empty");
         }
-        Logger::getInstance().log(LogLevel::INFO, std::format("Account created for: {}", accountHolder));
+        LOG_INFO(std::format("Account created for: {}", accountHolder));
     }
 
     // deposit money into account, fails fast on invalid amount
@@ -78,18 +78,18 @@ public:
         validateState();
         if (amount <= 0) {
             // make this info since we have negative tests, but should be error/critical
-            Logger::getInstance().log(LogLevel::INFO, std::format("Invalid deposit amount: {}", amount));
+            LOG_INFO(std::format("Invalid deposit amount: {}", amount));
             throw std::invalid_argument("Deposit amount must be positive");
         }
         m_balance += amount;
-        Logger::getInstance().log(LogLevel::INFO, std::format("Deposited ${:.2f}, new balance: ${:.2f}", amount, m_balance));
+        LOG_INFO(std::format("Deposited ${:.2f}, new balance: ${:.2f}", amount, m_balance));
     }
 
     // withdraw money from an account, fails fast on invalid amount or insufficient funds
     void withdraw(double amount) {
         validateState();
         if (amount <= 0) {
-            Logger::getInstance().log(LogLevel::ERROR, std::format("Invalid withdrawal amount: {}", amount));
+            LOG_ERROR(std::format("Invalid withdrawal amount: {}", amount));
             throw std::invalid_argument("Withdrawal amount must be positive");
         }
         if ((m_balance - amount) < m_minimumBalance) {
@@ -100,18 +100,18 @@ public:
             throw std::runtime_error("Insufficient funds");
         }
         m_balance -= amount;
-        Logger::getInstance().log(LogLevel::INFO, std::format("Withdrawn ${:.2f}, new balance: ${:.2f}", amount, m_balance));
+        LOG_INFO(std::format("Withdrawn ${:.2f}, new balance: ${:.2f}", amount, m_balance));
     }
 
     // close account, fails fast if already closed
     void closeAccount() {
         if (!m_isActive) {
             // make this info since we have negative tests, but should be error/critical
-            Logger::getInstance().log(LogLevel::INFO, std::format("Cannot close already inactive account"));
+            LOG_INFO(std::format("Cannot close already inactive account"));
             throw std::runtime_error("Account already inactive");
         }
         m_isActive = false;
-        Logger::getInstance().log(LogLevel::INFO, std::format("Account closed for: {}", m_accountHolder));
+        LOG_INFO(std::format("Account closed for: {}", m_accountHolder));
     }
 
     // getters
@@ -122,7 +122,7 @@ public:
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, "Starting Fail-Fast Pattern tests");
+        LOG_INFO("Starting Fail-Fast Pattern tests");
 
         // test 1: valid account creation
         FailFastAccount account("John Doe");
@@ -182,10 +182,10 @@ int main() {
             Logger::getInstance().log(LogLevel::INFO, "Test passed: Double closure rejected", e.what());
         }
 
-        Logger::getInstance().log(LogLevel::INFO, "All tests completed successfully");
+        LOG_INFO("All tests completed successfully");
         
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Unexpected error: {}", e.what()));
+        LOG_ERROR(std::format("Unexpected error: {}", e.what()));
         return 1;
     }
 

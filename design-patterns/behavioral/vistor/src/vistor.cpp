@@ -262,26 +262,26 @@ public:
     // implementation for Circle
     void visit(const Circle& circle) override {
         m_description = std::format("A circle with radius {}", circle.getRadius());
-        Logger::getInstance().log(LogLevel::INFO, std::format("Generated description: {}", m_description));
+        LOG_INFO(std::format("Generated description: {}", m_description));
     }
     
     // implementation for Square
     void visit(const Square& square) override {
         m_description = std::format("A square with side length {}", square.getSide());
-        Logger::getInstance().log(LogLevel::INFO, std::format("Generated description: {}", m_description));
+        LOG_INFO(std::format("Generated description: {}", m_description));
     }
     
     // implementation for Triangle
     void visit(const Triangle& triangle) override {
         m_description = std::format("A triangle with sides {}, {}, and {}", 
                                    triangle.getA(), triangle.getB(), triangle.getC());
-        Logger::getInstance().log(LogLevel::INFO, std::format("Generated description: {}", m_description));
+        LOG_INFO(std::format("Generated description: {}", m_description));
     }
 };
 
 // main function with comprehensive testing
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting Visitor Pattern Test");
+    LOG_INFO("Starting Visitor Pattern Test");
     
     // create shapes
     std::vector<std::unique_ptr<Shape>> shapes;
@@ -289,17 +289,17 @@ int main() {
     shapes.push_back(std::make_unique<Square>(4.0));                // [1]
     shapes.push_back(std::make_unique<Triangle>(3.0, 4.0, 5.0));    // [2]
     
-    Logger::getInstance().log(LogLevel::INFO, std::format("Created {} shapes for testing", shapes.size()));
+    LOG_INFO(std::format("Created {} shapes for testing", shapes.size()));
     
     // create visitors
     AreaVisitor areaVisitor;
     PerimeterVisitor perimeterVisitor;
     DescriptionVisitor descriptionVisitor;
     
-    Logger::getInstance().log(LogLevel::INFO, "Created visitors: AreaVisitor, PerimeterVisitor, DescriptionVisitor");
+    LOG_INFO("Created visitors: AreaVisitor, PerimeterVisitor, DescriptionVisitor");
     
     // test area calculations
-    Logger::getInstance().log(LogLevel::INFO, "Testing area calculations...");
+    LOG_INFO("Testing area calculations...");
     
     // expected values for testing
     constexpr double expectedCircleArea = M_PI * 5.0 * 5.0;
@@ -309,23 +309,23 @@ int main() {
     // test circle area
     shapes[0]->accept(areaVisitor);
     double circleArea = areaVisitor.getArea();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Circle area: {}, Expected: {}", circleArea, expectedCircleArea));
+    LOG_INFO(std::format("Circle area: {}, Expected: {}", circleArea, expectedCircleArea));
     assert(std::abs(circleArea - expectedCircleArea) < 0.0001);
     
     // test square area
     shapes[1]->accept(areaVisitor);
     double squareArea = areaVisitor.getArea();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Square area: {}, Expected: {}", squareArea, expectedSquareArea));
+    LOG_INFO(std::format("Square area: {}, Expected: {}", squareArea, expectedSquareArea));
     assert(std::abs(squareArea - expectedSquareArea) < 0.0001);
     
     // test triangle area
     shapes[2]->accept(areaVisitor);
     double triangleArea = areaVisitor.getArea();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triangle area: {}, Expected: {}", triangleArea, expectedTriangleArea));
+    LOG_INFO(std::format("Triangle area: {}, Expected: {}", triangleArea, expectedTriangleArea));
     assert(std::abs(triangleArea - expectedTriangleArea) < 0.0001);
     
     // test perimeter calculations
-    Logger::getInstance().log(LogLevel::INFO, "Testing perimeter calculations...");
+    LOG_INFO("Testing perimeter calculations...");
     
     // expected values for testing
     constexpr double expectedCirclePerimeter = 2.0 * M_PI * 5.0;
@@ -335,23 +335,23 @@ int main() {
     // test circle perimeter
     shapes[0]->accept(perimeterVisitor);
     double circlePerimeter = perimeterVisitor.getPerimeter();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Circle perimeter: {}, Expected: {}", circlePerimeter, expectedCirclePerimeter));
+    LOG_INFO(std::format("Circle perimeter: {}, Expected: {}", circlePerimeter, expectedCirclePerimeter));
     assert(std::abs(circlePerimeter - expectedCirclePerimeter) < 0.0001);
     
     // test square perimeter
     shapes[1]->accept(perimeterVisitor);
     double squarePerimeter = perimeterVisitor.getPerimeter();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Square perimeter: {}, Expected: {}", squarePerimeter, expectedSquarePerimeter));
+    LOG_INFO(std::format("Square perimeter: {}, Expected: {}", squarePerimeter, expectedSquarePerimeter));
     assert(std::abs(squarePerimeter - expectedSquarePerimeter) < 0.0001);
     
     // test triangle perimeter
     shapes[2]->accept(perimeterVisitor);
     double trianglePerimeter = perimeterVisitor.getPerimeter();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triangle perimeter: {}, Expected: {}", trianglePerimeter, expectedTrianglePerimeter));
+    LOG_INFO(std::format("Triangle perimeter: {}, Expected: {}", trianglePerimeter, expectedTrianglePerimeter));
     assert(std::abs(trianglePerimeter - expectedTrianglePerimeter) < 0.0001);
     
     // test description generation
-    Logger::getInstance().log(LogLevel::INFO, "Testing description generation...");
+    LOG_INFO("Testing description generation...");
     
     // expected descriptions
     const std::string expectedCircleDesc = "A circle with radius 5";
@@ -361,27 +361,27 @@ int main() {
     // test circle description
     shapes[0]->accept(descriptionVisitor);
     std::string circleDesc = descriptionVisitor.getDescription();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Circle description: {}", circleDesc));
+    LOG_INFO(std::format("Circle description: {}", circleDesc));
     assert(circleDesc == expectedCircleDesc);
     
     // test square description
     shapes[1]->accept(descriptionVisitor);
     std::string squareDesc = descriptionVisitor.getDescription();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Square description: {}", squareDesc));
+    LOG_INFO(std::format("Square description: {}", squareDesc));
     assert(squareDesc == expectedSquareDesc);
     
     // test triangle description
     shapes[2]->accept(descriptionVisitor);
     std::string triangleDesc = descriptionVisitor.getDescription();
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triangle description: {}", triangleDesc));
+    LOG_INFO(std::format("Triangle description: {}", triangleDesc));
     assert(triangleDesc == expectedTriangleDesc);
     
     // demonstrate polymorphic behavior through a shape collection
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating polymorphic behavior through shape collection...");
+    LOG_INFO("Demonstrating polymorphic behavior through shape collection...");
     
     // iterate through all shapes and apply all visitors
     for (const auto& shape : shapes) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Processing shape: {}", shape->getName()));
+        LOG_INFO(std::format("Processing shape: {}", shape->getName()));
         
         // reset visitors
         areaVisitor.reset();
@@ -399,7 +399,7 @@ int main() {
                                   descriptionVisitor.getDescription()));
     }
     
-    Logger::getInstance().log(LogLevel::INFO, "All tests passed successfully!");
+    LOG_INFO("All tests passed successfully!");
     return 0;
 }
 

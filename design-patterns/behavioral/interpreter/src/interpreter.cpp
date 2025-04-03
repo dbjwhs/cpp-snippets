@@ -102,7 +102,7 @@ private:
 public:
     void resetOperationCount() const {
         m_operationCount = 0;
-        Logger::getInstance().log(LogLevel::DEBUG, "Context: Reset operation count");
+        LOG_DEBUG("Context: Reset operation count");
     }
 
     void setVariable(const std::string& name, int value) {
@@ -262,7 +262,7 @@ public:
         const int rightValue = m_right->interpret(context);
         if (rightValue == 0) {
             // ### make this info since we have tests for it, but this should be an error
-            Logger::getInstance().log(LogLevel::INFO, "DivideExpression: Division by zero");
+            LOG_INFO("DivideExpression: Division by zero");
             throw std::runtime_error("Division by zero");
         }
         int result = m_left->interpret(context) / rightValue;
@@ -282,7 +282,7 @@ public:
         context.incrementOperations();
         const int rightValue = m_right->interpret(context);
         if (rightValue == 0) {
-            Logger::getInstance().log(LogLevel::ERROR, "ModuloExpression: Modulo by zero");
+            LOG_ERROR("ModuloExpression: Modulo by zero");
             throw std::runtime_error("Modulo by zero");
         }
         int result = m_left->interpret(context) % rightValue;
@@ -303,7 +303,7 @@ public:
         const int base = m_left->interpret(context);
         const int exponent = m_right->interpret(context);
         if (exponent < 0) {
-            Logger::getInstance().log(LogLevel::ERROR, "PowerExpression: Negative exponent");
+            LOG_ERROR("PowerExpression: Negative exponent");
             throw std::runtime_error("Negative exponent not supported");
         }
         int result = 1;
@@ -318,11 +318,11 @@ public:
 
 // comprehensive test suite
 void runTests() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting comprehensive interpreter pattern tests");
+    LOG_INFO("Starting comprehensive interpreter pattern tests");
 
     // test case 1: basic arithmetic operations
     {
-        Logger::getInstance().log(LogLevel::INFO, "Test 1: Basic arithmetic operations");
+        LOG_INFO("Test 1: Basic arithmetic operations");
 
         auto expr = std::make_unique<AddExpression>(
             std::make_unique<NumberExpression>(5),
@@ -332,7 +332,7 @@ void runTests() {
         expr->debugPrint();
         Context context;
         assert(expr->interpret(context) == 8);
-        Logger::getInstance().log(LogLevel::INFO, "Test 1a: Addition passed");
+        LOG_INFO("Test 1a: Addition passed");
 
         auto expr2 = std::make_unique<MultiplyExpression>(
             std::make_unique<NumberExpression>(4),
@@ -341,7 +341,7 @@ void runTests() {
 
         expr2->debugPrint();
         assert(expr2->interpret(context) == 24);
-        Logger::getInstance().log(LogLevel::INFO, "Test 1b: Multiplication passed");
+        LOG_INFO("Test 1b: Multiplication passed");
     }
 
     // test case 2: variable operations
@@ -349,7 +349,7 @@ void runTests() {
         Context context;
         context.setVariable("x", 10);
         context.setVariable("y", 5);
-        Logger::getInstance().log(LogLevel::INFO, "Test 2: Variable operations");
+        LOG_INFO("Test 2: Variable operations");
 
         auto expr = std::make_unique<DivideExpression>(
             std::make_unique<VariableExpression>("x"),
@@ -358,7 +358,7 @@ void runTests() {
 
         expr->debugPrint();
         assert(expr->interpret(context) == 2);
-        Logger::getInstance().log(LogLevel::INFO, "Test 2: Division with variables passed");
+        LOG_INFO("Test 2: Division with variables passed");
     }
 
     // test case 3: complex expression tree
@@ -366,7 +366,7 @@ void runTests() {
         Context context;
         context.setVariable("a", 15);
         context.setVariable("b", 3);
-        Logger::getInstance().log(LogLevel::INFO, "Test 3: Complex expression tree");
+        LOG_INFO("Test 3: Complex expression tree");
 
         // creates: ((a + 5) * (b - 1)) % 4
         auto expr = std::make_unique<ModuloExpression>(
@@ -385,13 +385,13 @@ void runTests() {
 
         expr->debugPrint();
         assert(expr->interpret(context) == 0);
-        Logger::getInstance().log(LogLevel::INFO, "Test 3: Complex expression evaluation passed");
+        LOG_INFO("Test 3: Complex expression evaluation passed");
     }
 
     // test case 4: power operations
     {
         Context context;
-        Logger::getInstance().log(LogLevel::INFO, "Test 4: Power operations");
+        LOG_INFO("Test 4: Power operations");
 
         auto expr = std::make_unique<PowerExpression>(
             std::make_unique<NumberExpression>(2),
@@ -400,13 +400,13 @@ void runTests() {
 
         expr->debugPrint();
         assert(expr->interpret(context) == 8);
-        Logger::getInstance().log(LogLevel::INFO, "Test 4: Power operation passed");
+        LOG_INFO("Test 4: Power operation passed");
     }
 
     // test case 5: error handling
     {
         Context context;
-        Logger::getInstance().log(LogLevel::INFO, "Test 5: Error handling");
+        LOG_INFO("Test 5: Error handling");
 
         // test division by zero
         auto expr1 = std::make_unique<DivideExpression>(
@@ -432,7 +432,7 @@ void runTests() {
             assert(false && "Should have thrown undefined variable exception");
         } catch (const std::runtime_error& e) {
             // ### make this info since we have tests for it, but this should be an error
-            Logger::getInstance().log(LogLevel::INFO, std::format("Context: {}", e.what()));
+            LOG_INFO(std::format("Context: {}", e.what()));
 
             Logger::getInstance().log(LogLevel::INFO
                 , "Test 5b: Undefined variable exception caught correctly, interpret result: {}", result);
@@ -442,7 +442,7 @@ void runTests() {
     // test case 6: operation counting
     {
         Context context;
-        Logger::getInstance().log(LogLevel::INFO, "Test 6: Operation counting");
+        LOG_INFO("Test 6: Operation counting");
 
         // reset operation count before this test
         context.resetOperationCount();
@@ -473,12 +473,12 @@ void runTests() {
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, "Starting interpreter pattern tests");
+        LOG_INFO("Starting interpreter pattern tests");
         runTests();
-        Logger::getInstance().log(LogLevel::INFO, "All tests passed successfully");
+        LOG_INFO("All tests passed successfully");
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Test failed with error: {}", e.what()));
+        LOG_ERROR(std::format("Test failed with error: {}", e.what()));
         return 1;
     }
 }

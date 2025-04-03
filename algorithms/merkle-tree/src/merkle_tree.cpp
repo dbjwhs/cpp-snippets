@@ -168,7 +168,7 @@ public:
 
 // test basic merkle tree properties
 void testBasicProperties() {
-    Logger::getInstance().log(LogLevel::INFO, "starting basic property tests");
+    LOG_INFO("starting basic property tests");
 
     // test an empty tree
     {
@@ -176,7 +176,7 @@ void testBasicProperties() {
         MerkleTree tree(empty_data);
         assert(tree.getRootHash().empty());
         assert(tree.getLeafCount() == 0);
-        Logger::getInstance().log(LogLevel::INFO, "empty tree test passed");
+        LOG_INFO("empty tree test passed");
     }
 
     // test a single node tree
@@ -200,7 +200,7 @@ void testBasicProperties() {
         MerkleTree tree2(data);
         assert(tree1.getRootHash() == tree2.getRootHash());
         assert(tree1.getLeafCount() == 2);
-        Logger::getInstance().log(LogLevel::INFO, "consistency test passed");
+        LOG_INFO("consistency test passed");
     }
 }
 
@@ -223,7 +223,7 @@ std::string generateRandomString(const size_t length) {
 
 // test complex tree scenarios
 void testComplexTree() {
-    Logger::getInstance().log(LogLevel::INFO, "starting complex tree tests");
+    LOG_INFO("starting complex tree tests");
 
     // create a large dataset with random strings
     std::vector<std::string> large_dataset;
@@ -246,7 +246,7 @@ void testComplexTree() {
     MerkleTree large_tree(large_dataset);
 
     // verify all data can be found in a tree
-    Logger::getInstance().log(LogLevel::INFO, "verifying all data elements...");
+    LOG_INFO("verifying all data elements...");
     for (const auto& data : large_dataset) {
         assert(large_tree.verifyData(data));
     }
@@ -256,7 +256,7 @@ void testComplexTree() {
     assert(!large_tree.getRootHash().empty());
 
     // test data integrity
-    Logger::getInstance().log(LogLevel::INFO, "testing data integrity...");
+    LOG_INFO("testing data integrity...");
 
     // modify one element and verify root hash changes
     std::vector<std::string> modified_dataset = large_dataset;
@@ -276,7 +276,7 @@ void testComplexTree() {
     ));
 
     // test different tree sizes
-    Logger::getInstance().log(LogLevel::INFO, "testing different tree sizes...");
+    LOG_INFO("testing different tree sizes...");
 
     for (std::vector<size_t> test_sizes = {2, 3, 4, 7, 8, 15, 16}; size_t size : test_sizes) {
         std::vector<std::string> data;
@@ -297,7 +297,7 @@ void testComplexTree() {
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, "starting merkle tree tests");
+        LOG_INFO("starting merkle tree tests");
 
         // run basic property tests
         testBasicProperties();
@@ -305,7 +305,7 @@ int main() {
         // run complex tree tests
         testComplexTree();
 
-        Logger::getInstance().log(LogLevel::INFO, "all tests completed successfully");
+        LOG_INFO("all tests completed successfully");
         return 0;
 
     } catch (const std::exception& e) {

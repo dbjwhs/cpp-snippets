@@ -51,12 +51,12 @@ private:
 public:
     // default constructor
     ResourceManager() : m_data(nullptr), m_size(0), m_id(++s_counter) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("default constructor called for id {}", m_id));
+        LOG_INFO(std::format("default constructor called for id {}", m_id));
     }
 
     // parameterized constructor
     explicit ResourceManager(const size_t size) : m_size(size), m_id(++s_counter) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("parameterized constructor called for id {}", m_id));
+        LOG_INFO(std::format("parameterized constructor called for id {}", m_id));
 
         // allocate memory using smart pointer
         m_data = std::make_unique<int[]>(m_size);
@@ -146,7 +146,7 @@ public:
 
     // destructor
     ~ResourceManager() {
-        Logger::getInstance().log(LogLevel::INFO, std::format("destructor called for id {}", m_id));
+        LOG_INFO(std::format("destructor called for id {}", m_id));
     }
 
     // utility methods
@@ -185,7 +185,7 @@ public:
     // print the contents of the resource
     void print() const {
         if (!m_data) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("ResourceManager id {} has no data", m_id));
+            LOG_INFO(std::format("ResourceManager id {} has no data", m_id));
             return;
         }
 
@@ -194,7 +194,7 @@ public:
             if (ndx > 0) values += ", ";
             values += std::to_string(m_data[ndx]);
         }
-        Logger::getInstance().log(LogLevel::INFO, std::format("ResourceManager id {} contains: [{}]", m_id, values));
+        LOG_INFO(std::format("ResourceManager id {} contains: [{}]", m_id, values));
     }
 };
 
@@ -203,7 +203,7 @@ int ResourceManager::s_counter;
 
 // function that returns by value, allowing for move semantics
 ResourceManager createResourceManager(size_t size) {
-    Logger::getInstance().log(LogLevel::INFO, std::format("creating ResourceManager with size {}", size));
+    LOG_INFO(std::format("creating ResourceManager with size {}", size));
 
     // local variable that will be moved from when returned
     ResourceManager resource(size);
@@ -215,7 +215,7 @@ ResourceManager createResourceManager(size_t size) {
 
 // function that uses std::move explicitly to force a move
 void processAndSwap(ResourceManager& first, ResourceManager& second) {
-    Logger::getInstance().log(LogLevel::INFO, "processing and swapping resources");
+    LOG_INFO("processing and swapping resources");
 
     // create a temporary using moved resources from first
     ResourceManager temp(std::move(first));
@@ -232,11 +232,11 @@ void processAndSwap(ResourceManager& first, ResourceManager& second) {
 
 // test cases for ResourceManager move semantics
 void runTests() {
-    Logger::getInstance().log(LogLevel::INFO, "starting move semantics tests");
+    LOG_INFO("starting move semantics tests");
 
     // test 1: verify move constructor
     {
-        Logger::getInstance().log(LogLevel::INFO, "test 1: move constructor");
+        LOG_INFO("test 1: move constructor");
 
         // create a source object
         ResourceManager source(5);
@@ -267,7 +267,7 @@ void runTests() {
 
     // test 2: verify move assignment
     {
-        Logger::getInstance().log(LogLevel::INFO, "test 2: move assignment");
+        LOG_INFO("test 2: move assignment");
 
         // create source and destination objects
         ResourceManager source(3);
@@ -307,7 +307,7 @@ void runTests() {
 
     // test 3: verify returning by value (potential move)
     {
-        Logger::getInstance().log(LogLevel::INFO, "test 3: return by value");
+        LOG_INFO("test 3: return by value");
 
         // get a resource by value (may use move or copy elision)
         const ResourceManager resource = createResourceManager(4);
@@ -328,7 +328,7 @@ void runTests() {
 
     // test 4: verify std::move and swap functionality
     {
-        Logger::getInstance().log(LogLevel::INFO, "test 4: explicit std::move for swapping");
+        LOG_INFO("test 4: explicit std::move for swapping");
 
         // create two resources with different values
         ResourceManager first(2);
@@ -375,7 +375,7 @@ void runTests() {
 
     // test 5: verify moved-from objects can be reused
     {
-        Logger::getInstance().log(LogLevel::INFO, "test 5: reusing moved-from objects");
+        LOG_INFO("test 5: reusing moved-from objects");
 
         // create a source object
         ResourceManager source(3);
@@ -401,43 +401,43 @@ void runTests() {
             , std::format("test 5 passed: moved-from resource id {} successfully reused", sourceId));
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "all move semantics tests passed");
+    LOG_INFO("all move semantics tests passed");
 }
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "--- starting move semantics demonstration ---");
+    LOG_INFO("--- starting move semantics demonstration ---");
 
     // run comprehensive tests
     runTests();
 
     // example of using std::move with standard containers
-    Logger::getInstance().log(LogLevel::INFO, "demonstrating std::move with standard containers");
+    LOG_INFO("demonstrating std::move with standard containers");
 
     // create a vector of strings
     std::vector<std::string> strings = {"hello", "world", "this", "is", "a", "test"};
 
     // get the first string
     std::string firstString = strings[0];
-    Logger::getInstance().log(LogLevel::INFO, std::format("copied first string: '{}'", firstString));
-    Logger::getInstance().log(LogLevel::INFO, std::format("original still exists in vector: '{}'", strings[0]));
+    LOG_INFO(std::format("copied first string: '{}'", firstString));
+    LOG_INFO(std::format("original still exists in vector: '{}'", strings[0]));
 
     // move the second string
     std::string secondString = std::move(strings[1]);
-    Logger::getInstance().log(LogLevel::INFO, std::format("moved second string: '{}'", secondString));
-    Logger::getInstance().log(LogLevel::INFO, std::format("original in vector is now: '{}'", strings[1]));  // will be empty
+    LOG_INFO(std::format("moved second string: '{}'", secondString));
+    LOG_INFO(std::format("original in vector is now: '{}'", strings[1]));  // will be empty
 
     // create a unique_ptr (move-only type)
     std::unique_ptr<int> ptr1 = std::make_unique<int>(42);
-    Logger::getInstance().log(LogLevel::INFO, std::format("created unique_ptr with value: {}", *ptr1));
+    LOG_INFO(std::format("created unique_ptr with value: {}", *ptr1));
 
     // move the unique_ptr (cannot copy)
     std::unique_ptr<int> ptr2 = std::move(ptr1);
-    Logger::getInstance().log(LogLevel::INFO, std::format("moved unique_ptr to ptr2, value: {}", *ptr2));
+    LOG_INFO(std::format("moved unique_ptr to ptr2, value: {}", *ptr2));
 
     // ptr1 is now nullptr
     assert(ptr1 == nullptr);
-    Logger::getInstance().log(LogLevel::INFO, "ptr1 is now nullptr after move");
+    LOG_INFO("ptr1 is now nullptr after move");
 
-    Logger::getInstance().log(LogLevel::INFO, "--- move semantics demonstration complete ---");
+    LOG_INFO("--- move semantics demonstration complete ---");
     return 0;
 }

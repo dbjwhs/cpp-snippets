@@ -126,7 +126,7 @@ public:
 
 // test functions to demonstrate and validate spaceship operator behavior
 void testPointComparisons() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing Point comparisons");
+    LOG_INFO("Testing Point comparisons");
 
     // create test points
     const Point p1(5, 10);
@@ -135,46 +135,46 @@ void testPointComparisons() {
     const Point p4(5, 10);
 
     // test equality
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 == p4: {}", p1 == p4));
+    LOG_INFO(std::format("p1 == p4: {}", p1 == p4));
     assert(p1 == p4 && "Points with same coordinates should be equal");
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 == p2: {}", p1 == p2));
+    LOG_INFO(std::format("p1 == p2: {}", p1 == p2));
     assert(p1 != p2 && "Points with different coordinates should not be equal");
 
     // test inequality
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 != p2: {}", p1 != p2));
+    LOG_INFO(std::format("p1 != p2: {}", p1 != p2));
     assert(p1 != p2 && "Points with different coordinates should be unequal");
 
     // test less than
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 < p2: {}", p1 < p2));
+    LOG_INFO(std::format("p1 < p2: {}", p1 < p2));
     assert(p1 < p2 && "p1 should be less than p2 (same x, lower y)");
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 < p3: {}", p1 < p3));
+    LOG_INFO(std::format("p1 < p3: {}", p1 < p3));
     assert(p1 < p3 && "p1 should be less than p3 (lower x)");
 
     // test greater than
-    Logger::getInstance().log(LogLevel::INFO, std::format("p3 > p2: {}", p3 > p2));
+    LOG_INFO(std::format("p3 > p2: {}", p3 > p2));
     assert(p3 > p2 && "p3 should be greater than p2 (higher x)");
 
     // test less than or equal
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 <= p4: {}", p1 <= p4));
+    LOG_INFO(std::format("p1 <= p4: {}", p1 <= p4));
     assert(p1 <= p4 && "p1 should be less than or equal to p4 (equal)");
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 <= p2: {}", p1 <= p2));
+    LOG_INFO(std::format("p1 <= p2: {}", p1 <= p2));
     assert(p1 <= p2 && "p1 should be less than or equal to p2 (less than)");
 
     // test greater than or equal
-    Logger::getInstance().log(LogLevel::INFO, std::format("p1 >= p4: {}", p1 >= p4));
+    LOG_INFO(std::format("p1 >= p4: {}", p1 >= p4));
     assert(p1 >= p4 && "p1 should be greater than or equal to p4 (equal)");
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("p3 >= p2: {}", p3 >= p2));
+    LOG_INFO(std::format("p3 >= p2: {}", p3 >= p2));
     assert(p3 >= p2 && "p3 should be greater than or equal to p2 (greater than)");
 
-    Logger::getInstance().log(LogLevel::INFO, "All Point comparison tests passed");
+    LOG_INFO("All Point comparison tests passed");
 }
 
 void testStudentComparisons() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing Student comparisons");
+    LOG_INFO("Testing Student comparisons");
 
     // create test students
     const Student s1("Alice", 1001, 3.8);
@@ -183,33 +183,33 @@ void testStudentComparisons() {
     const Student s4("Alice", 1001, 3.8);
 
     // test equality
-    Logger::getInstance().log(LogLevel::INFO, std::format("s1 == s4: {}", s1 == s4));
+    LOG_INFO(std::format("s1 == s4: {}", s1 == s4));
     assert(s1 == s4 && "Students with same attributes should be equal");
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("s1 == s2: {}", s1 == s2));
+    LOG_INFO(std::format("s1 == s2: {}", s1 == s2));
     assert(s1 != s2 && "Students with different attributes should not be equal");
 
     // test inequality
-    Logger::getInstance().log(LogLevel::INFO, std::format("s1 != s2: {}", s1 != s2));
+    LOG_INFO(std::format("s1 != s2: {}", s1 != s2));
     assert(s1 != s2 && "Students with different attributes should be unequal");
 
     // test less than (remember: ordering is by GPA descending, then name ascending)
-    Logger::getInstance().log(LogLevel::INFO, std::format("s1 < s2: {}", s1 < s2));
+    LOG_INFO(std::format("s1 < s2: {}", s1 < s2));
     // s1 (Alice, 3.8) should be less than s2 (Bob, 3.9) because GPAs are in descending order
     assert(s1 < s2 && "s1 should be less than s2 (lower GPA = higher in our ordering)");
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("s1 < s3: {}", s1 < s3));
+    LOG_INFO(std::format("s1 < s3: {}", s1 < s3));
     assert(s1 < s3 && "s1 should be less than s3 (same GPA, but 'Alice' < 'Charlie' alphabetically)");
 
     // test greater than
-    Logger::getInstance().log(LogLevel::INFO, std::format("s3 > s1: {}", s3 > s1));
+    LOG_INFO(std::format("s3 > s1: {}", s3 > s1));
     assert(s3 > s1 && "s3 should be greater than s1 (same GPA, but 'Charlie' > 'Alice' alphabetically)");
 
     // test vectorized sorting
     std::vector<Student> students = {s1, s2, s3, s4};
     
     // Print the students before sorting
-    Logger::getInstance().log(LogLevel::INFO, "Students before sorting:");
+    LOG_INFO("Students before sorting:");
     for (int ndx = 0; ndx < students.size(); ndx++) {
         Logger::getInstance().log(LogLevel::INFO, std::format("  {}: {} (ID: {})", ndx, 
             students[ndx].toString(), students[ndx].id()));
@@ -233,7 +233,7 @@ void testStudentComparisons() {
     });
 
     // expect order: s2 (3.9), s1 (3.8, "Alice"), s4 (3.8, "Alice"), s3 (3.8, "Charlie")
-    Logger::getInstance().log(LogLevel::INFO, "Sorted students (by GPA desc, then name asc):");
+    LOG_INFO("Sorted students (by GPA desc, then name asc):");
     for (int ndx = 0; ndx < students.size(); ndx++) {
         Logger::getInstance().log(LogLevel::INFO, std::format("  {}: {} (ID: {})", ndx, 
             students[ndx].toString(), students[ndx].id()));
@@ -242,49 +242,49 @@ void testStudentComparisons() {
     assert(students[0].id() == 1002 && "First student should be Bob (highest GPA)");
     assert(students[students.size()-1].id() == 1003 && "Last student should be Charlie (same GPA as others but name comes later)");
     
-    Logger::getInstance().log(LogLevel::INFO, "All Student comparison tests passed");
+    LOG_INFO("All Student comparison tests passed");
 }
 
 // demonstrates how the <=> operator works with standard library types
 void testStandardLibraryComparisons() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing standard library type comparisons");
+    LOG_INFO("Testing standard library type comparisons");
     
     // integers
     constexpr int a = 5;
     constexpr int b = 10;
     const auto result_int = a <=> b;
-    Logger::getInstance().log(LogLevel::INFO, std::format("5 <=> 10 is {}", result_int < 0 ? "less" : (result_int > 0 ? "greater" : "equal")));
+    LOG_INFO(std::format("5 <=> 10 is {}", result_int < 0 ? "less" : (result_int > 0 ? "greater" : "equal)")));
     assert(result_int < 0 && "5 should be less than 10");
     
     // floating point
     double c = 3.14;
     double d = 2.71;
     const auto result_double = c <=> d;
-    Logger::getInstance().log(LogLevel::INFO, std::format("3.14 <=> 2.71 is {}", result_double < 0 ? "less" : (result_double > 0 ? "greater" : "equal")));
+    LOG_INFO(std::format("3.14 <=> 2.71 is {}", result_double < 0 ? "less" : (result_double > 0 ? "greater" : "equal)")));
     assert(result_double > 0 && "3.14 should be greater than 2.71");
     
     // strings
     std::string s1 = "apple";
     std::string s2 = "banana";
     const auto result_string = s1 <=> s2;
-    Logger::getInstance().log(LogLevel::INFO, std::format("'apple' <=> 'banana' is {}", result_string < 0 ? "less" : (result_string > 0 ? "greater" : "equal")));
+    LOG_INFO(std::format("'apple' <=> 'banana' is {}", result_string < 0 ? "less" : (result_string > 0 ? "greater" : "equal)")));
     assert(result_string < 0 && "'apple' should be less than 'banana'");
     
-    Logger::getInstance().log(LogLevel::INFO, "All standard library comparison tests passed");
+    LOG_INFO("All standard library comparison tests passed");
 }
 
 // demonstrates the different ordering types returned by the spaceship operator
 void testOrderingTypes() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing different ordering types");
+    LOG_INFO("Testing different ordering types");
 
     constexpr int a = 1;
     constexpr int b = 2;
     // strong_ordering: used for types with strict total ordering
     std::strong_ordering so = a <=> b;
-    Logger::getInstance().log(LogLevel::INFO, "strong_ordering example (integers): 1 <=> 2");
-    Logger::getInstance().log(LogLevel::INFO, std::format("  less: {}", so == std::strong_ordering::less));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  equal: {}", so == std::strong_ordering::equal));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  greater: {}", so == std::strong_ordering::greater));
+    LOG_INFO("strong_ordering example (integers): 1 <=> 2");
+    LOG_INFO(std::format("  less: {}", so == std::strong_ordering::less));
+    LOG_INFO(std::format("  equal: {}", so == std::strong_ordering::equal));
+    LOG_INFO(std::format("  greater: {}", so == std::strong_ordering::greater));
     assert(so == std::strong_ordering::less && "1 <=> 2 should be less");
     
     // weak_ordering: used for types with equivalence instead-of-equality
@@ -301,10 +301,10 @@ void testOrderingTypes() {
     };
     
     std::weak_ordering wo = case_insensitive_compare("Apple", "apple");
-    Logger::getInstance().log(LogLevel::INFO, "weak_ordering example (case-insensitive strings): 'Apple' <=> 'apple'");
-    Logger::getInstance().log(LogLevel::INFO, std::format("  less: {}", wo == std::weak_ordering::less));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  equivalent: {}", wo == std::weak_ordering::equivalent));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  greater: {}", wo == std::weak_ordering::greater));
+    LOG_INFO("weak_ordering example (case-insensitive strings): 'Apple' <=> 'apple'");
+    LOG_INFO(std::format("  less: {}", wo == std::weak_ordering::less));
+    LOG_INFO(std::format("  equivalent: {}", wo == std::weak_ordering::equivalent));
+    LOG_INFO(std::format("  greater: {}", wo == std::weak_ordering::greater));
     assert(wo == std::weak_ordering::equivalent && "'Apple' <=> 'apple' should be equivalent in case-insensitive comparison");
     
     // partial_ordering: used for types where not all values can be compared
@@ -312,18 +312,18 @@ void testOrderingTypes() {
     double nan = std::numeric_limits<double>::quiet_NaN();
     double c = 3.14;
     std::partial_ordering po = c <=> nan;
-    Logger::getInstance().log(LogLevel::INFO, "partial_ordering example (floating-point with NaN): 3.14 <=> NaN");
-    Logger::getInstance().log(LogLevel::INFO, std::format("  less: {}", po == std::partial_ordering::less));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  equivalent: {}", po == std::partial_ordering::equivalent));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  greater: {}", po == std::partial_ordering::greater));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  unordered: {}", po == std::partial_ordering::unordered));
+    LOG_INFO("partial_ordering example (floating-point with NaN): 3.14 <=> NaN");
+    LOG_INFO(std::format("  less: {}", po == std::partial_ordering::less));
+    LOG_INFO(std::format("  equivalent: {}", po == std::partial_ordering::equivalent));
+    LOG_INFO(std::format("  greater: {}", po == std::partial_ordering::greater));
+    LOG_INFO(std::format("  unordered: {}", po == std::partial_ordering::unordered));
     assert(po == std::partial_ordering::unordered && "3.14 <=> NaN should be unordered");
     
-    Logger::getInstance().log(LogLevel::INFO, "All ordering type tests passed");
+    LOG_INFO("All ordering type tests passed");
 }
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting spaceship operator demonstration");
+    LOG_INFO("Starting spaceship operator demonstration");
     
     // run the test suites
     testPointComparisons();
@@ -331,6 +331,6 @@ int main() {
     testStandardLibraryComparisons();
     testOrderingTypes();
     
-    Logger::getInstance().log(LogLevel::INFO, "All tests passed successfully");
+    LOG_INFO("All tests passed successfully");
     return 0;
 }

@@ -177,7 +177,7 @@ void testThemeConsistency(const UIFactory& factory, const Button& button, const 
 
 int main() {
     // test light theme
-    Logger::getInstance().log(LogLevel::INFO, "starting light theme tests");
+    LOG_INFO("starting light theme tests");
     const auto lightFactory = std::make_unique<LightThemeFactory>();
     const auto lightButton = lightFactory->createButton("OK");
     const auto lightCheckbox = lightFactory->createCheckbox();
@@ -193,7 +193,7 @@ int main() {
     assert(lightCheckbox->isChecked() && "checkbox should be checked after toggle");
 
     // test dark theme
-    Logger::getInstance().log(LogLevel::INFO, "starting dark theme tests");
+    LOG_INFO("starting dark theme tests");
     const auto darkFactory = std::make_unique<DarkThemeFactory>();
     const auto darkButton = darkFactory->createButton("Cancel");
     const auto darkCheckbox = darkFactory->createCheckbox();
@@ -208,6 +208,6 @@ int main() {
     darkCheckbox->toggle();
     assert(darkCheckbox->isChecked() && "checkbox should be checked after toggle");
 
-    Logger::getInstance().log(LogLevel::INFO, "all tests completed successfully");
+    LOG_INFO("all tests completed successfully");
     return 0;
 }

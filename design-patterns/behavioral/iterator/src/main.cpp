@@ -12,10 +12,10 @@ int main() {
     const auto numbers = std::make_unique<ConcreteAggregate<int>>();
     numbers->addMany(1, 2, 3, 4, 5);
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("Created aggregate with {} elements", numbers->size()));
+    LOG_INFO(std::format("Created aggregate with {} elements", numbers->size()));
 
     // test 1: standard forward iteration
-    Logger::getInstance().log(LogLevel::INFO, "Test 1: Forward iteration");
+    LOG_INFO("Test 1: Forward iteration");
     const auto iterator = numbers->createIterator();
 
     // verify iterator initialization
@@ -26,7 +26,7 @@ int main() {
     std::vector<int> collected;
     for (iterator->first(); !iterator->isDone(); iterator->next()) {
         collected.push_back(iterator->current());
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Visited element: {}", iterator->current()));
+        LOG_INFO(std::format("  Visited element: {}", iterator->current()));
     }
 
     // verify all elements were visited in correct order
@@ -35,7 +35,7 @@ int main() {
            collected[3] == 4 && collected[4] == 5 && "Elements should be in order");
 
     // test 2: verify is done behavior
-    Logger::getInstance().log(LogLevel::INFO, "Test 2: Testing isDone and boundary conditions");
+    LOG_INFO("Test 2: Testing isDone and boundary conditions");
     assert(iterator->isDone() && "Iterator should be done after traversal");
 
     // test for exception when accessing after completion
@@ -44,12 +44,12 @@ int main() {
         iterator->current();
     } catch (const std::out_of_range& e) {
         exceptionThrown = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Exception correctly thrown: {}", e.what()));
+        LOG_INFO(std::format("  Exception correctly thrown: {}", e.what()));
     }
     assert(exceptionThrown && "Exception should be thrown when accessing past end");
 
     // test 3: reverse iteration
-    Logger::getInstance().log(LogLevel::INFO, "Test 3: Reverse iteration");
+    LOG_INFO("Test 3: Reverse iteration");
 
     // pass a reference instead of a pointer to the reverse iterator constructor
     auto reverseIterator = std::make_unique<ReverseIterator<int>>(*numbers);
@@ -62,7 +62,7 @@ int main() {
     std::vector<int> reversedElements;
     for (reverseIterator->first(); !reverseIterator->isDone(); reverseIterator->next()) {
         reversedElements.push_back(reverseIterator->current());
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Visited element: {}", reverseIterator->current()));
+        LOG_INFO(std::format("  Visited element: {}", reverseIterator->current()));
     }
 
     // verify all elements were visited in reverse order
@@ -71,7 +71,7 @@ int main() {
            reversedElements[3] == 2 && reversedElements[4] == 1 && "Elements should be in reverse order");
 
     // test 4: filtering iteration (even numbers only)
-    Logger::getInstance().log(LogLevel::INFO, "Test 4: Filtering iteration (even numbers only)");
+    LOG_INFO("Test 4: Filtering iteration (even numbers only)");
     auto isEven = [](const int& n) -> bool { return n % 2 == 0; };
 
     // pass a reference instead of a pointer to the filtering iterator constructor
@@ -81,7 +81,7 @@ int main() {
     std::vector<int> evenNumbers;
     for (filteringIterator->first(); !filteringIterator->isDone(); filteringIterator->next()) {
         evenNumbers.push_back(filteringIterator->current());
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Visited element: {}", filteringIterator->current()));
+        LOG_INFO(std::format("  Visited element: {}", filteringIterator->current()));
     }
 
     // verify only even numbers were visited
@@ -89,7 +89,7 @@ int main() {
     assert(evenNumbers[0] == 2 && evenNumbers[1] == 4 && "Should only visit even numbers");
 
     // test 5: empty collection
-    Logger::getInstance().log(LogLevel::INFO, "Test 5: Empty collection behavior");
+    LOG_INFO("Test 5: Empty collection behavior");
     const auto emptyCollection = std::make_unique<ConcreteAggregate<int>>();
 
     // test iterator on an empty collection
@@ -107,12 +107,12 @@ int main() {
         emptyIterator->current();
     } catch (const std::out_of_range& e) {
         emptyExceptionThrown = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Exception correctly thrown on empty collection: {}", e.what()));
+        LOG_INFO(std::format("  Exception correctly thrown on empty collection: {}", e.what()));
     }
     assert(emptyExceptionThrown && "Exception should be thrown when accessing empty collection");
 
     // test 6: using the variadic template method in a different way
-    Logger::getInstance().log(LogLevel::INFO, "Test 6: Using variadic addMany method");
+    LOG_INFO("Test 6: Using variadic addMany method");
     const auto moreNumbers = std::make_unique<ConcreteAggregate<int>>();
     moreNumbers->addMany(10, 20, 30, 40, 50);
 
@@ -121,13 +121,13 @@ int main() {
 
     for (moreIterator->first(); !moreIterator->isDone(); moreIterator->next()) {
         moreCollected.push_back(moreIterator->current());
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Added element: {}", moreIterator->current()));
+        LOG_INFO(std::format("  Added element: {}", moreIterator->current()));
     }
 
     assert(moreCollected.size() == 5 && "Should have 5 elements from addMany");
     assert(moreCollected[0] == 10 && moreCollected[4] == 50 && "Elements should match added values");
 
-    Logger::getInstance().log(LogLevel::INFO, "All iterator tests completed successfully");
+    LOG_INFO("All iterator tests completed successfully");
 
     return 0;
 }

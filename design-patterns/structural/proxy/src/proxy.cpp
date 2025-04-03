@@ -104,7 +104,7 @@ public:
 
         // simulate processing
         for (const auto& item : data) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("processing item: {}", item));
+            LOG_INFO(std::format("processing item: {}", item));
         }
     }
 
@@ -125,7 +125,7 @@ public:
 
     void authenticate() {
         m_isAuthenticated = true;
-        Logger::getInstance().log(LogLevel::INFO, "proxy: authentication successful");
+        LOG_INFO("proxy: authentication successful");
     }
 
     void processData(const std::vector<std::string>& data) override {
@@ -133,7 +133,7 @@ public:
 
         // check authentication before allowing access
         if (!m_isAuthenticated) {
-            Logger::getInstance().log(LogLevel::INFO, "proxy: access denied - not authenticated");
+            LOG_INFO("proxy: access denied - not authenticated");
             return;
         }
 
@@ -156,31 +156,31 @@ public:
 
 // test suite for vector<string> data
 void runVectorTests() {
-    Logger::getInstance().log(LogLevel::INFO, "starting vector<string> tests");
+    LOG_INFO("starting vector<string> tests");
 
     DataProcessorProxy proxy;
     std::vector<std::string> testData{"item1", "item2", "item3"};
 
     // test 1: unauthenticated access
-    Logger::getInstance().log(LogLevel::INFO, "test 1: attempting unauthenticated access");
+    LOG_INFO("test 1: attempting unauthenticated access");
     proxy.processData(testData);
     assert(proxy.getProcessedCount() == 0);
     assert(proxy.getAccessCount() == 1);
 
     // test 2: authenticated access
-    Logger::getInstance().log(LogLevel::INFO, "test 2: attempting authenticated access");
+    LOG_INFO("test 2: attempting authenticated access");
     proxy.authenticate();
     proxy.processData(testData);
     assert(proxy.getProcessedCount() == 3);
     assert(proxy.getAccessCount() == 2);
 
     // test 3: multiple processing calls
-    Logger::getInstance().log(LogLevel::INFO, "test 3: testing multiple processing calls");
+    LOG_INFO("test 3: testing multiple processing calls");
     proxy.processData(testData);
     assert(proxy.getProcessedCount() == 6);
     assert(proxy.getAccessCount() == 3);
 
-    Logger::getInstance().log(LogLevel::INFO, "vector<string> tests completed successfully");
+    LOG_INFO("vector<string> tests completed successfully");
 }
 
 // utility function to read a file into vector of strings (one per line)
@@ -205,12 +205,12 @@ std::vector<std::string> readFileToVector(const std::string& filename) {
 
 // test suite for file data
 void runFileTests(const std::string& file1, const std::string& file2) {
-    Logger::getInstance().log(LogLevel::INFO, "starting file tests");
+    LOG_INFO("starting file tests");
 
     DataProcessorProxy proxy;
 
     // test 1: read and process original file
-    Logger::getInstance().log(LogLevel::INFO, "test 1: processing original file");
+    LOG_INFO("test 1: processing original file");
     const auto originalData = readFileToVector(file1);
 
     // authenticate and process
@@ -222,7 +222,7 @@ void runFileTests(const std::string& file1, const std::string& file2) {
     assert(proxy.getAccessCount() == 1);
 
     // test 2: compare processing of both files
-    Logger::getInstance().log(LogLevel::INFO, "test 2: comparing file processing");
+    LOG_INFO("test 2: comparing file processing");
     const auto alteredData = readFileToVector(file2);
 
     // process altered file
@@ -233,7 +233,7 @@ void runFileTests(const std::string& file1, const std::string& file2) {
     assert(proxy.getAccessCount() == 2);
 
     // test 3: process files multiple times to ensure consistent behavior
-    Logger::getInstance().log(LogLevel::INFO, "test 3: testing multiple file processing");
+    LOG_INFO("test 3: testing multiple file processing");
     proxy.processData(originalData);
     proxy.processData(alteredData);
 
@@ -241,7 +241,7 @@ void runFileTests(const std::string& file1, const std::string& file2) {
     assert(proxy.getProcessedCount() == 2 * (originalData.size() + alteredData.size()));
     assert(proxy.getAccessCount() == 4);
 
-    Logger::getInstance().log(LogLevel::INFO, "file tests completed successfully");
+    LOG_INFO("file tests completed successfully");
 }
 
 int main() {
@@ -253,7 +253,7 @@ int main() {
         runFileTests("../../../../testing-files/frost_giants_daughter.txt",
                     "../../../../testing-files/frost_giants_daughter-altered.txt");
 
-        Logger::getInstance().log(LogLevel::INFO, "all tests completed successfully");
+        LOG_INFO("all tests completed successfully");
         return 0;
     } catch (const std::exception& e) {
         Logger::getInstance().log(LogLevel::INFO,

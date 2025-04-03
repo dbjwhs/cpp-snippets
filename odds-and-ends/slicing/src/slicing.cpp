@@ -28,29 +28,29 @@ public:
 
 // case 1: by pointer - no slicing
 void processByPointer(Base* obj) {
-    Logger::getInstance().log(LogLevel::INFO, "Processing by pointer: ");
+    LOG_INFO("Processing by pointer: ");
     obj->print();
 }
 
 // case 2: by reference - no slicing
 void processByReference(Base& obj) {
-    Logger::getInstance().log(LogLevel::INFO, "Processing by reference: ");
+    LOG_INFO("Processing by reference: ");
     obj.print();
 }
 
 // case 3: by value - slicing occurs!
 void processByValue(Base obj) {
-    Logger::getInstance().log(LogLevel::INFO, "Processing by value: ");
+    LOG_INFO("Processing by value: ");
     obj.print();  // will only print base data, derived data is lost!
 }
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Creating Derived object...");
+    LOG_INFO("Creating Derived object...");
     Derived d;
 
-    Logger::getInstance().log(LogLevel::INFO, "Original object:");
+    LOG_INFO("Original object:");
     d.print();
-    Logger::getInstance().log(LogLevel::INFO, "");
+    LOG_INFO("");
 
     // case 1: pointer - works correctly
     processByPointer(&d);

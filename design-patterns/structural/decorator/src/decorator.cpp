@@ -112,7 +112,7 @@ void testDecorator(const std::string& testName, const TextComponent& decorator, 
 }
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting decorator pattern tests");
+    LOG_INFO("Starting decorator pattern tests");
 
     // test 1: simple text without decorators
     auto baseText = std::make_shared<SimpleText>("Hello");
@@ -152,6 +152,6 @@ int main() {
     );
     testDecorator("Special Characters", *specialChars, "<i>Hello & World!</i>");
 
-    Logger::getInstance().log(LogLevel::INFO, "All decorator pattern tests completed");
+    LOG_INFO("All decorator pattern tests completed");
     return 0;
 }

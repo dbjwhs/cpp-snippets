@@ -45,7 +45,7 @@ public:
         // check what's not allowed first
         if (value.empty()) {
             // make this info since we have negative tests, but should be error/critical
-            Logger::getInstance().log(LogLevel::INFO, std::format("Empty string not allowed"));
+            LOG_INFO(std::format("Empty string not allowed"));
             throw std::invalid_argument("empty string not allowed");
         }
 
@@ -100,14 +100,14 @@ public:
 };
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting SafeString tests");
+    LOG_INFO("Starting SafeString tests");
 
     // test case 1: basic valid string
     try {
         SafeString ss;
         ss.setValue("Hello, World!");
         assert(ss.getValue() == "Hello, World!");
-        Logger::getInstance().log(LogLevel::INFO, "Test case 1 passed: Basic valid string");
+        LOG_INFO("Test case 1 passed: Basic valid string");
     } catch (const std::exception& e) {
         Logger::getInstance().log(LogLevel::ERROR, 
             std::format("Test case 1 failed: {}", e.what()));
@@ -118,10 +118,10 @@ int main() {
     try {
         SafeString ss;
         ss.setValue("");
-        Logger::getInstance().log(LogLevel::ERROR, "Test case 2 failed: Empty string was accepted");
+        LOG_ERROR("Test case 2 failed: Empty string was accepted");
         return 1;
     } catch (const std::invalid_argument&) {
-        Logger::getInstance().log(LogLevel::INFO, "Test case 2 passed: Empty string rejected");
+        LOG_INFO("Test case 2 passed: Empty string rejected");
     }
 
     // test case 3: string with control character (should fail)
@@ -144,7 +144,7 @@ int main() {
             "Test case 4 failed: Oversized string was accepted");
         return 1;
     } catch (const std::invalid_argument&) {
-        Logger::getInstance().log(LogLevel::INFO, "Test case 4 passed: Oversized string rejected");
+        LOG_INFO("Test case 4 passed: Oversized string rejected");
     }
 
     // test case 5: adding new forbidden character
@@ -161,6 +161,6 @@ int main() {
         return 1;
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "All tests completed successfully");
+    LOG_INFO("All tests completed successfully");
     return 0;
 }

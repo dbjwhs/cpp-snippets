@@ -105,7 +105,7 @@ public:
 
     // implementation of send method
     void send(const std::string& message) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Colleague {} sends: {}", m_id, message));
+        LOG_INFO(std::format("Colleague {} sends: {}", m_id, message));
         if (const auto mediator = m_mediator.lock()) {
             mediator->sendMessage(message, shared_from_this());
         }
@@ -115,7 +115,7 @@ public:
     void receive(const std::string& message) override {
         m_lastMessage = message;
         m_receivedNewMessage = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("Colleague {} received: {}", m_id, message));
+        LOG_INFO(std::format("Colleague {} received: {}", m_id, message));
     }
 };
 
@@ -128,7 +128,7 @@ public:
 
     // implementation of send method
     void send(const std::string& message) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Colleague {} sends: {}", m_id, message));
+        LOG_INFO(std::format("Colleague {} sends: {}", m_id, message));
         if (const auto mediator = m_mediator.lock()) {
             mediator->sendMessage(message, shared_from_this());
         }
@@ -138,7 +138,7 @@ public:
     void receive(const std::string& message) override {
         m_lastMessage = message;
         m_receivedNewMessage = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("Colleague {} received: {}", m_id, message));
+        LOG_INFO(std::format("Colleague {} received: {}", m_id, message));
     }
 };
 
@@ -151,13 +151,13 @@ private:
 public:
     // implementation of register colleague method
     void registerColleague(std::shared_ptr<Colleague> colleague) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Mediator: Registering colleague {}", colleague->getId()));
+        LOG_INFO(std::format("Mediator: Registering colleague {}", colleague->getId()));
         m_colleagues.push_back(std::move(colleague));
     }
 
     // implementation of send message method
     void sendMessage(const std::string& message, const std::shared_ptr<Colleague>& sender) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Mediator: Distributing message from {}", sender->getId()));
+        LOG_INFO(std::format("Mediator: Distributing message from {}", sender->getId()));
 
         // distribute the message to all colleagues except the sender
         for (const auto& colleague : m_colleagues) {
@@ -180,19 +180,19 @@ private:
 public:
     // implementation of register colleague method
     void registerColleague(std::shared_ptr<Colleague> colleague) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("FilteringMediator: Registering colleague {}", colleague->getId()));
+        LOG_INFO(std::format("FilteringMediator: Registering colleague {}", colleague->getId()));
         m_colleaguesMap[colleague->getId()] = std::move(colleague);
     }
 
     // method to define communication rules between colleagues
     void setCommRules(const std::string& senderId, const std::vector<std::string>& receiverIds) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("FilteringMediator: Setting communication rules for {}", senderId));
+        LOG_INFO(std::format("FilteringMediator: Setting communication rules for {}", senderId));
         m_communicationRules[senderId] = receiverIds;
     }
 
     // implementation of send message method with filtering based on rules
     void sendMessage(const std::string& message, const std::shared_ptr<Colleague>& sender) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("FilteringMediator: Processing message from {}", sender->getId()));
+        LOG_INFO(std::format("FilteringMediator: Processing message from {}", sender->getId()));
 
         // get sender's id
         const std::string senderId = sender->getId();
@@ -206,17 +206,17 @@ public:
             for (const auto& receiverId : allowedReceivers) {
                 auto it = m_colleaguesMap.find(receiverId);
                 if (it != m_colleaguesMap.end()) {
-                    Logger::getInstance().log(LogLevel::INFO, std::format("FilteringMediator: Sending to {}", receiverId));
+                    LOG_INFO(std::format("FilteringMediator: Sending to {}", receiverId));
                     it->second->receive(message);
                 } else {
-                    Logger::getInstance().log(LogLevel::INFO, std::format("FilteringMediator: Receiver {} not found", receiverId));
+                    LOG_INFO(std::format("FilteringMediator: Receiver {} not found", receiverId));
                 }
             }
         } else {
             // if no specific rules, broadcast to all except sender
             for (const auto& [id, colleague] : m_colleaguesMap) {
                 if (id != senderId) {
-                    Logger::getInstance().log(LogLevel::INFO, std::format("FilteringMediator: Broadcasting to {}", id));
+                    LOG_INFO(std::format("FilteringMediator: Broadcasting to {}", id));
                     colleague->receive(message);
                 }
             }
@@ -270,7 +270,7 @@ public:
     // method to send a message to all users
     void broadcast(const std::string& message) {
         if (m_mediator) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("User {} broadcasts: {}", m_name, message));
+            LOG_INFO(std::format("User {} broadcasts: {}", m_name, message));
             m_mediator->sendMessage(message, shared_from_this());
         }
     }
@@ -287,7 +287,7 @@ public:
     // method to receive a message
     void receive(const std::string& message) {
         m_receivedMessages.push_back(message);
-        Logger::getInstance().log(LogLevel::INFO, std::format("User {} received: {}", m_name, message));
+        LOG_INFO(std::format("User {} received: {}", m_name, message));
     }
 
     // method to get all received messages
@@ -315,14 +315,14 @@ private:
 public:
     // implementation of add user method
     void addUser(std::shared_ptr<ChatUser> user) override {
-        Logger::getInstance().log(LogLevel::INFO, std::format("ChatRoom: Adding user {}", user->getName()));
+        LOG_INFO(std::format("ChatRoom: Adding user {}", user->getName()));
         m_users[user->getName()] = std::move(user);
     }
 
     // implementation of send message method (broadcast)
     void sendMessage(const std::string& message, const std::shared_ptr<ChatUser>& sender) override {
         const std::string formattedMsg = std::format("[{}]: {}", sender->getName(), message);
-        Logger::getInstance().log(LogLevel::INFO, std::format("ChatRoom: Broadcasting message from {}", sender->getName()));
+        LOG_INFO(std::format("ChatRoom: Broadcasting message from {}", sender->getName()));
 
         // send to all users except the sender
         for (const auto& [name, user] : m_users) {
@@ -341,18 +341,18 @@ public:
                 sender->getName(), receiverId));
             m_users[receiverId]->receive(formattedMsg);
         } else {
-            Logger::getInstance().log(LogLevel::INFO, std::format("ChatRoom: User {} not found", receiverId));
+            LOG_INFO(std::format("ChatRoom: User {} not found", receiverId));
         }
     }
 };
 
 // main function with comprehensive testing
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting Mediator Pattern Tests");
+    LOG_INFO("Starting Mediator Pattern Tests");
 
     // test 1: basic mediator functionality
     {
-        Logger::getInstance().log(LogLevel::INFO, "Test 1: Basic Mediator Functionality");
+        LOG_INFO("Test 1: Basic Mediator Functionality");
 
         // create mediator
         auto mediator = std::make_shared<ConcreteMediator>();
@@ -381,12 +381,12 @@ int main() {
         assert(colleagueA->getLastMessage() == "Response from B" && "A should receive message from B");
         assert(colleagueC->getLastMessage() == "Response from B" && "C should receive message from B");
 
-        Logger::getInstance().log(LogLevel::INFO, "Test 1: Passed");
+        LOG_INFO("Test 1: Passed");
     }
 
     // test 2: filtering mediator
     {
-        Logger::getInstance().log(LogLevel::INFO, "Test 2: Filtering Mediator");
+        LOG_INFO("Test 2: Filtering Mediator");
 
         // create filtering mediator
         auto mediator = std::make_shared<FilteringMediator>();
@@ -448,12 +448,12 @@ int main() {
         assert(colleagueB->getLastMessage() == "Message from C" && "B's last message should be from C");
         assert(colleagueD->getLastMessage() == "Message from C" && "D's last message should be from C");
 
-        Logger::getInstance().log(LogLevel::INFO, "Test 2: Passed");
+        LOG_INFO("Test 2: Passed");
     }
 
     // test 3: chat room mediator
     {
-        Logger::getInstance().log(LogLevel::INFO, "Test 3: Chat Room Mediator");
+        LOG_INFO("Test 3: Chat Room Mediator");
 
         // create chat room
         auto chatRoom = std::make_shared<ChatRoom>();
@@ -509,10 +509,10 @@ int main() {
         assert(charlie->getReceivedMessages().size() == 1 && "Charlie should have exactly one message (from Bob)");
         assert(diana->getReceivedMessages().size() == 1 && "Diana should have exactly one message");
 
-        Logger::getInstance().log(LogLevel::INFO, "Test 3: Passed");
+        LOG_INFO("Test 3: Passed");
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "All Mediator Pattern Tests Passed");
+    LOG_INFO("All Mediator Pattern Tests Passed");
 
     return 0;
 }

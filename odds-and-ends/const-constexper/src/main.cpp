@@ -36,7 +36,7 @@
 // basic usage of const
 void demonstrate_basic_const()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating basic const usage");
+    LOG_INFO("Demonstrating basic const usage");
 
     // const variables - cannot be modified after initialization
     const int kImmutableValue = 42;
@@ -72,7 +72,7 @@ void demonstrate_basic_const()
     // *const_ptr_to_const = 21;  // error: assignment of read-only location
     // const_ptr_to_const = &value1;  // error: assignment of read-only variable
 
-    Logger::getInstance().log(LogLevel::INFO, "Basic const tests passed");
+    LOG_INFO("Basic const tests passed");
 }
 
 // const with function parameters and return values
@@ -131,11 +131,11 @@ public:
 
 void demonstrate_const_functions()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating const with functions");
+    LOG_INFO("Demonstrating const with functions");
 
     const int kValue = 100;
     std::string message = get_message(kValue);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Got message: {}", message));
+    LOG_INFO(std::format("Got message: {}", message));
 
     // const objects can only call const member functions
     const ConstExample kConstObj(42);
@@ -160,7 +160,7 @@ void demonstrate_const_functions()
     Logger::getInstance().log(LogLevel::INFO, std::format("Access count on const object: {}",
                                                          kConstWithMutable.get_access_count()));
 
-    Logger::getInstance().log(LogLevel::INFO, "Const function tests passed");
+    LOG_INFO("Const function tests passed");
 }
 
 // basic usage of constexpr
@@ -171,7 +171,7 @@ constexpr int square(int x)
 
 void demonstrate_basic_constexpr()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating basic constexpr usage");
+    LOG_INFO("Demonstrating basic constexpr usage");
 
     // constexpr variables - evaluated at compile-time
     constexpr int kSquareOfFive = square(5);
@@ -192,7 +192,7 @@ void demonstrate_basic_constexpr()
 
     Logger::getInstance().log(LogLevel::INFO, std::format("kSquareOfFive = {}, runtime square = {}",
                                                          kSquareOfFive, sq));
-    Logger::getInstance().log(LogLevel::INFO, "Basic constexpr tests passed");
+    LOG_INFO("Basic constexpr tests passed");
 }
 
 // more complex constexpr functions (c++14 and beyond)
@@ -213,7 +213,7 @@ constexpr bool is_prime(int n, int i = 2)
 
 void demonstrate_advanced_constexpr()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating advanced constexpr usage");
+    LOG_INFO("Demonstrating advanced constexpr usage");
 
     // constexpr functions with complex logic
     constexpr int kFact5 = factorial(5);
@@ -226,7 +226,7 @@ void demonstrate_advanced_constexpr()
 
     // checking at runtime as well
     for (int i = 2; i <= 10; i++) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Is {} prime? {}", i, is_prime(i) ? "Yes" : "No"));
+        LOG_INFO(std::format("Is {} prime? {}", i, is_prime(i) ? "Yes" : "No"));
     }
 
     // constexpr with arrays
@@ -240,7 +240,7 @@ void demonstrate_advanced_constexpr()
 
     static_assert(kFactorials[4] == 120, "Factorial of 5 should be 120");
 
-    Logger::getInstance().log(LogLevel::INFO, "Advanced constexpr tests passed");
+    LOG_INFO("Advanced constexpr tests passed");
 }
 
 // constexpr class (c++11 and later)
@@ -278,7 +278,7 @@ public:
 
 void demonstrate_constexpr_classes()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating constexpr classes");
+    LOG_INFO("Demonstrating constexpr classes");
 
     // constexpr objects
     constexpr ConstexprPoint kP1(3, 4);
@@ -297,10 +297,10 @@ void demonstrate_constexpr_classes()
     ConstexprPoint p4(5, 6);
     ConstexprPoint p5 = p4.add(kP1);
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("P5 coordinates: ({}, {})", p5.get_x(), p5.get_y()));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Distance of P1 from origin: {}", kP1.distance_from_origin()));
+    LOG_INFO(std::format("P5 coordinates: ({}, {})", p5.get_x(), p5.get_y()));
+    LOG_INFO(std::format("Distance of P1 from origin: {}", kP1.distance_from_origin()));
 
-    Logger::getInstance().log(LogLevel::INFO, "Constexpr class tests passed");
+    LOG_INFO("Constexpr class tests passed");
 }
 
 // constexpr if (c++17)
@@ -343,7 +343,7 @@ constexpr const char* type_category_to_string(TypeCategory category)
 
 void demonstrate_constexpr_if()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating constexpr if (C++17)");
+    LOG_INFO("Demonstrating constexpr if (C++17)");
 
     // during compilation, only the relevant branch is instantiated
     constexpr TypeCategory kIntCategory = get_value_type_category<int>();
@@ -358,12 +358,12 @@ void demonstrate_constexpr_if()
     static_assert(kBoolCategory == TypeCategory::Integral, "bool should be integral");
 
     // for logging, convert to strings
-    Logger::getInstance().log(LogLevel::INFO, std::format("int type: {}", type_category_to_string(kIntCategory)));
-    Logger::getInstance().log(LogLevel::INFO, std::format("double type: {}", type_category_to_string(kDoubleCategory)));
-    Logger::getInstance().log(LogLevel::INFO, std::format("string type: {}", type_category_to_string(kStringCategory)));
-    Logger::getInstance().log(LogLevel::INFO, std::format("bool type: {}", type_category_to_string(kBoolCategory)));
+    LOG_INFO(std::format("int type: {}", type_category_to_string(kIntCategory)));
+    LOG_INFO(std::format("double type: {}", type_category_to_string(kDoubleCategory)));
+    LOG_INFO(std::format("string type: {}", type_category_to_string(kStringCategory)));
+    LOG_INFO(std::format("bool type: {}", type_category_to_string(kBoolCategory)));
 
-    Logger::getInstance().log(LogLevel::INFO, "Constexpr if tests passed");
+    LOG_INFO("Constexpr if tests passed");
 }
 
 // putting it all together: a comprehensive example
@@ -438,7 +438,7 @@ public:
 
 void demonstrate_comprehensive_example()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Demonstrating comprehensive constexpr/const example");
+    LOG_INFO("Demonstrating comprehensive constexpr/const example");
 
     // compile-time creation and operations on array
     constexpr ConstexprArray<int, 5> kArrayOne(1, 2, 3, 4, 5);
@@ -461,18 +461,18 @@ void demonstrate_comprehensive_example()
     ConstexprArray<double, 4> floating_array(1.1, 2.2, 3.3, 4.4);
     double runtime_sum = floating_array.sum();
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("Compile-time sum: {}", kSum));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Compile-time max: {}", kMax));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Compile-time sum of squares: {}", kSquaredSum));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Runtime sum: {}", runtime_sum));
+    LOG_INFO(std::format("Compile-time sum: {}", kSum));
+    LOG_INFO(std::format("Compile-time max: {}", kMax));
+    LOG_INFO(std::format("Compile-time sum of squares: {}", kSquaredSum));
+    LOG_INFO(std::format("Runtime sum: {}", runtime_sum));
 
-    Logger::getInstance().log(LogLevel::INFO, "Comprehensive example tests passed");
+    LOG_INFO("Comprehensive example tests passed");
 }
 
 int main()
 {
-    Logger::getInstance().log(LogLevel::INFO, "Starting const/constexpr demonstration");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Version: {}", CONST_CONSTEXPR_DEMO_VERSION));
+    LOG_INFO("Starting const/constexpr demonstration");
+    LOG_INFO(std::format("Version: {}", CONST_CONSTEXPR_DEMO_VERSION));
 
     // run all demonstrations
     demonstrate_basic_const();
@@ -483,6 +483,6 @@ int main()
     demonstrate_constexpr_if();
     demonstrate_comprehensive_example();
 
-    Logger::getInstance().log(LogLevel::INFO, "All demonstrations completed successfully");
+    LOG_INFO("All demonstrations completed successfully");
     return 0;
 }

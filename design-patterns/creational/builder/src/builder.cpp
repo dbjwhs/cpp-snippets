@@ -229,23 +229,23 @@ public:
 // comprehensive test function
 void runTests() {
     // test case 1: build gaming pc and verify all components
-    Logger::getInstance().log(LogLevel::INFO, std::format("Running test case 1: Gaming PC build"));
+    LOG_INFO(std::format("Running test case 1: Gaming PC build"));
     const auto gamingPC = ComputerDirector::buildGamingPC();
     assert(gamingPC->getCPU() == "AMD Ryzen 9" && "gaming pc cpu mismatch");
     assert(gamingPC->getRAM() == 32 && "gaming pc ram mismatch");
     assert(gamingPC->hasGPU() && "gaming pc should have gpu");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Test case 1 passed"));
+    LOG_INFO(std::format("Test case 1 passed"));
 
     // test case 2: build office pc and verify all components
-    Logger::getInstance().log(LogLevel::INFO, std::format("Running test case 2: Office PC build"));
+    LOG_INFO(std::format("Running test case 2: Office PC build"));
     const auto officePC = ComputerDirector::buildOfficePC();
     assert(officePC->getCPU() == "Intel i5" && "office pc cpu mismatch");
     assert(officePC->getRAM() == 16 && "office pc ram mismatch");
     assert(!officePC->hasGPU() && "office pc should not have gpu");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Test case 2 passed"));
+    LOG_INFO(std::format("Test case 2 passed"));
 
     // test case 3: custom build with manual validation
-    Logger::getInstance().log(LogLevel::INFO, std::format("Running test case 3: Custom build validation"));
+    LOG_INFO(std::format("Running test case 3: Custom build validation"));
     const auto customPC = ComputerBuilder()
         .setCPU("Intel i7")
         .setMotherboard("MSI PRO")
@@ -256,10 +256,10 @@ void runTests() {
 
     assert(customPC->getStorage() == "4TB NVMe RAID" && "custom pc storage mismatch");
     assert(customPC->getRAM() == 64 && "custom pc ram mismatch");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Test case 3 passed"));
+    LOG_INFO(std::format("Test case 3 passed"));
 
     // test case 4: verify builder validation
-    Logger::getInstance().log(LogLevel::INFO, std::format("Running test case 4: Builder validation"));
+    LOG_INFO(std::format("Running test case 4: Builder validation"));
     bool validationCaught = false;
     try {
         auto invalidPC = ComputerBuilder()
@@ -267,20 +267,20 @@ void runTests() {
             .build();
     } catch (const BuilderValidationError& e) {
         validationCaught = true;
-        Logger::getInstance().log(LogLevel::INFO, std::format("Caught expected validation error: {}", e.what()));
+        LOG_INFO(std::format("Caught expected validation error: {}", e.what()));
     }
     assert(validationCaught && "validation error should have been caught");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Test case 4 passed"));
+    LOG_INFO(std::format("Test case 4 passed"));
 }
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Starting Builder Pattern tests"));
+        LOG_INFO(std::format("Starting Builder Pattern tests"));
         runTests();
-        Logger::getInstance().log(LogLevel::INFO, std::format("All tests completed successfully"));
+        LOG_INFO(std::format("All tests completed successfully"));
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Test failure: {}", e.what()));
+        LOG_ERROR(std::format("Test failure: {}", e.what()));
         return 1;
     }
 }

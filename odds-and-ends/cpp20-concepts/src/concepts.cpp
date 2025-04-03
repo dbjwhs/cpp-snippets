@@ -79,14 +79,14 @@ Type sum(const C& values) {
 template <typename Type>
 void test_type() {
     // output the type name and whether it satisfies our concepts
-    Logger::getInstance().log(LogLevel::INFO, std::format("Testing type: {}", typeid(Type).name()));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Is addable: {}", addable<Type> ? "Yes" : "No"));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Is numeric: {}", numeric<Type> ? "Yes" : "No"));
+    LOG_INFO(std::format("Testing type: {}", typeid(Type).name()));
+    LOG_INFO(std::format("Is addable: {}", addable<Type> ? "Yes" : "No"));
+    LOG_INFO(std::format("Is numeric: {}", numeric<Type> ? "Yes" : "No"));
 }
 
 // test the calculator class with different types
 void test_calculator() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing Calculator with int");
+    LOG_INFO("Testing Calculator with int");
     
     // create a calculator with int
     Calculator<int> calc_int(5);
@@ -94,9 +94,9 @@ void test_calculator() {
     
     // verify the result
     assert(calc_int.getValue() == 15 && "Calculator with int failed");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Calculator value: {}", calc_int.getValue()));
+    LOG_INFO(std::format("Calculator value: {}", calc_int.getValue()));
     
-    Logger::getInstance().log(LogLevel::INFO, "Testing Calculator with double");
+    LOG_INFO("Testing Calculator with double");
     
     // create a calculator with double
     Calculator<double> calc_double(5.5);
@@ -107,7 +107,7 @@ void test_calculator() {
     const double actual = calc_double.getValue();
     constexpr double epsilon = 0.001;
     assert(std::abs(actual - expected) < epsilon && "Calculator with double failed");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Calculator value: {}", calc_double.getValue()));
+    LOG_INFO(std::format("Calculator value: {}", calc_double.getValue()));
     
     // the following line would cause a compilation error, uncomment to test
     // Calculator<std::string> calc_string("Hello"); // error: std::string doesn't satisfy the numeric concept
@@ -115,7 +115,7 @@ void test_calculator() {
 
 // test the sum function with different containers
 void test_sum() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing sum with vector<int>");
+    LOG_INFO("Testing sum with vector<int>");
     
     // create a vector of ints
     const std::vector<int> vec_int = {1, 2, 3, 4, 5};
@@ -123,9 +123,9 @@ void test_sum() {
     
     // verify the result
     assert(sum_int == 15 && "Sum of vector<int> failed");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Sum: {}", sum_int));
+    LOG_INFO(std::format("Sum: {}", sum_int));
     
-    Logger::getInstance().log(LogLevel::INFO, "Testing sum with vector<double>");
+    LOG_INFO("Testing sum with vector<double>");
     
     // create a vector of doubles
     const std::vector<double> vec_double = {1.1, 2.2, 3.3, 4.4, 5.5};
@@ -136,7 +136,7 @@ void test_sum() {
     const double actual = sum_double;
     constexpr double epsilon = 0.001;
     assert(std::abs(actual - expected) < epsilon && "Sum of vector<double> failed");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Sum: {}", sum_double));
+    LOG_INFO(std::format("Sum: {}", sum_double));
     
     // the following line would cause a compilation error, uncomment to test
     // std::vector<std::string> vec_string = {"Hello", "World"};
@@ -145,7 +145,7 @@ void test_sum() {
 
 // main function to run all tests
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting C++ Concepts tests");
+    LOG_INFO("Starting C++ Concepts tests");
     
     // test different types with our concepts
     test_type<int>();
@@ -158,6 +158,6 @@ int main() {
     // test the sum function
     test_sum();
     
-    Logger::getInstance().log(LogLevel::INFO, "All tests completed successfully");
+    LOG_INFO("All tests completed successfully");
     return 0;
 }

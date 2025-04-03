@@ -151,13 +151,13 @@ public:
     // additional feature - mute
     void mute() {
         m_device->setVolumeLevel(0);
-        Logger::getInstance().log(LogLevel::INFO, "Advanced remote: Mute activated");
+        LOG_INFO("Advanced remote: Mute activated");
     }
 };
 
 // comprehensive test suite
 void runTests() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting Bridge Pattern Tests");
+    LOG_INFO("Starting Bridge Pattern Tests");
 
     // test tv with basic remote
     {
@@ -177,7 +177,7 @@ void runTests() {
         tvRemote.setVolume(150);  // should clamp to 100
         assert(tvRemote.getVolume() == 100 && "TV volume should be clamped to 100");
 
-        Logger::getInstance().log(LogLevel::INFO, "Basic TV remote tests passed");
+        LOG_INFO("Basic TV remote tests passed");
     }
 
     // test radio with advanced remote
@@ -191,10 +191,10 @@ void runTests() {
         radioRemote.mute();
         assert(radioRemote.getVolume() == 0 && "Radio should be muted (volume 0)");
 
-        Logger::getInstance().log(LogLevel::INFO, "Advanced radio remote tests passed");
+        LOG_INFO("Advanced radio remote tests passed");
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "All Bridge Pattern Tests Completed Successfully");
+    LOG_INFO("All Bridge Pattern Tests Completed Successfully");
 }
 
 int main() {

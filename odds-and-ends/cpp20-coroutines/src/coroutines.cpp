@@ -304,7 +304,7 @@ public:
 
     // called when the coroutine is about to suspend
     void await_suspend(std::coroutine_handle<> handle) const {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Simulating delay of {} ticks", m_ticks));
+        LOG_INFO(std::format("Simulating delay of {} ticks", m_ticks));
         
         // in a real implementation, this might register with an event loop
         // for this example; we just immediately resume
@@ -324,7 +324,7 @@ auto delay(int ticks) {
 
 // an example task that uses the delay awaitable
 task<std::string> process_data(int id) {
-    Logger::getInstance().log(LogLevel::INFO, std::format("Starting to process data {}", id));
+    LOG_INFO(std::format("Starting to process data {}", id));
     
     // simulate some asynchronous work
     co_await delay(3);
@@ -335,11 +335,11 @@ task<std::string> process_data(int id) {
 
 // test our coroutine implementations
 void test_coroutines() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting coroutine tests");
+    LOG_INFO("Starting coroutine tests");
     
     // test fibonacci generator
     {
-        Logger::getInstance().log(LogLevel::INFO, "Testing fibonacci generator");
+        LOG_INFO("Testing fibonacci generator");
         
         // generate fibonacci numbers up to 100
         auto fib = fibonacci(100);
@@ -351,7 +351,7 @@ void test_coroutines() {
         int idx = 0;
         while (fib.next()) {
             int value = fib.value();
-            Logger::getInstance().log(LogLevel::INFO, std::format("Fibonacci[{}] = {}", idx, value));
+            LOG_INFO(std::format("Fibonacci[{}] = {}", idx, value));
             
             // assert that the values match our expected sequence
             assert(idx < expected.size() && "Generated more Fibonacci numbers than expected");
@@ -362,12 +362,12 @@ void test_coroutines() {
         
         // verify we got all expected values
         assert(idx == expected.size() && "Did not generate enough Fibonacci numbers");
-        Logger::getInstance().log(LogLevel::INFO, "Fibonacci generator test passed");
+        LOG_INFO("Fibonacci generator test passed");
     }
     
     // test task with co_await
     {
-        Logger::getInstance().log(LogLevel::INFO, "Testing asynchronous task");
+        LOG_INFO("Testing asynchronous task");
         
         // create and start the task
         auto task = process_data(42);
@@ -376,29 +376,29 @@ void test_coroutines() {
         std::string result = task.result();
         
         // verify the result
-        Logger::getInstance().log(LogLevel::INFO, std::format("Task result: {}", result));
+        LOG_INFO(std::format("Task result: {}", result));
         assert(result == "Data 42 processed" && "Task returned unexpected result");
         
         // verify the task is complete
         assert(task.is_done() && "Task should be done after getting result");
         
-        Logger::getInstance().log(LogLevel::INFO, "Asynchronous task test passed");
+        LOG_INFO("Asynchronous task test passed");
     }
     
-    Logger::getInstance().log(LogLevel::INFO, "All coroutine tests passed");
+    LOG_INFO("All coroutine tests passed");
 }
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, "Starting C++20 Coroutines example");
+        LOG_INFO("Starting C++20 Coroutines example");
         
         // run all our tests
         test_coroutines();
         
-        Logger::getInstance().log(LogLevel::INFO, "C++20 Coroutines example completed successfully");
+        LOG_INFO("C++20 Coroutines example completed successfully");
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Exception caught: {}", e.what()));
+        LOG_ERROR(std::format("Exception caught: {}", e.what()));
         return 1;
     }
 }

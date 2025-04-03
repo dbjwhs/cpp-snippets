@@ -37,9 +37,9 @@ public:
             return n % 2 == 0;
         });
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating filter view for even numbers");
+        LOG_INFO("demonstrating filter view for even numbers");
         for (int n : even_numbers) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("even number: {}", n));
+            LOG_INFO(std::format("even number: {}", n));
         }
         
         // testing the filter view with assertions
@@ -58,9 +58,9 @@ public:
             return n * n;
         });
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating transform view for squaring numbers");
+        LOG_INFO("demonstrating transform view for squaring numbers");
         for (int n : squared_numbers) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("squared number: {}", n));
+            LOG_INFO(std::format("squared number: {}", n));
         }
         
         // testing the transform view with assertions
@@ -86,9 +86,9 @@ public:
                 return n * n;
             });
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating composition: even numbers squared");
+        LOG_INFO("demonstrating composition: even numbers squared");
         for (int n : even_squared) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("even number squared: {}", n));
+            LOG_INFO(std::format("even number squared: {}", n));
         }
         
         // testing the composition with assertions
@@ -116,9 +116,9 @@ public:
         // take view - selects the first n elements
         const auto first_three = m_data | std::views::take(3);
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating take view for first three elements");
+        LOG_INFO("demonstrating take view for first three elements");
         for (int n : first_three) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("element: {}", n));
+            LOG_INFO(std::format("element: {}", n));
         }
         
         // testing take view
@@ -135,9 +135,9 @@ public:
         // drop view - skips the first n elements
         auto after_two = m_data | std::views::drop(2);
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating drop view to skip first two elements");
+        LOG_INFO("demonstrating drop view to skip first two elements");
         for (int n : after_two) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("element: {}", n));
+            LOG_INFO(std::format("element: {}", n));
         }
         
         // testing drop view
@@ -157,9 +157,9 @@ public:
         // reverse view - reverses the order of elements
         auto reversed = m_data | std::views::reverse;
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating reverse view");
+        LOG_INFO("demonstrating reverse view");
         for (int n : reversed) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("reversed element: {}", n));
+            LOG_INFO(std::format("reversed element: {}", n));
         }
         
         // testing reverse view
@@ -178,9 +178,9 @@ public:
         std::vector<std::vector<int>> nested = {{1, 2}, {3, 4, 5}, {6}};
         auto flattened = nested | std::views::join;
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating join view to flatten nested vectors");
+        LOG_INFO("demonstrating join view to flatten nested vectors");
         for (int n : flattened) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("flattened element: {}", n));
+            LOG_INFO(std::format("flattened element: {}", n));
         }
         */
         
@@ -191,9 +191,9 @@ public:
         
         auto numbers = pairs | std::views::elements<0>;  // extract first elements
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating elements view to extract first elements of pairs");
+        LOG_INFO("demonstrating elements view to extract first elements of pairs");
         for (int n : numbers) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("number: {}", n));
+            LOG_INFO(std::format("number: {}", n));
         }
         
         // testing elements view
@@ -213,21 +213,21 @@ public:
         // ranges::find algorithm
         auto it = std::ranges::find(m_data, 5);
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating ranges::find to locate element 5");
+        LOG_INFO("demonstrating ranges::find to locate element 5");
         if (it != m_data.end()) {
             Logger::getInstance().log(LogLevel::INFO, std::format("found element 5 at position {}", 
                 std::distance(m_data.begin(), it)));
         } else {
-            Logger::getInstance().log(LogLevel::INFO, "element 5 not found");
+            LOG_INFO("element 5 not found");
         }
         
         // ranges::sort algorithm
         std::vector<int> data_copy = m_data;
         std::ranges::sort(data_copy);
         
-        Logger::getInstance().log(LogLevel::INFO, "demonstrating ranges::sort");
+        LOG_INFO("demonstrating ranges::sort");
         for (int n : data_copy) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("sorted element: {}", n));
+            LOG_INFO(std::format("sorted element: {}", n));
         }
         
         // testing sort
@@ -253,7 +253,7 @@ public:
 };
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "starting c++ ranges example program");
+    LOG_INFO("starting c++ ranges example program");
     
     // create a sample vector for demonstration
     std::vector<int> data = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -268,6 +268,6 @@ int main() {
     example.demonstrateAdvancedOperations();
     example.demonstrateAlgorithms();
     
-    Logger::getInstance().log(LogLevel::INFO, "all tests passed successfully");
+    LOG_INFO("all tests passed successfully");
     return 0;
 }

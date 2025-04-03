@@ -44,16 +44,16 @@
 
 // Utility function to print match results
 void print_matches(const std::string& label, const std::smatch& matches) {
-    Logger::getInstance().log(LogLevel::INFO, std::format("=== {} ===", label));
-    Logger::getInstance().log(LogLevel::INFO, std::format("Full match: [{}]", matches[0].str()));
+    LOG_INFO(std::format("=== {} ===", label));
+    LOG_INFO(std::format("Full match: [{}]", matches[0].str()));
 
     for (size_t ndx = 1; ndx < matches.size(); ++ndx) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Group {}: [{}]", ndx, matches[ndx].str()));
+        LOG_INFO(std::format("  Group {}: [{}]", ndx, matches[ndx].str()));
     }
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("  Prefix: [{}]", matches.prefix().str()));
-    Logger::getInstance().log(LogLevel::INFO, std::format("  Suffix: [{}]", matches.suffix().str()));
-    Logger::getInstance().log(LogLevel::INFO, "");
+    LOG_INFO(std::format("  Prefix: [{}]", matches.prefix().str()));
+    LOG_INFO(std::format("  Suffix: [{}]", matches.suffix().str()));
+    LOG_INFO("");
 }
 
 // Basic testing functions using assertions
@@ -66,7 +66,7 @@ void test_equal(const T& actual, const U& expected, const std::string& test_name
     Logger::getInstance().log(LogLevel::INFO, std::format("Testing: {} - Actual: {}, Expected: {}",
                                test_name, actual, expected));
     assert(actual == expected);
-    Logger::getInstance().log(LogLevel::INFO, std::format("✓ {} passed", test_name));
+    LOG_INFO(std::format("✓ {} passed", test_name));
 }
 
 // Specialized version for string literals and std::string
@@ -75,7 +75,7 @@ void test_equal(const std::string& actual, const char* expected, const std::stri
     Logger::getInstance().log(LogLevel::INFO, std::format("Testing: {} - Actual: '{}', Expected: '{}'",
                                test_name, actual, expected));
     assert(actual == expected);
-    Logger::getInstance().log(LogLevel::INFO, std::format("✓ {} passed", test_name));
+    LOG_INFO(std::format("✓ {} passed", test_name));
 }
 
 // Specialized version for comparing with size_t to avoid warnings
@@ -84,24 +84,24 @@ void test_equal(const size_t actual, const int expected, const std::string& test
     Logger::getInstance().log(LogLevel::INFO, std::format("Testing: {} - Actual: {}, Expected: {}",
                                test_name, actual, expected));
     assert(actual == static_cast<size_t>(expected));
-    Logger::getInstance().log(LogLevel::INFO, std::format("✓ {} passed", test_name));
+    LOG_INFO(std::format("✓ {} passed", test_name));
 }
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, std::format("C++ Regex Examples - C++{}", __cplusplus));
-    Logger::getInstance().log(LogLevel::INFO, "");
+    LOG_INFO(std::format("C++ Regex Examples - C++{}", __cplusplus));
+    LOG_INFO("");
 
     //////////////////////////////////////////////////////////////
     // PART 1: SIMPLE REGEX EXAMPLES
     //////////////////////////////////////////////////////////////
 
-    Logger::getInstance().log(LogLevel::INFO, "PART 1: SIMPLE REGEX EXAMPLES");
-    Logger::getInstance().log(LogLevel::INFO, "-----------------------------");
-    Logger::getInstance().log(LogLevel::INFO, "");
+    LOG_INFO("PART 1: SIMPLE REGEX EXAMPLES");
+    LOG_INFO("-----------------------------");
+    LOG_INFO("");
 
     // Example 1: Basic matching
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 1: Basic matching");
+        LOG_INFO("Example 1: Basic matching");
 
         std::string text = "The quick brown fox jumps over the lazy dog";
         std::regex pattern("fox");
@@ -122,7 +122,7 @@ int main() {
 
     // Example 2: Character classes
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 2: Character classes");
+        LOG_INFO("Example 2: Character classes");
 
         std::string text = "The year is 2023, and the price is $19.99";
 
@@ -152,16 +152,16 @@ int main() {
 
     // Example 3: Using std::regex_replace
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 3: Using std::regex_replace");
+        LOG_INFO("Example 3: Using std::regex_replace");
 
         std::string text = "Contact us at info@example.com or support@company.org";
         std::regex email_pattern("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
 
         // Replace all email addresses with "[EMAIL REDACTED]"
         std::string redacted = std::regex_replace(text, email_pattern, "[EMAIL REDACTED]");
-        Logger::getInstance().log(LogLevel::INFO, std::format("Original: {}", text));
-        Logger::getInstance().log(LogLevel::INFO, std::format("Redacted: {}", redacted));
-        Logger::getInstance().log(LogLevel::INFO, "");
+        LOG_INFO(std::format("Original: {}", text));
+        LOG_INFO(std::format("Redacted: {}", redacted));
+        LOG_INFO("");
 
         test_equal(redacted,
                   "Contact us at [EMAIL REDACTED] or [EMAIL REDACTED]",
@@ -172,13 +172,13 @@ int main() {
     // PART 2: MEDIUM COMPLEXITY REGEX EXAMPLES
     //////////////////////////////////////////////////////////////
 
-    Logger::getInstance().log(LogLevel::INFO, "PART 2: MEDIUM COMPLEXITY REGEX EXAMPLES");
-    Logger::getInstance().log(LogLevel::INFO, "---------------------------------------");
-    Logger::getInstance().log(LogLevel::INFO, "");
+    LOG_INFO("PART 2: MEDIUM COMPLEXITY REGEX EXAMPLES");
+    LOG_INFO("---------------------------------------");
+    LOG_INFO("");
 
     // Example 4: Capturing groups
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 4: Capturing groups");
+        LOG_INFO("Example 4: Capturing groups");
 
         std::string date_text = "Important dates: 2023-11-15 and 2024-02-28";
 
@@ -197,19 +197,19 @@ int main() {
         // Iterate over all date matches
         std::string::const_iterator search_start = date_text.cbegin();
         while (std::regex_search(search_start, date_text.cend(), matches, date_pattern)) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("Found date: {}", matches[0].str()));
-            Logger::getInstance().log(LogLevel::INFO, std::format("  Year: {}", matches[1].str()));
-            Logger::getInstance().log(LogLevel::INFO, std::format("  Month: {}", matches[2].str()));
-            Logger::getInstance().log(LogLevel::INFO, std::format("  Day: {}", matches[3].str()));
+            LOG_INFO(std::format("Found date: {}", matches[0].str()));
+            LOG_INFO(std::format("  Year: {}", matches[1].str()));
+            LOG_INFO(std::format("  Month: {}", matches[2].str()));
+            LOG_INFO(std::format("  Day: {}", matches[3].str()));
 
             search_start = matches.suffix().first;
         }
-        Logger::getInstance().log(LogLevel::INFO, "");
+        LOG_INFO("");
     }
 
     // Example 5: Non-capturing groups and alternation
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 5: Non-capturing groups and alternation");
+        LOG_INFO("Example 5: Non-capturing groups and alternation");
 
         std::string text = "File formats: image.jpg, document.pdf, spreadsheet.xlsx";
 
@@ -224,7 +224,7 @@ int main() {
         std::vector<std::string> extensions;
 
         while (std::regex_search(search_start, text.cend(), matches, file_pattern)) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("Filename: {}", matches[1].str()));
+            LOG_INFO(std::format("Filename: {}", matches[1].str()));
             filenames.push_back(matches[1]);
 
             // Extract the extension from the full match
@@ -234,7 +234,7 @@ int main() {
 
             search_start = matches.suffix().first;
         }
-        Logger::getInstance().log(LogLevel::INFO, "");
+        LOG_INFO("");
 
         test_equal(filenames.size(), static_cast<size_t>(3), "Found 3 filenames");
         test_equal(filenames[0], "image", "First filename is 'image'");
@@ -243,7 +243,7 @@ int main() {
 
     // Example 6: Regex with quantifiers and anchors
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 6: Quantifiers and anchors");
+        LOG_INFO("Example 6: Quantifiers and anchors");
 
         // Validate different password patterns
         std::vector<std::string> passwords = {
@@ -262,7 +262,7 @@ int main() {
             Logger::getInstance().log(LogLevel::INFO, std::format("Password: {} is {}",
                                      pwd, (is_strong ? "strong" : "weak")));
         }
-        Logger::getInstance().log(LogLevel::INFO, "");
+        LOG_INFO("");
 
         // Test specific cases with assertions
         test_equal(std::regex_match("weak", strong_pwd_pattern), false, "Short password fails check");
@@ -274,13 +274,13 @@ int main() {
     // PART 3: ADVANCED REGEX EXAMPLES
     //////////////////////////////////////////////////////////////
 
-    Logger::getInstance().log(LogLevel::INFO, "PART 3: ADVANCED REGEX EXAMPLES");
-    Logger::getInstance().log(LogLevel::INFO, "---------------------------------");
-    Logger::getInstance().log(LogLevel::INFO, "");
+    LOG_INFO("PART 3: ADVANCED REGEX EXAMPLES");
+    LOG_INFO("---------------------------------");
+    LOG_INFO("");
 
     // Example 7: Lookahead and lookahead assertions
     {
-        Logger::getInstance().log(LogLevel::INFO, "Example 7: Lookahead and lookbehind assertions");
+        LOG_INFO("Example 7: Lookahead and lookbehind assertions");
 
         std::string text = "Price: $100, Discount: 20%, Total: $80";
 
@@ -312,12 +312,12 @@ int main() {
             test_equal(matches[1].str(), "Discount", "Percentage label is 'Discount'");
             test_equal(matches[2].str(), "20", "Percentage value is 20");
         }
-        Logger::getInstance().log(LogLevel::INFO, "");
+        LOG_INFO("");
     }
 
     // Example 8: Working with std::regex_iterator
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 8: Working with std::regex_iterator"));
+        LOG_INFO(std::format("Example 8: Working with std::regex_iterator"));
 
         // Simplified HTML example for more reliable regex matching
         std::string html = R"(
@@ -339,12 +339,12 @@ int main() {
             std::smatch match = *it;
             std::string tag_name = match[1];
             tag_names.push_back(tag_name);
-            Logger::getInstance().log(LogLevel::INFO, std::format("Found tag: <{}>", tag_name));
+            LOG_INFO(std::format("Found tag: <{}>", tag_name));
             ++it;
         }
 
         // Count the actual number of tags found
-        Logger::getInstance().log(LogLevel::INFO, std::format("Total HTML tags found: {}", tag_names.size()));
+        LOG_INFO(std::format("Total HTML tags found: {}", tag_names.size()));
 
         // Skip complex tag tests and just check we found some tags
         test_equal(tag_names.size() >= 3, true, "Found at least 3 HTML tags");
@@ -365,12 +365,12 @@ int main() {
 
         // Only test that we found some kind of tags, without specific assertions
         // This makes the test much more robust against regex engine variations
-        Logger::getInstance().log(LogLevel::INFO, "HTML tag regex test completed successfully");
+        LOG_INFO("HTML tag regex test completed successfully");
     }
 
     // Example 9: Regex with custom flags and error handling
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 9: Regex with custom flags and error handling"));
+        LOG_INFO(std::format("Example 9: Regex with custom flags and error handling"));
 
         std::string text = "The Quick Brown Fox Jumps Over The Lazy Dog";
 
@@ -382,7 +382,7 @@ int main() {
             bool found = std::regex_search(text, matches, pattern);
 
             test_equal(found, true, "Case-insensitive match found");
-            Logger::getInstance().log(LogLevel::INFO, std::format("Found: {}", matches[0].str()));
+            LOG_INFO(std::format("Found: {}", matches[0].str()));
 
             // Trying a more complex pattern with error handling
             std::regex complex_pattern(R"(\b[A-Z][a-z]+\b)",
@@ -397,11 +397,11 @@ int main() {
                 ++it;
             }
 
-            Logger::getInstance().log(LogLevel::INFO, "Capitalized words: ");
+            LOG_INFO("Capitalized words: ");
             for (const auto& word : words) {
-                Logger::getInstance().log(LogLevel::INFO, std::format("  {}", word));
+                LOG_INFO(std::format("  {}", word));
             }
-            Logger::getInstance().log(LogLevel::INFO, "");
+            LOG_INFO("");
 
             test_equal(words.size() >= 8, true, "Found at least 8 capitalized words");
             if (!words.empty()) {
@@ -412,53 +412,53 @@ int main() {
             }
         }
         catch (const std::regex_error& e) {
-            Logger::getInstance().log(LogLevel::ERROR, std::format("Regex error: {}", e.what()));
+            LOG_ERROR(std::format("Regex error: {}", e.what()));
             // Convert e.code() to int before formatting
-            Logger::getInstance().log(LogLevel::ERROR, std::format("Error code: {}", static_cast<int>(e.code())));
+            LOG_ERROR(std::format("Error code: {}", static_cast<int>(e.code())));
 
             // Display a more descriptive error message based on the error code
             switch (e.code()) {
                 case std::regex_constants::error_collate:
-                    Logger::getInstance().log(LogLevel::ERROR, "Invalid collation element request");
+                    LOG_ERROR("Invalid collation element request");
                     break;
                 case std::regex_constants::error_ctype:
-                    Logger::getInstance().log(LogLevel::ERROR, "Invalid character class");
+                    LOG_ERROR("Invalid character class");
                     break;
                 case std::regex_constants::error_escape:
-                    Logger::getInstance().log(LogLevel::ERROR, "Invalid escape character or trailing escape");
+                    LOG_ERROR("Invalid escape character or trailing escape");
                     break;
                 case std::regex_constants::error_backref:
-                    Logger::getInstance().log(LogLevel::ERROR, "Invalid back reference");
+                    LOG_ERROR("Invalid back reference");
                     break;
                 case std::regex_constants::error_brack:
-                    Logger::getInstance().log(LogLevel::ERROR, "Mismatched bracket ([ or ])");
+                    LOG_ERROR("Mismatched bracket ([ or ])");
                     break;
                 case std::regex_constants::error_paren:
-                    Logger::getInstance().log(LogLevel::ERROR, "Mismatched parentheses (( or ))");
+                    LOG_ERROR("Mismatched parentheses (( or ))");
                     break;
                 case std::regex_constants::error_brace:
-                    Logger::getInstance().log(LogLevel::ERROR, "Mismatched brace ({ or })");
+                    LOG_ERROR("Mismatched brace ({ or })");
                     break;
                 case std::regex_constants::error_badbrace:
-                    Logger::getInstance().log(LogLevel::ERROR, "Invalid range inside a { }");
+                    LOG_ERROR("Invalid range inside a { }");
                     break;
                 case std::regex_constants::error_range:
-                    Logger::getInstance().log(LogLevel::ERROR, "Invalid character range (e.g., [z-a])");
+                    LOG_ERROR("Invalid character range (e.g., [z-a])");
                     break;
                 case std::regex_constants::error_space:
-                    Logger::getInstance().log(LogLevel::ERROR, "Out of memory");
+                    LOG_ERROR("Out of memory");
                     break;
                 case std::regex_constants::error_badrepeat:
-                    Logger::getInstance().log(LogLevel::ERROR, "A repetition character (*, ?, +, or {) was not preceded by a valid regular expression");
+                    LOG_ERROR("A repetition character (*, ?, +, or {) was not preceded by a valid regular expression");
                     break;
                 case std::regex_constants::error_complexity:
-                    Logger::getInstance().log(LogLevel::ERROR, "The requested match is too complex");
+                    LOG_ERROR("The requested match is too complex");
                     break;
                 case std::regex_constants::error_stack:
-                    Logger::getInstance().log(LogLevel::ERROR, "Stack space overflow");
+                    LOG_ERROR("Stack space overflow");
                     break;
                 default:
-                    Logger::getInstance().log(LogLevel::ERROR, "Unknown error");
+                    LOG_ERROR("Unknown error");
                     break;
             }
         }
@@ -466,7 +466,7 @@ int main() {
 
     // Example 10: Advanced regex: Parsing and transforming data
     {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 10: Parsing and transforming data"));
+        LOG_INFO(std::format("Example 10: Parsing and transforming data"));
 
         std::string log_entries = R"(
             [2023-11-15 08:32:45] INFO: System started
@@ -503,17 +503,17 @@ int main() {
         }
 
         // Display log level statistics
-        Logger::getInstance().log(LogLevel::INFO, "Log level statistics:");
+        LOG_INFO("Log level statistics:");
         for (const auto& [level, count] : log_level_counts) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("  {}: {}", level, count));
+            LOG_INFO(std::format("  {}: {}", level, count));
         }
 
         // Display errors
-        Logger::getInstance().log(LogLevel::INFO, "Errors:");
+        LOG_INFO("Errors:");
         for (const auto& [timestamp, message] : errors) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("  {}: {}", timestamp, message));
+            LOG_INFO(std::format("  {}: {}", timestamp, message));
         }
-        Logger::getInstance().log(LogLevel::INFO, "");
+        LOG_INFO("");
 
         // Test log parsing
         test_equal(log_level_counts.size(), static_cast<size_t>(3), "Found 3 different log levels");
@@ -522,6 +522,6 @@ int main() {
         test_equal(log_level_counts["ERROR"], 2, "Found 2 ERROR messages");
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "All tests completed successfully!");
+    LOG_INFO("All tests completed successfully!");
     return 0;
 }

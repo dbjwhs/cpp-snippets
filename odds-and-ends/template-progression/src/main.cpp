@@ -44,11 +44,11 @@
 void run_all_template_tests();
 
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "starting template examples");
+    LOG_INFO("starting template examples");
 
     run_all_template_tests();
 
-    Logger::getInstance().log(LogLevel::INFO, "all template tests completed successfully");
+    LOG_INFO("all template tests completed successfully");
     return 0;
 }
 
@@ -67,30 +67,30 @@ void swap_values(T& a, T& b) {
 
 // test function for the basic swap template
 void test_basic_template() {
-    Logger::getInstance().log(LogLevel::INFO, "testing basic function template");
+    LOG_INFO("testing basic function template");
 
     // test with integers
     int a = 5, b = 10;
-    Logger::getInstance().log(LogLevel::INFO, std::format("before swap: a = {}, b = {}", a, b));
+    LOG_INFO(std::format("before swap: a = {}, b = {}", a, b));
     swap_values(a, b);
-    Logger::getInstance().log(LogLevel::INFO, std::format("after swap: a = {}, b = {}", a, b));
+    LOG_INFO(std::format("after swap: a = {}, b = {}", a, b));
     assert(a == 10 && b == 5 && "Integer swap failed");
 
     // test with strings
     std::string s1 = "hello", s2 = "world";
-    Logger::getInstance().log(LogLevel::INFO, std::format("before swap: s1 = {}, s2 = {}", s1, s2));
+    LOG_INFO(std::format("before swap: s1 = {}, s2 = {}", s1, s2));
     swap_values(s1, s2);
-    Logger::getInstance().log(LogLevel::INFO, std::format("after swap: s1 = {}, s2 = {}", s1, s2));
+    LOG_INFO(std::format("after swap: s1 = {}, s2 = {}", s1, s2));
     assert(s1 == "world" && s2 == "hello" && "String swap failed");
 
     // test with doubles
     double d1 = 3.14, d2 = 2.71;
-    Logger::getInstance().log(LogLevel::INFO, std::format("before swap: d1 = {}, d2 = {}", d1, d2));
+    LOG_INFO(std::format("before swap: d1 = {}, d2 = {}", d1, d2));
     swap_values(d1, d2);
-    Logger::getInstance().log(LogLevel::INFO, std::format("after swap: d1 = {}, d2 = {}", d1, d2));
+    LOG_INFO(std::format("after swap: d1 = {}, d2 = {}", d1, d2));
     assert(d1 == 2.71 && d2 == 3.14 && "Double swap failed");
 
-    Logger::getInstance().log(LogLevel::INFO, "basic function template test passed");
+    LOG_INFO("basic function template test passed");
 }
 
 // =============================================================================
@@ -132,7 +132,7 @@ public:
 
 // test function for the pair class template
 void test_class_template() {
-    Logger::getInstance().log(LogLevel::INFO, "testing class template");
+    LOG_INFO("testing class template");
 
     // create a pair of integer and string
     Pair<int, std::string> person(42, "Alice");
@@ -177,7 +177,7 @@ void test_class_template() {
     full_name.swap(another_name);
     Logger::getInstance().log(LogLevel::INFO, std::format("after swap: first name = {}, last name = {}",
         full_name.get_first(), full_name.get_second()));
-    Logger::getInstance().log(LogLevel::INFO, "class template test passed");
+    LOG_INFO("class template test passed");
 }
 
 // =============================================================================
@@ -198,25 +198,25 @@ const char* max_value<const char*>(const char* a, const char* b) {
 
 // test function for template specialization
 void test_template_specialization() {
-    Logger::getInstance().log(LogLevel::INFO, "testing template specialization");
+    LOG_INFO("testing template specialization");
 
     // using the generic template
     int max_int = max_value(10, 20);
-    Logger::getInstance().log(LogLevel::INFO, std::format("max of 10 and 20 is {}", max_int));
+    LOG_INFO(std::format("max of 10 and 20 is {}", max_int));
     assert(max_int == 20 && "Integer max failed");
 
     double max_double = max_value(3.14, 2.71);
-    Logger::getInstance().log(LogLevel::INFO, std::format("max of 3.14 and 2.71 is {}", max_double));
+    LOG_INFO(std::format("max of 3.14 and 2.71 is {}", max_double));
     assert(max_double == 3.14 && "Double max failed");
 
     // using the specialized template for c-strings
     const char* s1 = "apple";
     const char* s2 = "banana";
     const char* max_str = max_value(s1, s2);
-    Logger::getInstance().log(LogLevel::INFO, std::format("max of '{}' and '{}' is '{}'", s1, s2, max_str));
+    LOG_INFO(std::format("max of '{}' and '{}' is '{}'", s1, s2, max_str));
     assert(strcmp(max_str, "banana") == 0 && "String max failed");
 
-    Logger::getInstance().log(LogLevel::INFO, "template specialization test passed");
+    LOG_INFO("template specialization test passed");
 }
 
 // =============================================================================
@@ -302,19 +302,19 @@ public:
 
 // test function for template with default parameters
 void test_template_default_params() {
-    Logger::getInstance().log(LogLevel::INFO, "testing template with default parameters");
+    LOG_INFO("testing template with default parameters");
 
     // create a dynamic array of integers with default allocator
     DynamicArray<int> numbers;
-    Logger::getInstance().log(LogLevel::INFO, std::format("initial capacity: {}", numbers.capacity()));
+    LOG_INFO(std::format("initial capacity: {}", numbers.capacity()));
 
     // add elements
     for (int i = 0; i < 15; ++i) {
         numbers.push_back(i * 10);
     }
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("size after adding 15 elements: {}", numbers.size()));
-    Logger::getInstance().log(LogLevel::INFO, std::format("capacity after growth: {}", numbers.capacity()));
+    LOG_INFO(std::format("size after adding 15 elements: {}", numbers.size()));
+    LOG_INFO(std::format("capacity after growth: {}", numbers.capacity()));
     assert(numbers.size() == 15 && "DynamicArray size incorrect");
     assert(numbers.capacity() >= 15 && "DynamicArray capacity incorrect");
 
@@ -322,7 +322,7 @@ void test_template_default_params() {
     for (size_t i = 0; i < numbers.size(); ++i) {
         const int expected = static_cast<int>(i) * 10;
         int actual = numbers.at(i);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Element at index {}: {}", i, actual));
+        LOG_INFO(std::format("Element at index {}: {}", i, actual));
         assert(actual == expected && "DynamicArray element incorrect");
     }
 
@@ -331,10 +331,10 @@ void test_template_default_params() {
         numbers.at(100);
         assert(false && "Expected exception was not thrown");
     } catch (const std::out_of_range& e) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Caught expected exception: {}", e.what()));
+        LOG_INFO(std::format("Caught expected exception: {}", e.what()));
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "template with default parameters test passed");
+    LOG_INFO("template with default parameters test passed");
 }
 
 // =============================================================================
@@ -343,14 +343,14 @@ void test_template_default_params() {
 
 // recursive base case for variadic template
 void print_values() {
-    Logger::getInstance().log(LogLevel::INFO, "");  // end of recursion, print newline
+    LOG_INFO("");  // end of recursion, print newline
 }
 
 // variadic template function to print multiple values of different types
 template <typename T, typename... Args>
 void print_values(T first, Args... rest) {
     // process the first argument
-    Logger::getInstance().log(LogLevel::INFO, std::format("{}", first));
+    LOG_INFO(std::format("{}", first));
 
     // recursively process the remaining arguments
     print_values(rest...);
@@ -369,24 +369,24 @@ T sum_values(T first, Args... rest) {
 
 // test function for variadic templates
 void test_variadic_templates() {
-    Logger::getInstance().log(LogLevel::INFO, "testing variadic templates");
+    LOG_INFO("testing variadic templates");
 
     // print values of different types
-    Logger::getInstance().log(LogLevel::INFO, "printing multiple values:");
-    Logger::getInstance().log(LogLevel::INFO, "Mixed types: ");
+    LOG_INFO("printing multiple values:");
+    LOG_INFO("Mixed types: ");
     print_values(42, "hello", 3.14, 'a');
 
     // sum integers
     int sum_int = sum_values(1, 2, 3, 4, 5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("sum of integers: {}", sum_int));
+    LOG_INFO(std::format("sum of integers: {}", sum_int));
     assert(sum_int == 15 && "Integer sum failed");
 
     // sum doubles
     double sum_double = sum_values(1.1, 2.2, 3.3, 4.4);
-    Logger::getInstance().log(LogLevel::INFO, std::format("sum of doubles: {}", sum_double));
+    LOG_INFO(std::format("sum of doubles: {}", sum_double));
     assert(std::abs(sum_double - 11.0) < 0.001 && "Double sum failed");
 
-    Logger::getInstance().log(LogLevel::INFO, "variadic templates test passed");
+    LOG_INFO("variadic templates test passed");
 }
 
 // =============================================================================
@@ -446,38 +446,38 @@ struct is_arithmetic_custom<double> {
 
 // test function for template metaprogramming
 void test_template_metaprogramming() {
-    Logger::getInstance().log(LogLevel::INFO, "testing template metaprogramming");
+    LOG_INFO("testing template metaprogramming");
 
     // compile-time factorial calculations
     constexpr unsigned int fact5 = Factorial<5>::value;
-    Logger::getInstance().log(LogLevel::INFO, std::format("factorial of 5 = {}", fact5));
+    LOG_INFO(std::format("factorial of 5 = {}", fact5));
     assert(fact5 == 120 && "Factorial calculation failed");
 
     constexpr unsigned int fact10 = Factorial<10>::value;
-    Logger::getInstance().log(LogLevel::INFO, std::format("factorial of 10 = {}", fact10));
+    LOG_INFO(std::format("factorial of 10 = {}", fact10));
     assert(fact10 == 3628800 && "Factorial calculation failed");
 
     // compile-time fibonacci calculations
     constexpr unsigned int fib10 = Fibonacci<10>::value;
-    Logger::getInstance().log(LogLevel::INFO, std::format("fibonacci(10) = {}", fib10));
+    LOG_INFO(std::format("fibonacci(10 = {}", fib10));
     assert(fib10 == 55 && "Fibonacci calculation failed");
 
     // type traits example
     bool int_is_arithmetic = is_arithmetic_custom<int>::value;
     bool string_is_arithmetic = is_arithmetic_custom<std::string>::value;
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("is_arithmetic_custom<int> = {}", int_is_arithmetic));
-    Logger::getInstance().log(LogLevel::INFO, std::format("is_arithmetic_custom<std::string> = {}", string_is_arithmetic));
+    LOG_INFO(std::format("is_arithmetic_custom<int> = {}", int_is_arithmetic));
+    LOG_INFO(std::format("is_arithmetic_custom<std::string> = {}", string_is_arithmetic));
 
     assert(int_is_arithmetic && "int should be arithmetic");
     assert(!string_is_arithmetic && "std::string should not be arithmetic");
 
     // can also use standard type traits from <type_traits>
     bool is_int_arithmetic = std::is_arithmetic_v<int>;
-    Logger::getInstance().log(LogLevel::INFO, std::format("std::is_arithmetic<int> = {}", is_int_arithmetic));
+    LOG_INFO(std::format("std::is_arithmetic<int> = {}", is_int_arithmetic));
     assert(is_int_arithmetic && "std::is_arithmetic<int> should be true");
 
-    Logger::getInstance().log(LogLevel::INFO, "template metaprogramming test passed");
+    LOG_INFO("template metaprogramming test passed");
 }
 
 // =============================================================================
@@ -509,7 +509,7 @@ public:
 template <typename T,
     std::enable_if_t<has_size_method<T>::value, int> = 0>
 size_t get_container_size(const T& container) {
-    Logger::getInstance().log(LogLevel::INFO, "using container's size() method");
+    LOG_INFO("using container's size() method");
     return container.size();
 }
 
@@ -517,7 +517,7 @@ size_t get_container_size(const T& container) {
 template <typename T,
     std::enable_if_t<!has_size_method<T>::value, int> = 0>
 size_t get_container_size(const T& /* container */) {
-    Logger::getInstance().log(LogLevel::INFO, "container has no size() method, returning 0");
+    LOG_INFO("container has no size() method, returning 0");
     return 0;
 }
 
@@ -551,33 +551,33 @@ public:
 
 // test function for sfinae
 void test_sfinae() {
-    Logger::getInstance().log(LogLevel::INFO, "testing sfinae");
+    LOG_INFO("testing sfinae");
 
     // test with a standard container
     std::vector<int> vec = {1, 2, 3, 4, 5};
     size_t vec_size = get_container_size(vec);
-    Logger::getInstance().log(LogLevel::INFO, std::format("vector size: {}", vec_size));
+    LOG_INFO(std::format("vector size: {}", vec_size));
     assert(vec_size == 5 && "Vector size incorrect");
 
     // test with a custom class that has size()
     SizeableClass sizeable;
     size_t sizeable_size = get_container_size(sizeable);
-    Logger::getInstance().log(LogLevel::INFO, std::format("sizeable class size: {}", sizeable_size));
+    LOG_INFO(std::format("sizeable class size: {}", sizeable_size));
     assert(sizeable_size == 5 && "SizeableClass size incorrect");
 
     // test with a custom class that doesn't have size()
     NonSizeableClass non_sizeable;
     size_t non_sizeable_size = get_container_size(non_sizeable);
-    Logger::getInstance().log(LogLevel::INFO, std::format("non-sizeable class size: {}", non_sizeable_size));
+    LOG_INFO(std::format("non-sizeable class size: {}", non_sizeable_size));
     assert(non_sizeable_size == 0 && "NonSizeableClass size should be 0");
 
     // test with a primitive type
     int primitive = 42;
     size_t primitive_size = get_container_size(primitive);
-    Logger::getInstance().log(LogLevel::INFO, std::format("primitive type size: {}", primitive_size));
+    LOG_INFO(std::format("primitive type size: {}", primitive_size));
     assert(primitive_size == 0 && "Primitive size should be 0");
 
-    Logger::getInstance().log(LogLevel::INFO, "sfinae test passed");
+    LOG_INFO("sfinae test passed");
 }
 
 // =============================================================================
@@ -632,7 +632,7 @@ public:
 
 // test function for template parameters
 void test_template_template_params() {
-    Logger::getInstance().log(LogLevel::INFO, "testing template template parameters");
+    LOG_INFO("testing template template parameters");
 
     // create a stack using std::vector as the container
     Stack<int, std::vector> int_stack;
@@ -642,19 +642,19 @@ void test_template_template_params() {
     int_stack.push(20);
     int_stack.push(30);
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("stack size: {}", int_stack.size()));
+    LOG_INFO(std::format("stack size: {}", int_stack.size()));
     assert(int_stack.size() == 3 && "Stack size incorrect");
 
     // peek at a top element
     int top_value = int_stack.top();
-    Logger::getInstance().log(LogLevel::INFO, std::format("top element: {}", top_value));
+    LOG_INFO(std::format("top element: {}", top_value));
     assert(top_value == 30 && "Stack top incorrect");
 
     // pop elements
-    Logger::getInstance().log(LogLevel::INFO, "popping elements:");
+    LOG_INFO("popping elements:");
     while (!int_stack.empty()) {
         int value = int_stack.pop();
-        Logger::getInstance().log(LogLevel::INFO, std::format("popped: {}", value));
+        LOG_INFO(std::format("popped: {}", value));
     }
 
     // check that stack is empty
@@ -668,10 +668,10 @@ void test_template_template_params() {
     std::string s1 = string_stack.pop();
     std::string s2 = string_stack.pop();
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("popped strings: {}, {}", s1, s2));
+    LOG_INFO(std::format("popped strings: {}, {}", s1, s2));
     assert(s1 == "world" && s2 == "hello" && "String stack incorrect");
 
-    Logger::getInstance().log(LogLevel::INFO, "template template parameters test passed");
+    LOG_INFO("template template parameters test passed");
 }
 
 // =============================================================================
@@ -759,7 +759,7 @@ public:
 
 // test function for crtp
 void test_crtp() {
-    Logger::getInstance().log(LogLevel::INFO, "testing crtp (curiously recurring template pattern)");
+    LOG_INFO("testing crtp (curiously recurring template pattern)");
 
     // create shapes
     Rectangle rect(5.0, 3.0);
@@ -784,7 +784,7 @@ void test_crtp() {
     std::vector<Shape<Rectangle>*> rectangles;
     rectangles.push_back(&rect);
 
-    Logger::getInstance().log(LogLevel::INFO, "crtp test passed");
+    LOG_INFO("crtp test passed");
 }
 
 // =============================================================================
@@ -836,38 +836,38 @@ void print_fold(Ts... values) {
 
 // test function for fold expressions
 void test_fold_expressions() {
-    Logger::getInstance().log(LogLevel::INFO, "testing fold expressions (c++17)");
+    LOG_INFO("testing fold expressions (c++17)");
 
     // sum using fold expression
     int sum = sum_fold(1, 2, 3, 4, 5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("sum using fold: {}", sum));
+    LOG_INFO(std::format("sum using fold: {}", sum));
     assert(sum == 15 && "Fold sum incorrect");
 
     // all_of with a predicate
     auto is_positive = [](int x) { return x > 0; };
     bool all_positive = all_of_fold(is_positive, 1, 2, 3, 4, 5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("all positive: {}", all_positive));
+    LOG_INFO(std::format("all positive: {}", all_positive));
     assert(all_positive && "all_of_fold with positive numbers failed");
 
     bool not_all_positive = all_of_fold(is_positive, 1, 2, -3, 4, 5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("all positive (with negative): {}", not_all_positive));
+    LOG_INFO(std::format("all positive (with negative: {}", not_all_positive));
     assert(!not_all_positive && "all_of_fold with a negative number should be false");
 
     // any_of with a predicate
     auto is_even = [](int x) { return x % 2 == 0; };
     bool any_even = any_of_fold(is_even, 1, 3, 5, 7, 8);
-    Logger::getInstance().log(LogLevel::INFO, std::format("any even: {}", any_even));
+    LOG_INFO(std::format("any even: {}", any_even));
     assert(any_even && "any_of_fold with an even number should be true");
 
     bool none_even = any_of_fold(is_even, 1, 3, 5, 7, 9);
-    Logger::getInstance().log(LogLevel::INFO, std::format("any even (all odd): {}", none_even));
+    LOG_INFO(std::format("any even (all odd: {}", none_even));
     assert(!none_even && "any_of_fold with all odd numbers should be false");
 
     // print using fold expression
-    Logger::getInstance().log(LogLevel::INFO, std::format("Print using fold expression: "));
+    LOG_INFO(std::format("Print using fold expression: "));
     print_fold(10, 20, 30, "hello", 3.14);
 
-    Logger::getInstance().log(LogLevel::INFO, "fold expressions test passed");
+    LOG_INFO("fold expressions test passed");
 }
 
 // =============================================================================
@@ -879,28 +879,28 @@ template <typename T>
 void process_value(const T& value) {
     // constexpr if evaluates the condition at compile-time
     if constexpr (std::is_integral_v<T>) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("processing integral value: {}", value));
+        LOG_INFO(std::format("processing integral value: {}", value));
         // integral-specific operations
-        Logger::getInstance().log(LogLevel::INFO, std::format("squared: {}", value * value));
+        LOG_INFO(std::format("squared: {}", value * value));
     }
     else if constexpr (std::is_floating_point_v<T>) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("processing floating-point value: {}", value));
+        LOG_INFO(std::format("processing floating-point value: {}", value));
         // floating-point specific operations
-        Logger::getInstance().log(LogLevel::INFO, std::format("reciprocal: {}", 1.0 / value));
+        LOG_INFO(std::format("reciprocal: {}", 1.0 / value));
     }
     else if constexpr (std::is_same_v<T, std::string>) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("processing string value: {}", value));
+        LOG_INFO(std::format("processing string value: {}", value));
         // string-specific operations
-        Logger::getInstance().log(LogLevel::INFO, std::format("length: {}", value.length()));
+        LOG_INFO(std::format("length: {}", value.length()));
     }
     else {
-        Logger::getInstance().log(LogLevel::INFO, std::format("processing unknown type value: {}", value));
+        LOG_INFO(std::format("processing unknown type value: {}", value));
     }
 }
 
 // test function for constexpr if
 void test_constexpr_if() {
-    Logger::getInstance().log(LogLevel::INFO, "testing constexpr if (c++17)");
+    LOG_INFO("testing constexpr if (c++17)");
 
     // test with different types
     process_value(42);                   // int
@@ -908,7 +908,7 @@ void test_constexpr_if() {
     process_value(std::string("hello")); // string
     process_value('X');                  // char (will use the fallback)
 
-    Logger::getInstance().log(LogLevel::INFO, "constexpr if test passed");
+    LOG_INFO("constexpr if test passed");
 }
 
 // =============================================================================
@@ -1008,15 +1008,15 @@ struct NonAddableType {
 
 // test function for concepts (or simulated concepts)
 void test_concepts() {
-    Logger::getInstance().log(LogLevel::INFO, "testing concepts (or simulated concepts)");
+    LOG_INFO("testing concepts (or simulated concepts)");
 
     // test with built-in types
     int sum_int = add(10, 20);
-    Logger::getInstance().log(LogLevel::INFO, std::format("sum of integers: {}", sum_int));
+    LOG_INFO(std::format("sum of integers: {}", sum_int));
     assert(sum_int == 30 && "Integer addition incorrect");
 
     double sum_double = add(3.5, 2.5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("sum of doubles: {}", sum_double));
+    LOG_INFO(std::format("sum of doubles: {}", sum_double));
     assert(std::abs(sum_double - 6.0) < 0.001 && "Double addition incorrect");
 
     // test with custom addable type
@@ -1024,7 +1024,7 @@ void test_concepts() {
     const AddableType a2(20);
 
     const AddableType sum_custom = add(a1, a2);
-    Logger::getInstance().log(LogLevel::INFO, "sum of custom addable types:");
+    LOG_INFO("sum of custom addable types:");
     print_value(sum_custom);
     assert(sum_custom.value == 30 && "Custom type addition incorrect");
 
@@ -1038,7 +1038,7 @@ void test_concepts() {
     // NonAddableType n1("hello"), n2("world");
     // NonAddableType sum_invalid = add(n1, n2);  // error!
 
-    Logger::getInstance().log(LogLevel::INFO, "concepts test passed");
+    LOG_INFO("concepts test passed");
 }
 
 // =============================================================================

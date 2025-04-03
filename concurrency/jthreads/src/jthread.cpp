@@ -88,15 +88,15 @@ private:
 class ThreadSafeQueue {
 public:
     ThreadSafeQueue() {
-        Logger::getInstance().log(LogLevel::INFO, std::format("thread safe queue initialized"));
+        LOG_INFO(std::format("thread safe queue initialized"));
         startProcessing();
     }
 
     ~ThreadSafeQueue() {
         try {
-            Logger::getInstance().log(LogLevel::INFO, std::format("thread safe queue destructor called"));
+            LOG_INFO(std::format("thread safe queue destructor called"));
             stop();
-            Logger::getInstance().log(LogLevel::INFO, std::format("thread safe queue destroyed"));
+            LOG_INFO(std::format("thread safe queue destroyed"));
         } catch (...) {
             // ensure no exceptions escape destructor
         }
@@ -107,15 +107,15 @@ public:
             std::lock_guard<std::mutex> lock(m_mutex);
             m_queue.insert(m_queue.end(), data.begin(), data.end());
         }
-        Logger::getInstance().log(LogLevel::INFO, std::format("added {} items to queue", data.size()));
+        LOG_INFO(std::format("added {} items to queue", data.size()));
     }
 
     void stop() {
         if (m_processor.joinable()) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("stopping processor"));
+            LOG_INFO(std::format("stopping processor"));
             m_processor.request_stop();
             m_processor.join();
-            Logger::getInstance().log(LogLevel::INFO, std::format("processor stopped"));
+            LOG_INFO(std::format("processor stopped"));
         }
     }
 
@@ -131,7 +131,7 @@ public:
 private:
     void startProcessing() {
         m_processor = jthread([this](const stop_token& token) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("processing thread started"));
+            LOG_INFO(std::format("processing thread started"));
 
             while (!token.stop_requested()) {
                 std::string item;
@@ -146,13 +146,13 @@ private:
                 if (!item.empty()) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(10));
                     ++m_processed_count;
-                    Logger::getInstance().log(LogLevel::INFO, std::format("processed item: {}", item));
+                    LOG_INFO(std::format("processed item: {}", item));
                 } else {
                     std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
             }
 
-            Logger::getInstance().log(LogLevel::INFO, std::format("processing thread ending"));
+            LOG_INFO(std::format("processing thread ending"));
         });
     }
 
@@ -164,7 +164,7 @@ private:
 
 void testVectorProcessing() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, std::format("starting basic test"));
+        LOG_INFO(std::format("starting basic test"));
 
         ThreadSafeQueue queue;
         const std::vector<std::string> test_data{"test1", "test2", "test3"};
@@ -181,21 +181,21 @@ void testVectorProcessing() {
         assert(processed == 3 && "basic processing failed");
         assert(remaining == 0 && "queue should be empty");
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("basic test completed"));
+        LOG_INFO(std::format("basic test completed"));
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::CRITICAL, std::format("test error: {}", e.what()));
+        LOG_CRITICAL(std::format("test error: {}", e.what()));
         throw;
     }
 }
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, std::format("starting custom jthread example tests"));
+        LOG_INFO(std::format("starting custom jthread example tests"));
         testVectorProcessing();
-        Logger::getInstance().log(LogLevel::INFO, std::format("all tests completed successfully"));
+        LOG_INFO(std::format("all tests completed successfully"));
         return 0;
     } catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::CRITICAL, std::format("test failure: {}", e.what()));
+        LOG_CRITICAL(std::format("test failure: {}", e.what()));
         return 1;
     }
 }

@@ -175,8 +175,8 @@ public:
         }
 
         // print some statistics
-        Logger::getInstance().log(LogLevel::INFO, std::format("Total unique strings: {}", string_counts.size()));
-        Logger::getInstance().log(LogLevel::INFO, std::format("Duplicate string statistics:"));
+        LOG_INFO(std::format("Total unique strings: {}", string_counts.size()));
+        LOG_INFO(std::format("Duplicate string statistics:"));
 
         // find and print most duplicated strings
         std::vector<std::pair<std::string, size_t>> sorted_counts;
@@ -192,7 +192,7 @@ public:
                                   }
         );
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("Top 10 most duplicated strings:"));
+        LOG_INFO(std::format("Top 10 most duplicated strings:"));
         for (size_t ndx = 0; ndx < std::min(static_cast<size_t>(10), sorted_counts.size()); ++ndx) {
             Logger::getInstance().log(LogLevel::INFO, std::format("\t{}: {} times"
                 , sorted_counts[ndx].first, sorted_counts[ndx].second));
@@ -226,8 +226,8 @@ void testHyperLogLog() {
     const std::unordered_set<std::string> uniqueSet(elements.begin(), elements.end());
 
     // compare actual unique count with hyperloglog estimate
-    Logger::getInstance().log(LogLevel::INFO, std::format("Actual unique elements: {}", uniqueSet.size()));
-    Logger::getInstance().log(LogLevel::INFO, std::format("HyperLogLog estimate: {}", hll.uniqueCount()));
+    LOG_INFO(std::format("Actual unique elements: {}", uniqueSet.size()));
+    LOG_INFO(std::format("HyperLogLog estimate: {}", hll.uniqueCount()));
 }
 
 int main() {

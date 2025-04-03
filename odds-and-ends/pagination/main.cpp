@@ -122,13 +122,13 @@ std::string paginate(int currentPage, int totalPages, int maxPages) {
 
 // test function to verify the pagination functionality against the provided examples
 void testPaginationWithExamples() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing pagination with provided examples");
+    LOG_INFO("Testing pagination with provided examples");
     
     // test case 1: all pages fit
     {
         std::string expected = "[1] 2 3 4 5 6 7 8 9 10 11";
         std::string result = paginate(1, 11, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 1: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 1: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -136,7 +136,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "[1] 2 3 4 5 6 7 8 9 10 ... 30";
         std::string result = paginate(1, 30, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 2: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 2: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -144,7 +144,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 2 3 4 5 [6] 7 8 9 10";
         std::string result = paginate(6, 10, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 3: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 3: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -152,7 +152,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 2 3 4 5 [6] 7 8 9 10 ... 30";
         std::string result = paginate(6, 30, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 4: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 4: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -160,7 +160,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 ... 3 4 5 6 [7] 8 9 10 11 ... 30";
         std::string result = paginate(7, 30, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 5: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 5: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -168,7 +168,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 ... 20 21 22 23 [24] 25 26 27 28 ... 30";
         std::string result = paginate(24, 30, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 6: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 6: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -176,7 +176,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 ... 21 22 23 24 25 26 [27] 28 29 30";
         std::string result = paginate(27, 30, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 7: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 7: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -184,7 +184,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 ... 21 22 23 24 25 26 27 28 29 [30]";
         std::string result = paginate(30, 30, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 8: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 8: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -192,7 +192,7 @@ void testPaginationWithExamples() {
     {
         std::string expected = "[1] 2 3 4 5 6 7 8 9 ... 30";
         std::string result = paginate(1, 30, 10);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 9: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 9: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -200,22 +200,22 @@ void testPaginationWithExamples() {
     {
         std::string expected = "1 ... 22 23 24 25 26 27 28 29 [30]";
         std::string result = paginate(30, 30, 10);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Example 10: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Example 10: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
-    Logger::getInstance().log(LogLevel::INFO, "All examples passed!");
+    LOG_INFO("All examples passed!");
 }
 
 // additional test function with edge cases and variations
 void testAdditionalCases() {
-    Logger::getInstance().log(LogLevel::INFO, "Testing additional edge cases");
+    LOG_INFO("Testing additional edge cases");
     
     // test case: very small total pages
     {
         std::string expected = "[1] 2 3";
         std::string result = paginate(1, 3, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Small dataset: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Small dataset: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -223,7 +223,7 @@ void testAdditionalCases() {
     {
         std::string expected = "[1]";
         std::string result = paginate(1, 1, 5);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Single page: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Single page: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -231,7 +231,7 @@ void testAdditionalCases() {
     {
         std::string expected = "1 ... 21 22 23 24 25 26 27 28 29 [30]";
         std::string result = paginate(35, 30, 11); // Should correct to page 30
-        Logger::getInstance().log(LogLevel::INFO, std::format("Current page too high: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Current page too high: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -239,7 +239,7 @@ void testAdditionalCases() {
     {
         std::string expected = "[1] 2 3 4 5 6 7 8 9 10 ... 30";
         std::string result = paginate(0, 30, 11); // Should correct to page 1
-        Logger::getInstance().log(LogLevel::INFO, std::format("Current page too low: Expected: '{}', Got: '{}'", expected, result));
+        LOG_INFO(std::format("Current page too low: Expected: '{}', Got: '{}'", expected, result));
         assert(result == expected);
     }
     
@@ -247,7 +247,7 @@ void testAdditionalCases() {
     {
         std::string expected = "1 ... [5] ... 30";
         std::string result = paginate(5, 30, 3);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Small max pages: '{}'", result));
+        LOG_INFO(std::format("Small max pages: '{}'", result));
         assert(result == expected);
     }
     
@@ -255,11 +255,11 @@ void testAdditionalCases() {
     {
         std::string expected = "1 ... 46 47 48 49 [50] 51 52 53 54 ... 1000";
         std::string result = paginate(50, 1000, 11);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Large dataset: '{}'", result));
+        LOG_INFO(std::format("Large dataset: '{}'", result));
         assert(result == expected);
     }
     
-    Logger::getInstance().log(LogLevel::INFO, "All additional tests completed!");
+    LOG_INFO("All additional tests completed!");
 }
 
 int main() {

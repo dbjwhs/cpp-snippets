@@ -281,7 +281,7 @@ public:
         for (auto& node : m_buckets[index]) {
             if (node.m_key == key) {
                 node.m_value = value;  // update existing value
-                Logger::getInstance().log(LogLevel::INFO, std::format("updated value for key={}", key));
+                LOG_INFO(std::format("updated value for key={}", key));
                 return;
             }
         }
@@ -348,7 +348,7 @@ void runHashTableTests(const std::shared_ptr<HashFunction<int>>& hashFunc) {
     HashTable<int, std::string> hashTable(hashFunc, 4, 0.75);
 
     // test 1: basic insertion and search
-    Logger::getInstance().log(LogLevel::INFO, "--- test 1: basic operations ---");
+    LOG_INFO("--- test 1: basic operations ---");
     hashTable.insert(1, "one");
     hashTable.insert(2, "two");
     hashTable.insert(3, "three");
@@ -360,7 +360,7 @@ void runHashTableTests(const std::shared_ptr<HashFunction<int>>& hashFunc) {
     assert(!hashTable.search(4, value));
 
     // test 2: collision handling and chaining
-    Logger::getInstance().log(LogLevel::INFO, "--- test 2: collision handling ---");
+    LOG_INFO("--- test 2: collision handling ---");
     hashTable.insert(5, "five");
     hashTable.insert(9, "nine");  // may collide depending on hash function
 
@@ -368,18 +368,18 @@ void runHashTableTests(const std::shared_ptr<HashFunction<int>>& hashFunc) {
     assert(hashTable.search(9, value) && value == "nine");
 
     // test 3: deletion
-    Logger::getInstance().log(LogLevel::INFO, "--- test 3: deletion ---");
+    LOG_INFO("--- test 3: deletion ---");
     assert(hashTable.remove(2));
     assert(!hashTable.search(2, value));
     assert(!hashTable.remove(10));  // non-existent key
 
     // test 4: update existing key
-    Logger::getInstance().log(LogLevel::INFO, "--- test 4: update existing key ---");
+    LOG_INFO("--- test 4: update existing key ---");
     hashTable.insert(1, "ONE");
     assert(hashTable.search(1, value) && value == "ONE");
 
     // test 5: rehashing
-    Logger::getInstance().log(LogLevel::INFO, "--- test 5: rehashing ---");
+    LOG_INFO("--- test 5: rehashing ---");
     for (int i = 10; i < 20; ++i) {
         hashTable.insert(i, std::to_string(i));
     }

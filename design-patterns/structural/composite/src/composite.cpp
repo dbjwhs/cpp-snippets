@@ -131,7 +131,7 @@ void test_composite_pattern() {
     try {
         leaf1->add(leaf2);
     } catch (const std::runtime_error&) {
-        Logger::getInstance().log(LogLevel::INFO, "leaf-add() threw as expected");
+        LOG_INFO("leaf-add() threw as expected");
         exception_thrown = true;
     }
     assert(exception_thrown);
@@ -142,7 +142,7 @@ void test_composite_pattern() {
     composite1->add(leaf2);
 
     assert(composite1->getCount() == 3);  // composite + 2 leaves
-    Logger::getInstance().log(LogLevel::INFO, "composite1->getCount() == 3, successful");
+    LOG_INFO("composite1->getCount() == 3, successful");
     
     // test case 4: test nested composites
     const auto composite2 = std::make_shared<Composite>("Composite2");
@@ -152,14 +152,14 @@ void test_composite_pattern() {
     composite1->add(composite2);
     
     assert(composite1->getCount() == 5);  // composite1 + 2 leaves + composite2 + 1 leaf
-    Logger::getInstance().log(LogLevel::INFO, "composite1 + 2 leaves + composite2 + 1 leaf == 5, successful");
+    LOG_INFO("composite1 + 2 leaves + composite2 + 1 leaf == 5, successful");
     
     // test case 5: test remove operation
     composite1->remove(leaf1);
     assert(composite1->getCount() == 4);
-    Logger::getInstance().log(LogLevel::INFO, "composite1->getCount() == 4, successful");
+    LOG_INFO("composite1->getCount() == 4, successful");
     
-    Logger::getInstance().log(LogLevel::INFO, "All composite pattern tests passed successfully");
+    LOG_INFO("All composite pattern tests passed successfully");
 }
 
 int main() {

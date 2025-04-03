@@ -43,11 +43,11 @@ namespace {
     // helper function to perform simple assertion tests
     void runTest(const bool condition, const std::string& testName) {
         if (!condition) {
-            Logger::getInstance().log(LogLevel::ERROR, std::format("Test failed: {}", testName));
+            LOG_ERROR(std::format("Test failed: {}", testName));
             // Don't assert in production code, but log the failure
             // We'll still see the issue but the program won't crash
         } else {
-            Logger::getInstance().log(LogLevel::INFO, std::format("Test passed: {}", testName));
+            LOG_INFO(std::format("Test passed: {}", testName));
         }
     }
 }
@@ -55,7 +55,7 @@ namespace {
 // example 1: a basic synchronous tcp client
 // this example demonstrates the simplest use of boost.asio to create a tcp client
 void basicSynchronousTcpClient() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting Basic Synchronous TCP Client Example");
+    LOG_INFO("Starting Basic Synchronous TCP Client Example");
 
     try {
         // create an io_context - the core of asio
@@ -119,10 +119,10 @@ void basicSynchronousTcpClient() {
         m_socket.close();
     }
     catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Exception: {}", e.what()));
+        LOG_ERROR(std::format("Exception: {}", e.what()));
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "Completed Basic Synchronous TCP Client Example");
+    LOG_INFO("Completed Basic Synchronous TCP Client Example");
 }
 
 // example 2: an asynchronous tcp client
@@ -184,7 +184,7 @@ public:
     // close the socket
     void close() {
         if (m_socket.is_open()) {
-            Logger::getInstance().log(LogLevel::INFO, "Closing socket");
+            LOG_INFO("Closing socket");
             boost::system::error_code ec;
             m_socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
             m_socket.close();
@@ -203,7 +203,7 @@ private:
     void onResolve(const boost::system::error_code& ec,
                   const boost::asio::ip::tcp::resolver::results_type& endpoints) {
         if (!ec) {
-            Logger::getInstance().log(LogLevel::INFO, "Host resolved successfully");
+            LOG_INFO("Host resolved successfully");
 
             // asynchronously connect to the first available endpoint
             boost::asio::async_connect(
@@ -259,7 +259,7 @@ private:
 
             // if end of a file, the connection is done
             if (ec == boost::asio::error::eof) {
-                Logger::getInstance().log(LogLevel::INFO, "End of file reached");
+                LOG_INFO("End of file reached");
                 close();
             } else {
                 // if more data expected, continue reading
@@ -324,7 +324,7 @@ private:
                     // echo back to a client
                     asyncWrite(bytes_transferred);
                 } else if (ec != boost::asio::error::operation_aborted) {
-                    Logger::getInstance().log(LogLevel::ERROR, std::format("Read error: {}", ec.message()));
+                    LOG_ERROR(std::format("Read error: {}", ec.message()));
                 }
             }
         );
@@ -408,12 +408,12 @@ public:
 
         // Log start time for debugging
         m_start_time = std::chrono::steady_clock::now();
-        Logger::getInstance().log(LogLevel::INFO, "Timer example constructed");
+        LOG_INFO("Timer example constructed");
     }
 
     // start the timer operations
     void start() {
-        Logger::getInstance().log(LogLevel::INFO, "Timer example starting...");
+        LOG_INFO("Timer example starting...");
 
         // Set timer1 to expire after 500 ms (faster to get more iterations)
         m_timer1.expires_after(boost::asio::chrono::milliseconds(500));
@@ -431,7 +431,7 @@ public:
             }
         );
 
-        Logger::getInstance().log(LogLevel::INFO, "Timer example started, timers scheduled");
+        LOG_INFO("Timer example started, timers scheduled");
     }
 
     // check if all tests passed
@@ -481,7 +481,7 @@ private:
             );
         } else {
             if (ec == boost::asio::error::operation_aborted) {
-                Logger::getInstance().log(LogLevel::INFO, "Timer 1 was cancelled");
+                LOG_INFO("Timer 1 was cancelled");
             } else {
                 Logger::getInstance().log(LogLevel::ERROR,
                     std::format("Timer 1 error: {}", ec.message()));
@@ -503,7 +503,7 @@ private:
             testCondition(m_count > 0, "Count is positive when timer 2 expires");
         } else {
             if (ec == boost::asio::error::operation_aborted) {
-                Logger::getInstance().log(LogLevel::INFO, "Timer 2 was cancelled");
+                LOG_INFO("Timer 2 was cancelled");
             } else {
                 Logger::getInstance().log(LogLevel::ERROR,
                     std::format("Timer 2 error: {}", ec.message()));
@@ -564,7 +564,7 @@ public:
             )
         );
 
-        Logger::getInstance().log(LogLevel::INFO, "Strand example started");
+        LOG_INFO("Strand example started");
     }
 
     // get the current counter-value
@@ -635,7 +635,7 @@ private:
 // run all examples
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, "Starting Boost.Asio examples");
+        LOG_INFO("Starting Boost.Asio examples");
 
         // example 1: synchronous tcp client
         basicSynchronousTcpClient();
@@ -697,7 +697,7 @@ int main() {
             boost::asio::io_context io_context;
 
             // Log for debugging
-            Logger::getInstance().log(LogLevel::INFO, "Starting timer example");
+            LOG_INFO("Starting timer example");
 
             // To prevent io_context from exiting when no more work
             auto work = boost::asio::make_work_guard(io_context);
@@ -708,17 +708,17 @@ int main() {
 
             // Run the io_context in a separate thread to keep it active
             std::thread io_thread([&io_context]() {
-                Logger::getInstance().log(LogLevel::INFO, "IO thread starting");
+                LOG_INFO("IO thread starting");
                 io_context.run();
-                Logger::getInstance().log(LogLevel::INFO, "IO thread exiting");
+                LOG_INFO("IO thread exiting");
             });
 
             // Wait long enough for multiple timer firings
-            Logger::getInstance().log(LogLevel::INFO, "Main thread waiting for 5 seconds");
+            LOG_INFO("Main thread waiting for 5 seconds");
             std::this_thread::sleep_for(std::chrono::seconds(5));
 
             // Stop all timers and io_context
-            Logger::getInstance().log(LogLevel::INFO, "Stopping io_context");
+            LOG_INFO("Stopping io_context");
             io_context.stop();
 
             // Wait for the io_thread to complete
@@ -772,7 +772,7 @@ int main() {
             runTest(strands.getCounter() > 0, "Strand counter was incremented");
         }
 
-        Logger::getInstance().log(LogLevel::INFO, "All Boost.Asio examples completed successfully");
+        LOG_INFO("All Boost.Asio examples completed successfully");
         return 0;
     }
     catch (const std::exception& e) {

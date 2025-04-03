@@ -258,7 +258,7 @@ void Document::reject() {
 // document content management implementation
 void Document::setContent(const std::string& content) {
     m_content = content;
-    Logger::getInstance().log(LogLevel::INFO, "Document content updated");
+    LOG_INFO("Document content updated");
 }
 
 std::string Document::getContent() const {
@@ -268,7 +268,7 @@ std::string Document::getContent() const {
 // document comment management implementation
 void Document::addReviewComment(const std::string& comment) {
     m_reviewComments.push_back(comment);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Review comment added: {}", comment));
+    LOG_INFO(std::format("Review comment added: {}", comment));
 }
 
 const std::vector<std::string>& Document::getReviewComments() const {
@@ -293,14 +293,14 @@ std::string Document::getAuthor() const {
 
 // draft state implementation
 void DraftState::draft(Document& document) {
-    Logger::getInstance().log(LogLevel::INFO, "Already in Draft state");
+    LOG_INFO("Already in Draft state");
 }
 
 void DraftState::review(Document& document) {
     // check if a document has content before transitioning to review
     if (document.getContent().empty()) {
         Logger::StderrSuppressionGuard stderr_guard;
-        Logger::getInstance().log(LogLevel::ERROR, "Cannot review empty document");
+        LOG_ERROR("Cannot review empty document");
         return;
     }
     document.changeState(std::make_unique<ReviewState>());
@@ -308,12 +308,12 @@ void DraftState::review(Document& document) {
 
 void DraftState::approve(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Cannot approve document in Draft state");
+    LOG_ERROR("Cannot approve document in Draft state");
 }
 
 void DraftState::reject(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Cannot reject document in Draft state");
+    LOG_ERROR("Cannot reject document in Draft state");
 }
 
 std::string DraftState::getName() const {
@@ -327,7 +327,7 @@ void ReviewState::draft(Document& document) {
 
 void ReviewState::review(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Already in Review state");
+    LOG_ERROR("Already in Review state");
 }
 
 void ReviewState::approve(Document& document) {
@@ -353,7 +353,7 @@ void ApprovedState::review(Document& document) {
 
 void ApprovedState::approve(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Already in Approved state");
+    LOG_ERROR("Already in Approved state");
 }
 
 void ApprovedState::reject(Document& document) {
@@ -371,17 +371,17 @@ void RejectedState::draft(Document& document) {
 
 void RejectedState::review(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Cannot review rejected document, must be drafted first");
+    LOG_ERROR("Cannot review rejected document, must be drafted first");
 }
 
 void RejectedState::approve(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Cannot approve rejected document, must be drafted and reviewed first");
+    LOG_ERROR("Cannot approve rejected document, must be drafted and reviewed first");
 }
 
 void RejectedState::reject(Document& document) {
     Logger::StderrSuppressionGuard stderr_guard;
-    Logger::getInstance().log(LogLevel::ERROR, "Already in Rejected state");
+    LOG_ERROR("Already in Rejected state");
 }
 
 std::string RejectedState::getName() const {
@@ -390,14 +390,14 @@ std::string RejectedState::getName() const {
 
 // main function with comprehensive testing
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting State Pattern Test");
+    LOG_INFO("Starting State Pattern Test");
 
     // create a document
     Document doc("John Doe");
     
     // test initial state
     assert(doc.getCurrentStateName() == "Draft");
-    Logger::getInstance().log(LogLevel::INFO, std::format("Initial state: {}", doc.getCurrentStateName()));
+    LOG_INFO(std::format("Initial state: {}", doc.getCurrentStateName()));
     
     // test invalid transitions from draft state
     doc.approve();  // should log error and not change state
@@ -425,7 +425,7 @@ int main() {
     // test transitions from review state
     doc.approve();
     assert(doc.getCurrentStateName() == "Approved");
-    Logger::getInstance().log(LogLevel::INFO, std::format("After approval, state: {}", doc.getCurrentStateName()));
+    LOG_INFO(std::format("After approval, state: {}", doc.getCurrentStateName()));
     
     // test transitions from approved state
     doc.review();
@@ -434,7 +434,7 @@ int main() {
     // test rejection process
     doc.reject();
     assert(doc.getCurrentStateName() == "Rejected");
-    Logger::getInstance().log(LogLevel::INFO, std::format("After rejection, state: {}", doc.getCurrentStateName()));
+    LOG_INFO(std::format("After rejection, state: {}", doc.getCurrentStateName()));
     
     // test transitions from rejected state
     doc.review();  // should log error - can't review a rejected document
@@ -450,7 +450,7 @@ int main() {
                                                         doc.getCurrentStateName()));
     
     // comprehensive workflow test
-    Logger::getInstance().log(LogLevel::INFO, "Starting comprehensive workflow test");
+    LOG_INFO("Starting comprehensive workflow test");
     
     // draft -> review -> rejected -> draft -> review -> approved
     doc.review();
@@ -473,7 +473,7 @@ int main() {
     doc.approve();
     assert(doc.getCurrentStateName() == "Approved");
     
-    Logger::getInstance().log(LogLevel::INFO, "All tests passed successfully!");
+    LOG_INFO("All tests passed successfully!");
     
     return 0;
 }

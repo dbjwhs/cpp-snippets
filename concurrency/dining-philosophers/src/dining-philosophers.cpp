@@ -29,7 +29,7 @@ private:
     // simulate a thinking process
     void think() const {
         RandomGenerator random(1, 100);
-        Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " is thinking...");
+        LOG_INFO("Philosopher ", m_id, " is thinking...");
         // random thinking time between 1-3 seconds
         std::this_thread::sleep_for(std::chrono::seconds(random.getNumber() % 3 + 1));
     }
@@ -42,23 +42,23 @@ private:
         if (m_id % 2 == 0) {
             // even numbered philosophers pick up left fork first
             std::lock_guard<std::mutex> leftLock(*m_leftFork);
-            Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " picked up left fork");
+            LOG_INFO("Philosopher ", m_id, " picked up left fork");
 
             // delay to demonstrate deadlock prevention
             std::this_thread::sleep_for(std::chrono::milliseconds(random.getNumber()));
 
             std::lock_guard<std::mutex> rightLock(*m_rightFork);
-            Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " picked up right fork");
+            LOG_INFO("Philosopher ", m_id, " picked up right fork");
         } else {
             // odd numbered philosophers pick up right fork first
             std::lock_guard<std::mutex> rightLock(*m_rightFork);
-            Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " picked up right fork");
+            LOG_INFO("Philosopher ", m_id, " picked up right fork");
 
             // delay to demonstrate deadlock prevention
             std::this_thread::sleep_for(std::chrono::milliseconds(random.getNumber()));
 
             std::lock_guard<std::mutex> leftLock(*m_leftFork);
-            Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " picked up left fork");
+            LOG_INFO("Philosopher ", m_id, " picked up left fork");
         }
 
         // eating process
@@ -67,7 +67,7 @@ private:
         m_mealsEaten++;
 
         // forks are automatically released when lock_guards go out of scope
-        Logger::getInstance().log(LogLevel::INFO, "Philosopher ", m_id, " finished eating and put down forks");
+        LOG_INFO("Philosopher ", m_id, " finished eating and put down forks");
     }
 
     // delete copy and move operations
@@ -105,6 +105,6 @@ for (int ndx = 0; ndx < numPhilosophers; ++ndx) {
         thread.join();
     }
 
-    Logger::getInstance().log(LogLevel::INFO, "All philosophers have finished dining!\n");
+    LOG_INFO("All philosophers have finished dining!\n");
     return 0;
 }
