@@ -308,6 +308,14 @@ private:
     }
 };
 
+// simple logger macro to make testing output cleaner
+#define LOG_INFO(message, ...) Logger::getInstance().log(LogLevel::INFO, message, ##__VA_ARGS__)
+#define LOG_NORMAL(message, ...) Logger::getInstance().log(LogLevel::NORMAL, message, ##__VA_ARGS__)
+#define LOG_WARNING(message, ...) Logger::getInstance().log(LogLevel::WARNING, message, ##__VA_ARGS__)
+#define LOG_DEBUG(message, ...) Logger::getInstance().log(LogLevel::DEBUG, message, ##__VA_ARGS__)
+#define LOG_ERROR(message, ...) Logger::getInstance().log(LogLevel::ERROR, message, ##__VA_ARGS__)
+#define LOG_CRITICAL(message, ...) Logger::getInstance().log(LogLevel::CRITICAL, message, ##__VA_ARGS__)
+
 // no need to explicitly define static members when using inline
 
 #endif // project_utils_hpp
