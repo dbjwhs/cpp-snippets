@@ -309,12 +309,13 @@ private:
 };
 
 // simple logger macro to make testing output cleaner
-#define LOG_INFO(message, ...) Logger::getInstance().log(LogLevel::INFO, message, ##__VA_ARGS__)
-#define LOG_NORMAL(message, ...) Logger::getInstance().log(LogLevel::NORMAL, message, ##__VA_ARGS__)
-#define LOG_WARNING(message, ...) Logger::getInstance().log(LogLevel::WARNING, message, ##__VA_ARGS__)
-#define LOG_DEBUG(message, ...) Logger::getInstance().log(LogLevel::DEBUG, message, ##__VA_ARGS__)
-#define LOG_ERROR(message, ...) Logger::getInstance().log(LogLevel::ERROR, message, ##__VA_ARGS__)
-#define LOG_CRITICAL(message, ...) Logger::getInstance().log(LogLevel::CRITICAL, message, ##__VA_ARGS__)
+#define LOG_BASE(level, message, ...) Logger::getInstance().log(level, message, ##__VA_ARGS__)
+#define LOG_INFO(message, ...) LOG_BASE(LogLevel::INFO, message, ##__VA_ARGS__)
+#define LOG_NORMAL(message, ...) LOG_BASE(LogLevel::NORMAL, message, ##__VA_ARGS__)
+#define LOG_WARNING(message, ...) LOG_BASE(LogLevel::WARNING, message, ##__VA_ARGS__)
+#define LOG_DEBUG(message, ...) LOG_BASE(LogLevel::DEBUG, message, ##__VA_ARGS__)
+#define LOG_ERROR(message, ...) LOG_BASE(LogLevel::ERROR, message, ##__VA_ARGS__)
+#define LOG_CRITICAL(message, ...) LOG_BASE(LogLevel::CRITICAL, message, ##__VA_ARGS__)
 
 // no need to explicitly define static members when using inline
 
