@@ -11,11 +11,10 @@ AsyncAcceptOperation::AsyncAcceptOperation(std::shared_ptr<CompletionHandler> ha
     : AsyncOperation(std::move(handler), OperationType::ACCEPT), m_serverSocket(serverSocket.fd()) {}
 
 bool AsyncAcceptOperation::initiate(const std::shared_ptr<Proactor>& proactor) {
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Initiating accept operation on server socket {}", m_serverSocket));
+    LOG_INFO(std::format("Initiating accept operation on server socket {}", m_serverSocket));
         
     if (m_serverSocket < 0) {
-        Logger::getInstance().log(LogLevel::ERROR, "Invalid server socket");
+        LOG_ERROR("Invalid server socket");
         return false;
     }
     

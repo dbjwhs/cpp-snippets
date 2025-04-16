@@ -275,7 +275,7 @@ public:
     [[nodiscard]] bool executeAndVerify(const ProgramState& initialState) const {
         // check if precondition holds
         if (!m_precondition->evaluate(initialState)) {
-            Logger::getInstance().log(LogLevel::INFO, "Precondition does not hold");
+            LOG_INFO("Precondition does not hold");
             return false;
         }
 
@@ -285,7 +285,7 @@ public:
         // check if post-condition holds
         const bool post_condition_holds = m_post_condition->evaluate(finalState);
         if (!post_condition_holds) {
-            Logger::getInstance().log(LogLevel::INFO, "Post condition does not hold after execution");
+            LOG_INFO("Post condition does not hold after execution");
         }
 
         return post_condition_holds;
@@ -304,7 +304,7 @@ public:
 
 // function to test a simple increment example
 void testIncrementExample() {
-    Logger::getInstance().log(LogLevel::INFO, "Running increment example test");
+    LOG_INFO("Running increment example test");
 
     // create a program state with variable x = 5
     ProgramState state;
@@ -323,14 +323,14 @@ void testIncrementExample() {
     HoareTriple triple(precondition, command, post_condition);
 
     // log the triple
-    Logger::getInstance().log(LogLevel::INFO, std::format("Hoare Triple: {}", triple.toString()));
+    LOG_INFO(std::format("Hoare Triple: {}", triple.toString()));
 
     // execute and verify
     bool result = triple.executeAndVerify(state);
 
     // check the result
     assert(result);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triple verification result: {}", result ? "passed" : "failed"));
+    LOG_INFO(std::format("Triple verification result: {}", result ? "passed" : "failed"));
 
     // test with a different initial state where precondition doesn't hold
     ProgramState invalidState;
@@ -339,12 +339,12 @@ void testIncrementExample() {
     // this should not verify correctly
     result = triple.executeAndVerify(invalidState);
     assert(!result);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triple verification with invalid state: {}", result ? "passed" : "failed"));
+    LOG_INFO(std::format("Triple verification with invalid state: {}", result ? "passed" : "failed"));
 }
 
 // function to test a more complex swap example
 void testSwapExample() {
-    Logger::getInstance().log(LogLevel::INFO, "Running swap example test");
+    LOG_INFO("Running swap example test");
 
     // create a program state with variables a = 10, b = 20
     ProgramState state;
@@ -374,37 +374,37 @@ void testSwapExample() {
     const HoareTriple triple(precondition, swapCommand, post_condition);
 
     // log the triple
-    Logger::getInstance().log(LogLevel::INFO, std::format("Hoare Triple: {}", triple.toString()));
+    LOG_INFO(std::format("Hoare Triple: {}", triple.toString()));
 
     // execute and verify
     const bool result = triple.executeAndVerify(state);
 
     // check a result with detailed logging on failure
     if (!result) {
-        Logger::getInstance().log(LogLevel::INFO, "Failure details:");
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Precondition: {}", triple.getPrecondition()->toString()));
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Command: {}", triple.getCommand()->toString()));
-        Logger::getInstance().log(LogLevel::INFO, std::format("  Post condition: {}", triple.getPostcondition()->toString()));
+        LOG_INFO("Failure details:");
+        LOG_INFO(std::format("  Precondition: {}", triple.getPrecondition()->toString()));
+        LOG_INFO(std::format("  Command: {}", triple.getCommand()->toString()));
+        LOG_INFO(std::format("  Post condition: {}", triple.getPostcondition()->toString()));
 
         // execute command to see the final state
         ProgramState finalState = triple.getCommand()->execute(state);
-        Logger::getInstance().log(LogLevel::INFO, "Final state after execution:");
+        LOG_INFO("Final state after execution:");
         for (const auto& [var, val] : finalState.getVariables()) {
-            Logger::getInstance().log(LogLevel::INFO, std::format("  {} = {}", var, val));
+            LOG_INFO(std::format("  {} = {}", var, val));
         }
 
         // manually check post-condition
         const bool postEval = triple.getPostcondition()->evaluate(finalState);
-        Logger::getInstance().log(LogLevel::INFO, std::format("Postcondition evaluation: {}", postEval ? "true" : "false"));
+        LOG_INFO(std::format("Postcondition evaluation: {}", postEval ? "true" : "false"));
     }
 
     assert(result);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triple verification result: {}", result ? "passed" : "failed"));
+    LOG_INFO(std::format("Triple verification result: {}", result ? "passed" : "failed"));
 }
 
 // function to test a case with conjunction assertions
 void testConjunctionExample() {
-    Logger::getInstance().log(LogLevel::INFO, "Running conjunction example test");
+    LOG_INFO("Running conjunction example test");
 
     // create a program state with variables x = 5, y = 10
     ProgramState state;
@@ -430,19 +430,19 @@ void testConjunctionExample() {
     HoareTriple triple(precondition, sequence, post_condition);
 
     // log the triple
-    Logger::getInstance().log(LogLevel::INFO, std::format("Hoare Triple: {}", triple.toString()));
+    LOG_INFO(std::format("Hoare Triple: {}", triple.toString()));
 
     // execute and verify
     const bool result = triple.executeAndVerify(state);
 
     // check the result
     assert(result);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Triple verification result: {}", result ? "passed" : "failed"));
+    LOG_INFO(std::format("Triple verification result: {}", result ? "passed" : "failed"));
 }
 
 // function to test different command sequences
 void testMultipleCommands() {
-    Logger::getInstance().log(LogLevel::INFO, "Running multiple commands test");
+    LOG_INFO("Running multiple commands test");
 
     // test different command sequences with various state combinations
     for (int ndx = 0; ndx < 5; ndx++) {
@@ -462,18 +462,18 @@ void testMultipleCommands() {
         // create and test hoare triple
         HoareTriple triple(precondition, command, post_condition);
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("Test #{}: {}", ndx, triple.toString()));
+        LOG_INFO(std::format("Test #{}: {}", ndx, triple.toString()));
 
         const bool result = triple.executeAndVerify(state);
         assert(result);
 
-        Logger::getInstance().log(LogLevel::INFO, std::format("Test #{} result: {}", ndx, result ? "passed" : "failed"));
+        LOG_INFO(std::format("Test #{} result: {}", ndx, result ? "passed" : "failed"));
     }
 }
 
 // main function
 int main() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting Hoare Logic demonstration");
+    LOG_INFO("Starting Hoare Logic demonstration");
 
     // run all tests
     testIncrementExample();
@@ -481,7 +481,7 @@ int main() {
     testConjunctionExample();
     testMultipleCommands();
 
-    Logger::getInstance().log(LogLevel::INFO, "All tests completed successfully");
+    LOG_INFO("All tests completed successfully");
 
     return 0;
 }

@@ -35,16 +35,16 @@ void runTests();
 
 int main() {
     try {
-        Logger::getInstance().log(LogLevel::INFO, "proactor design pattern example");
+        LOG_INFO("proactor design pattern example");
 
         // run tests
         runTests();
 
-        Logger::getInstance().log(LogLevel::INFO, "proactor design pattern example completed successfully");
+        LOG_INFO("proactor design pattern example completed successfully");
         return 0;
     }
     catch (const std::exception& e) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("exception: {}", e.what()));
+        LOG_ERROR(std::format("exception: {}", e.what()));
         return 1;
     }
 }

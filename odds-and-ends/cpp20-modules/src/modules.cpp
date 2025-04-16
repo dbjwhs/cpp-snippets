@@ -45,7 +45,7 @@ import math_module.advanced;  // Note: Using dot notation for Clang compatibilit
 
 int main() {
     // log the start of the program
-    Logger::getInstance().log(LogLevel::INFO, "Starting C++20 Modules example program");
+    LOG_INFO("Starting C++20 Modules example program");
 
     // create an instance of our calculator class from the module
     math::Calculator calculator;
@@ -53,22 +53,22 @@ int main() {
     // test basic arithmetic operations from the main module interface
     // addition
     int result = calculator.add(5, 3);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Addition result: {}", result));
+    LOG_INFO(std::format("Addition result: {}", result));
     assert(result == 8 && "Addition test failed");
 
     // subtraction
     result = calculator.subtract(10, 4);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Subtraction result: {}", result));
+    LOG_INFO(std::format("Subtraction result: {}", result));
     assert(result == 6 && "Subtraction test failed");
 
     // multiplication
     result = calculator.multiply(3, 7);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Multiplication result: {}", result));
+    LOG_INFO(std::format("Multiplication result: {}", result));
     assert(result == 21 && "Multiplication test failed");
 
     // division
     result = calculator.divide(20, 5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Division result: {}", result));
+    LOG_INFO(std::format("Division result: {}", result));
     assert(result == 4 && "Division test failed");
 
     // test error handling for division by zero
@@ -77,19 +77,19 @@ int main() {
         // this should not execute
         assert(false && "Division by zero did not throw exception");
     } catch (const std::invalid_argument& e) {
-        Logger::getInstance().log(LogLevel::INFO, std::format("Caught expected exception: {}", e.what()));
+        LOG_INFO(std::format("Caught expected exception: {}", e.what()));
         // test passed
     }
 
     // test functions from the advanced partition
     // power function
     result = math::power(2, 3);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Power result: {}", result));
+    LOG_INFO(std::format("Power result: {}", result));
     assert(result == 8 && "Power test failed");
 
     // factorial function
     result = math::factorial(5);
-    Logger::getInstance().log(LogLevel::INFO, std::format("Factorial result: {}", result));
+    LOG_INFO(std::format("Factorial result: {}", result));
     assert(result == 120 && "Factorial test failed");
 
     // test a vector of operations to ensure consistent results
@@ -101,11 +101,11 @@ int main() {
         sum = calculator.add(sum, numbers[ndx]);
     }
 
-    Logger::getInstance().log(LogLevel::INFO, std::format("Sum of vector: {}", sum));
+    LOG_INFO(std::format("Sum of vector: {}", sum));
     assert(sum == 15 && "Vector sum test failed");
 
     // test the module-level constant
-    Logger::getInstance().log(LogLevel::INFO, std::format("Math module PI value: {}", math::PI));
+    LOG_INFO(std::format("Math module PI value: {}", math::PI));
     // compare with precision to account for floating point differences
     assert(std::abs(math::PI - 3.14159265359) < 0.0000001 && "PI constant test failed");
 
@@ -113,7 +113,7 @@ int main() {
     // the following line would not compile if uncommented:
     // calculator.m_privateHelper(5);
 
-    Logger::getInstance().log(LogLevel::INFO, "All tests passed successfully");
+    LOG_INFO("All tests passed successfully");
 
     return 0;
 }

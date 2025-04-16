@@ -20,7 +20,7 @@ void Proactor::start() {
         handleEvent(fd, filter, userData);
     });
 
-    Logger::getInstance().log(LogLevel::INFO, "proactor started");
+    LOG_INFO("proactor started");
 }
 
 void Proactor::stop() {
@@ -28,7 +28,7 @@ void Proactor::stop() {
         // stop the event queue
         m_eventQueue->stop();
 
-        Logger::getInstance().log(LogLevel::INFO, "proactor stopped");
+        LOG_INFO("proactor stopped");
     }
 }
 
@@ -43,15 +43,13 @@ void Proactor::registerOperation(int fd, const std::shared_ptr<AsyncOperation>& 
     switch (OperationType type = operation->type()) {
         case OperationType::ACCEPT:
         case OperationType::READ:
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Registering fd {} for READ events", fd));
+            LOG_INFO(std::format("Registering fd {} for READ events", fd));
             m_eventQueue->registerForRead(fd, operation.get());  // Pass the operation as userData
             break;
 
         case OperationType::CONNECT:
         case OperationType::WRITE:
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Registering fd {} for WRITE events", fd));
+            LOG_INFO(std::format("Registering fd {} for WRITE events", fd));
             m_eventQueue->registerForWrite(fd, operation.get());  // Pass the operation as userData
             break;
     }
@@ -88,10 +86,9 @@ void Proactor::cancelOperation(int fd) {
 void Proactor::handleEvent(int fd, const int filter, void* userData) {
     std::shared_ptr<AsyncOperation> operation;
 
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Handling event for fd {}, filter {}", fd, 
-            (filter == EVFILT_READ) ? "READ" : 
-            (filter == EVFILT_WRITE) ? "WRITE" : "UNKNOWN"));
+    LOG_INFO(std::format("Handling event for fd {}, filter {}", fd, 
+            (filter == EVFILT_READ ? "READ" : 
+            (filter == EVFILT_WRITE) ? "WRITE" : "UNKNOWN")));
 
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -99,8 +96,7 @@ void Proactor::handleEvent(int fd, const int filter, void* userData) {
         // find the operation in the map
         auto it = m_operations.find(fd);
         if (it == m_operations.end()) {
-            Logger::getInstance().log(LogLevel::ERROR, 
-                std::format("No operation found for fd {}", fd));
+            LOG_ERROR(std::format("No operation found for fd {}", fd));
             return;
         }
 
@@ -112,12 +108,10 @@ void Proactor::handleEvent(int fd, const int filter, void* userData) {
 
         // unregister the socket from the event queue
         if (filter == EVFILT_READ) {
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Unregistering fd {} for READ events", fd));
+            LOG_INFO(std::format("Unregistering fd {} for READ events", fd));
             m_eventQueue->unregisterForRead(fd);
         } else if (filter == EVFILT_WRITE) {
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Unregistering fd {} for WRITE events", fd));
+            LOG_INFO(std::format("Unregistering fd {} for WRITE events", fd));
             m_eventQueue->unregisterForWrite(fd);
         }
     }
@@ -125,12 +119,11 @@ void Proactor::handleEvent(int fd, const int filter, void* userData) {
     // handle the operation based on its type
     OperationType type = operation->type();
     
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Processing operation of type {}", 
-            (type == OperationType::ACCEPT) ? "ACCEPT" :
+    LOG_INFO(std::format("Processing operation of type {}", 
+            (type == OperationType::ACCEPT ? "ACCEPT" :
             (type == OperationType::CONNECT) ? "CONNECT" :
             (type == OperationType::READ) ? "READ" :
-            (type == OperationType::WRITE) ? "WRITE" : "UNKNOWN"));
+            (type == OperationType::WRITE) ? "WRITE" : "UNKNOWN")));
 
     switch (type) {
         case OperationType::ACCEPT:
@@ -156,28 +149,26 @@ void Proactor::handleAccept(const int fd, const std::shared_ptr<AsyncOperation>&
     // create a socket wrapper for the server socket
     Socket serverSocket(fd);
     
-    Logger::getInstance().log(LogLevel::INFO, "Handling accept operation");
+    LOG_INFO("Handling accept operation");
 
     // accept the incoming connection
     auto [clientSocket, error] = serverSocket.accept();
 
     if (error) {
         // accept failed
-        Logger::getInstance().log(LogLevel::ERROR, 
-            std::format("Accept failed: {}", error.message()));
+        LOG_ERROR(std::format("Accept failed: {}", error.message()));
         operation->complete(-1, Buffer());
         return;
     }
 
     if (!clientSocket.isValid()) {
         // no pending connections, try again
-        Logger::getInstance().log(LogLevel::INFO, "No pending connections, retrying");
+        LOG_INFO("No pending connections, retrying");
         this->registerOperation(fd, operation);
         return;
     }
     
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Accepted connection on socket {}", clientSocket.fd()));
+    LOG_INFO(std::format("Accepted connection on socket {}", clientSocket.fd()));
 
     // set the client socket to non-blocking mode
     error = clientSocket.setNonBlocking();
@@ -199,12 +190,11 @@ void Proactor::handleAccept(const int fd, const std::shared_ptr<AsyncOperation>&
 }
 
 void Proactor::handleConnect(int fd, const std::shared_ptr<AsyncOperation>& operation) {
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Handling connect operation for socket {}", fd));
+    LOG_INFO(std::format("Handling connect operation for socket {}", fd));
         
     // Check if socket is valid first
     if (fd < 0) {
-        Logger::getInstance().log(LogLevel::ERROR, "Invalid socket descriptor");
+        LOG_ERROR("Invalid socket descriptor");
         operation->complete(-1, Buffer());
         return;
     }
@@ -215,37 +205,32 @@ void Proactor::handleConnect(int fd, const std::shared_ptr<AsyncOperation>& oper
     socklen_t errorLen = sizeof(error);
     if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &errorLen) < 0) {
         // failed to get a socket option
-        Logger::getInstance().log(LogLevel::ERROR, 
-            std::format("Failed to get socket option: {} ({})", strerror(errno), errno));
+        LOG_ERROR(std::format("Failed to get socket option: {} ({})", strerror(errno), errno));
         operation->complete(-1, Buffer());
         return;
     }
 
     if (error != 0) {
         // connection failed
-        Logger::getInstance().log(LogLevel::ERROR, 
-            std::format("Connection failed: {} ({})", strerror(error), error));
+        LOG_ERROR(std::format("Connection failed: {} ({})", strerror(error), error));
         operation->complete(-1, Buffer());
         return;
     }
     
     // Second verification: try a zero-byte write to confirm connection
     if (const int writeResult = write(fd, nullptr, 0); writeResult < 0 && errno != EINTR) {
-        Logger::getInstance().log(LogLevel::ERROR, 
-            std::format("Zero-byte write test failed: {} ({})", strerror(errno), errno));
+        LOG_ERROR(std::format("Zero-byte write test failed: {} ({})", strerror(errno), errno));
         operation->complete(-1, Buffer());
         return;
     }
 
     // connection established successfully
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Connection established successfully on socket {}", fd));
+    LOG_INFO(std::format("Connection established successfully on socket {}", fd));
     operation->complete(0, Buffer());
 }
 
 void Proactor::handleRead(int fd, const std::shared_ptr<AsyncOperation>& operation) {
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Handling read operation for socket {}", fd));
+    LOG_INFO(std::format("Handling read operation for socket {}", fd));
         
     // Create a buffer for reading
     constexpr size_t bufferSize = 4096;
@@ -259,15 +244,14 @@ void Proactor::handleRead(int fd, const std::shared_ptr<AsyncOperation>& operati
     
     if (error) {
         // read failed
-        Logger::getInstance().log(LogLevel::ERROR, 
-            std::format("Read failed: {}", error.message()));
+        LOG_ERROR(std::format("Read failed: {}", error.message()));
         operation->complete(-1, Buffer());
         return;
     }
     
     if (bytesRead == 0) {
         // connection closed by peer or would block
-        Logger::getInstance().log(LogLevel::INFO, "Connection closed by peer or would block");
+        LOG_INFO("Connection closed by peer or would block");
         operation->complete(0, Buffer());
         return;
     }
@@ -276,8 +260,7 @@ void Proactor::handleRead(int fd, const std::shared_ptr<AsyncOperation>& operati
     buffer.setSize(bytesRead);
     
     // Complete the operation successfully
-    Logger::getInstance().log(LogLevel::INFO, 
-        std::format("Read {} bytes", bytesRead));
+    LOG_INFO(std::format("Read {} bytes", bytesRead));
     operation->complete(bytesRead, std::move(buffer));
 }
 

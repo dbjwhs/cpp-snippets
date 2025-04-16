@@ -21,19 +21,19 @@ using namespace proactor;
 
 // Function for running a direct socket test (bypassing proactor)
 void runDirectSocketTest() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting direct socket test...");
+    LOG_INFO("Starting direct socket test...");
     
     // Create a server socket
     Socket serverSocket = Socket::createTcp();
     if (!serverSocket.isValid()) {
-        Logger::getInstance().log(LogLevel::ERROR, "Failed to create server socket");
+        LOG_ERROR("Failed to create server socket");
         return;
     }
     
     // Set socket options
     Error error = serverSocket.setReuseAddress();
     if (error) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Failed to set socket options: {}", error.message()));
+        LOG_ERROR(std::format("Failed to set socket options: {}", error.message()));
         return;
     }
     
@@ -41,18 +41,18 @@ void runDirectSocketTest() {
     const int serverPort = 8081;
     error = serverSocket.bind("0.0.0.0", serverPort);
     if (error) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Failed to bind server socket: {}", error.message()));
+        LOG_ERROR(std::format("Failed to bind server socket: {}", error.message()));
         return;
     }
     
     // Listen for connections
     error = serverSocket.listen(5);
     if (error) {
-        Logger::getInstance().log(LogLevel::ERROR, std::format("Failed to listen on server socket: {}", error.message()));
+        LOG_ERROR(std::format("Failed to listen on server socket: {}", error.message()));
         return;
     }
     
-    Logger::getInstance().log(LogLevel::INFO, std::format("Server listening on port {}", serverPort));
+    LOG_INFO(std::format("Server listening on port {}", serverPort));
     
     // Flag to indicate when all client threads are ready
     std::mutex mtx;
@@ -75,16 +75,14 @@ void runDirectSocketTest() {
         for (int i = 0; i < 5; i++) {
             auto [clientSocket, acceptError] = serverSocket.accept();
             if (acceptError) {
-                Logger::getInstance().log(LogLevel::ERROR, 
-                    std::format("Direct server: Accept failed: {}", acceptError.message()));
+                LOG_ERROR(std::format("Direct server: Accept failed: {}", acceptError.message()));
                 break;
             }
             
             // Get peer address
             std::string clientAddr = "unknown";
             
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Direct server: Accepted connection from client {}", i));
+            LOG_INFO(std::format("Direct server: Accepted connection from client {}", i));
             
             // Start a thread to handle this client
             clientThreads.emplace_back([clientSocket = std::move(clientSocket)]() mutable {
@@ -94,8 +92,7 @@ void runDirectSocketTest() {
                     // Read data
                     auto [bytesRead, readError] = clientSocket.read(buffer, sizeof(buffer));
                     if (readError) {
-                        Logger::getInstance().log(LogLevel::ERROR, 
-                            std::format("Direct server: Read failed: {}", readError.message()));
+                        LOG_ERROR(std::format("Direct server: Read failed: {}", readError.message()));
                         break;
                     }
                     
@@ -105,22 +102,19 @@ void runDirectSocketTest() {
                     
                     // Log the received data
                     std::string data(buffer, bytesRead);
-                    Logger::getInstance().log(LogLevel::INFO, 
-                        std::format("Direct server: Read {} bytes: {}", bytesRead, data));
+                    LOG_INFO(std::format("Direct server: Read {} bytes: {}", bytesRead, data));
                     
                     // Echo it back
                     auto [bytesWritten, writeError] = clientSocket.write(buffer, bytesRead);
                     if (writeError) {
-                        Logger::getInstance().log(LogLevel::ERROR, 
-                            std::format("Direct server: Write failed: {}", writeError.message()));
+                        LOG_ERROR(std::format("Direct server: Write failed: {}", writeError.message()));
                         break;
                     }
                     
-                    Logger::getInstance().log(LogLevel::INFO, 
-                        std::format("Direct server: Echoed {} bytes", bytesWritten));
+                    LOG_INFO(std::format("Direct server: Echoed {} bytes", bytesWritten));
                 }
                 
-                Logger::getInstance().log(LogLevel::INFO, "Direct server: Client thread exiting");
+                LOG_INFO("Direct server: Client thread exiting");
             });
         }
         
@@ -131,7 +125,7 @@ void runDirectSocketTest() {
             }
         }
         
-        Logger::getInstance().log(LogLevel::INFO, "Direct server: All client threads finished");
+        LOG_INFO("Direct server: All client threads finished");
     });
     
     // Wait for server to be ready
@@ -150,55 +144,46 @@ void runDirectSocketTest() {
             // Create client socket
             Socket clientSocket = Socket::createTcp();
             if (!clientSocket.isValid()) {
-                Logger::getInstance().log(LogLevel::ERROR, 
-                    std::format("Client {}: Failed to create socket", i));
+                LOG_ERROR(std::format("Client {}: Failed to create socket", i));
                 return;
             }
             
             // Connect to server
             Error error = clientSocket.connect("127.0.0.1", serverPort);
             if (error) {
-                Logger::getInstance().log(LogLevel::ERROR, 
-                    std::format("Client {}: Failed to connect: {}", i, error.message()));
+                LOG_ERROR(std::format("Client {}: Failed to connect: {}", i, error.message()));
                 return;
             }
             
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Client {}: Connected to server", i));
+            LOG_INFO(std::format("Client {}: Connected to server", i));
             
             // Send data
             std::string message = std::format("Hello from client {}!", i);
             auto [bytesWritten, writeError] = clientSocket.write(message.data(), message.size());
             if (writeError) {
-                Logger::getInstance().log(LogLevel::ERROR, 
-                    std::format("Client {}: Write failed: {}", i, writeError.message()));
+                LOG_ERROR(std::format("Client {}: Write failed: {}", i, writeError.message()));
                 return;
             }
             
-            Logger::getInstance().log(LogLevel::INFO, 
-                std::format("Client {}: Sent {} bytes: {}", i, bytesWritten, message));
+            LOG_INFO(std::format("Client {}: Sent {} bytes: {}", i, bytesWritten, message));
             
             // Read response
             char buffer[1024];
             auto [bytesRead, readError] = clientSocket.read(buffer, sizeof(buffer));
             if (readError) {
-                Logger::getInstance().log(LogLevel::ERROR, 
-                    std::format("Client {}: Read failed: {}", i, readError.message()));
+                LOG_ERROR(std::format("Client {}: Read failed: {}", i, readError.message()));
                 return;
             }
             
             if (bytesRead > 0) {
                 std::string response(buffer, bytesRead);
-                Logger::getInstance().log(LogLevel::INFO, 
-                    std::format("Client {}: Received {} bytes: {}", i, bytesRead, response));
+                LOG_INFO(std::format("Client {}: Received {} bytes: {}", i, bytesRead, response));
                 
                 // Verify echo
                 if (response == message) {
-                    Logger::getInstance().log(LogLevel::INFO, 
-                        std::format("Client {}: Echo test passed", i));
+                    LOG_INFO(std::format("Client {}: Echo test passed", i));
                 } else {
-                    Logger::getInstance().log(LogLevel::ERROR, 
-                        std::format("Client {}: Echo test failed. Expected: '{}', Got: '{}'", 
+                    LOG_ERROR(std::format("Client {}: Echo test failed. Expected: '{}', Got: '{}'", 
                             i, message, response));
                 }
             }
@@ -223,12 +208,12 @@ void runDirectSocketTest() {
         serverThread.join();
     }
     
-    Logger::getInstance().log(LogLevel::INFO, "Direct socket test completed");
+    LOG_INFO("Direct socket test completed");
 }
 
 // Simple function to run basic tests for the proactor pattern
 void runTests() {
-    Logger::getInstance().log(LogLevel::INFO, "Starting proactor pattern tests");
+    LOG_INFO("Starting proactor pattern tests");
 
     // Run the direct socket test first to verify basic socket functionality
     runDirectSocketTest();
@@ -243,7 +228,7 @@ void runTests() {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     // Log test completion
-    Logger::getInstance().log(LogLevel::INFO, "Tests completed");
+    LOG_INFO("Tests completed");
     
     // Stop the proactor
     proactor->stop();
