@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Directories to exclude from processing
+EXCLUDE_DIRS=(
+    "../odds-and-ends/cpp20-modules"
+)
+
 # ANSI Color Codes Explanation
 # ---------------------------
 # These variables contain ANSI escape codes for text coloring in the terminal
@@ -157,6 +162,20 @@ while IFS= read -r -d '' cmake_file; do
     # Skip if build directory is in path
     if [[ "${project_dir}" == *"/build/"* ]]; then
         log "INFO" "Skipping build directory: ${project_dir}" "${BLUE}"
+        continue
+    fi
+
+    # Skip excluded directories
+    skip=false
+    for exclude_dir in "${EXCLUDE_DIRS[@]}"; do
+        if [[ "${project_dir}" == *"${exclude_dir}"* ]]; then
+            log "INFO" "Skipping excluded directory: ${project_dir}" "${BLUE}"
+            skip=true
+            break
+        fi
+    done
+    
+    if [ "$skip" = true ]; then
         continue
     fi
 

@@ -15,6 +15,11 @@ import sys
 import glob
 from pathlib import Path
 
+# Directories to exclude from processing
+EXCLUDE_DIRS = [
+    "../design-patterns/architectural/concurrency/proactor"
+]
+
 def replace_logger_calls(content):
     """
     Replace Logger calls with appropriate LOG_* macros.
@@ -175,6 +180,18 @@ def main():
     # Process each file
     modified_count = 0
     for file_path in cpp_files:
+        # Skip excluded directories
+        skip = False
+        file_path_str = str(file_path)
+        for exclude_dir in EXCLUDE_DIRS:
+            if exclude_dir in file_path_str:
+                print(f"Skipping excluded directory file: {file_path}")
+                skip = True
+                break
+
+        if skip:
+            continue
+
         print(f"Processing {file_path}...")
         if process_file(file_path):
             print(f"  Modified {file_path}")
