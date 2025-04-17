@@ -106,7 +106,7 @@ Error EventQueue::unregisterForWrite(int fd) const {
 void EventQueue::start(const std::function<void(int, int, void*)>& callback) {
     m_running = true;
     m_thread = std::thread([this, callback]() {
-        LOG_INFO("event loop started");
+        Logger::getInstance().log(LogLevel::INFO, "event loop started");
 
         struct timespec timeout{};
         timeout.tv_sec = 0;  // 500ms timeout for kevent to be more responsive
@@ -114,7 +114,7 @@ void EventQueue::start(const std::function<void(int, int, void*)>& callback) {
 
         while (m_running) {
             struct kevent events[64];
-            LOG_INFO("Waiting for events...");
+            Logger::getInstance().log(LogLevel::INFO, "Waiting for events...");
             
             // Use a timeout so we don't block indefinitely and can process other tasks
             int numEvents = kevent(m_kqueueFd, nullptr, 0, events, 64, &timeout);
@@ -122,22 +122,24 @@ void EventQueue::start(const std::function<void(int, int, void*)>& callback) {
             if (numEvents < 0) {
                 if (errno == EINTR) {
                     // interrupted by a signal, just retry
-                    LOG_INFO("Interrupted by signal, retrying");
+                    Logger::getInstance().log(LogLevel::INFO, "Interrupted by signal, retrying");
                     continue;
                 }
 
-                LOG_ERROR(std::format("kevent error: {}", strerror(errno)));
+                Logger::getInstance().log(LogLevel::ERROR,
+                                      std::format("kevent error: {}", strerror(errno)));
                 break;
             }
             
             if (numEvents == 0) {
                 // Timeout, no events - Check state of sockets periodically
-                LOG_INFO("Timeout - no events");
+                Logger::getInstance().log(LogLevel::INFO, "Timeout - no events");
                 // This is a good place to add any maintenance or timeout handling logic
                 continue;
             }
             
-            LOG_INFO(std::format("Received {} events", numEvents));
+            Logger::getInstance().log(LogLevel::INFO, 
+                std::format("Received {} events", numEvents));
 
             for (int i = 0; i < numEvents; ++i) {
                 int fd = static_cast<int>(events[i].ident);
@@ -146,7 +148,7 @@ void EventQueue::start(const std::function<void(int, int, void*)>& callback) {
                     // wake-up event, drain the pipe
                     char buffer[256];
                     while (read(m_wakePipe[0], buffer, sizeof(buffer)) > 0) {}
-                    LOG_INFO("Wake-up event processed");
+                    Logger::getInstance().log(LogLevel::INFO, "Wake-up event processed");
                     continue;
                 }
 
@@ -156,23 +158,26 @@ void EventQueue::start(const std::function<void(int, int, void*)>& callback) {
                 // Check for errors or special conditions
                 int flags = events[i].flags;
                 if (flags & EV_ERROR) {
-                    LOG_ERROR(std::format("Error on fd {}: {}", fd, strerror(events[i].data)));
+                    Logger::getInstance().log(LogLevel::ERROR, 
+                        std::format("Error on fd {}: {}", fd, strerror(events[i].data)));
                     continue;
                 }
                 
-                LOG_INFO(std::format("Event on fd {}, filter {}, flags 0x{:x}, data {}", 
+                Logger::getInstance().log(LogLevel::INFO, 
+                    std::format("Event on fd {}, filter {}, flags 0x{:x}, data {}", 
                         fd, 
-                        (filter == EVFILT_READ ? "READ" : 
+                        (filter == EVFILT_READ) ? "READ" : 
                         (filter == EVFILT_WRITE) ? "WRITE" : "UNKNOWN",
                         flags,
-                        events[i].data)));
+                        events[i].data));
 
                 // get the user data associated with the event
                 void* userData = events[i].udata;
                 
                 // Log if userData is null
                 if (userData == nullptr) {
-                    LOG_WARNING(std::format("Event on fd {} has null userData", fd));
+                    Logger::getInstance().log(LogLevel::WARNING, 
+                        std::format("Event on fd {} has null userData", fd));
                 }
 
                 // invoke the callback
@@ -180,7 +185,7 @@ void EventQueue::start(const std::function<void(int, int, void*)>& callback) {
             }
         }
 
-        LOG_INFO("event loop stopped");
+        Logger::getInstance().log(LogLevel::INFO, "event loop stopped");
     });
 }
 

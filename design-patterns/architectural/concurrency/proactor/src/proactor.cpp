@@ -79,7 +79,8 @@ public:
 
     // connect to the specified address and port
     void connect(const std::string& address, int port) {
-        LOG_INFO(std::format("Client connecting to {}:{}", address, port));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Client connecting to {}:{}", address, port));
             
         // disconnect if already connected
         if (m_connected) {
@@ -122,17 +123,19 @@ public:
 
     // disconnect from the server
     void disconnect() {
-        LOG_INFO("Client disconnecting");
+        Logger::getInstance().log(LogLevel::INFO, "Client disconnecting");
         m_socket.close();
         m_connected = false;
     }
 
     // send data to the server
     void send(const std::string& data) {
-        LOG_INFO(std::format("Client sending {} bytes of data", data.size()));
-        LOG_INFO(std::format("Sending data: '{}'", data));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Client sending {} bytes of data", data.size()));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Sending data: '{}'", data));
         if (!m_connected) {
-            LOG_ERROR("Not connected");
+            Logger::getInstance().log(LogLevel::ERROR, "Not connected");
             return;
         }
 
@@ -146,9 +149,10 @@ public:
             void handleCompletion(ssize_t result, Buffer buffer) override {
                 if (auto client = m_client.lock()) {
                     if (result >= 0) {
-                        LOG_INFO(std::format("Write operation completed, {} bytes written", result));
+                        Logger::getInstance().log(LogLevel::INFO, 
+                            std::format("Write operation completed, {} bytes written", result));
                     } else {
-                        LOG_ERROR("Write operation failed");
+                        Logger::getInstance().log(LogLevel::ERROR, "Write operation failed");
                     }
                 }
             }
@@ -163,16 +167,16 @@ public:
         // create and initiate an asynchronous write operation
         auto handler = std::make_shared<WriteCompletionHandler>(shared_from_this());
         if (const auto op = std::make_shared<AsyncWriteOperation>(handler, m_socket, std::move(buffer)); op->initiate(m_proactor)) {
-            LOG_INFO("Write operation initiated successfully");
+            Logger::getInstance().log(LogLevel::INFO, "Write operation initiated successfully");
         } else {
-            LOG_ERROR("Failed to initiate write operation");
+            Logger::getInstance().log(LogLevel::ERROR, "Failed to initiate write operation");
         }
     }
 
     // read data from the server
     void receive() {
         if (!m_connected) {
-            LOG_ERROR("Not connected");
+            Logger::getInstance().log(LogLevel::ERROR, "Not connected");
             return;
         }
 
@@ -188,10 +192,10 @@ public:
                     if (result > 0) {
                         client->handleDataReceived(std::move(buffer));
                     } else if (result == 0) {
-                        LOG_INFO("Connection closed by peer");
+                        Logger::getInstance().log(LogLevel::INFO, "Connection closed by peer");
                         client->disconnect();
                     } else {
-                        LOG_ERROR("Read operation failed");
+                        Logger::getInstance().log(LogLevel::ERROR, "Read operation failed");
                     }
                 }
             }
@@ -203,9 +207,9 @@ public:
         // create and initiate an asynchronous read operation
         auto handler = std::make_shared<ReadCompletionHandler>(shared_from_this());
         if (const auto op = std::make_shared<AsyncReadOperation>(handler, m_socket); op->initiate(m_proactor)) {
-            LOG_INFO("Read operation initiated successfully");
+            Logger::getInstance().log(LogLevel::INFO, "Read operation initiated successfully");
         } else {
-            LOG_ERROR("Failed to initiate read operation");
+            Logger::getInstance().log(LogLevel::ERROR, "Failed to initiate read operation");
         }
     }
 
@@ -222,14 +226,15 @@ public:
 private:
     // handle successful connection
     void handleConnectSuccess() {
-        LOG_INFO("Connection established");
+        Logger::getInstance().log(LogLevel::INFO, "Connection established");
         m_connected = true;
         notifyConnectionStatus(true, Error(0, ""));
     }
 
     // handle failed connection
     void handleConnectFailure(const Error& error) {
-        LOG_ERROR(std::format("Connection failed: {}", error.message()));
+        Logger::getInstance().log(LogLevel::ERROR, 
+            std::format("Connection failed: {}", error.message()));
         m_connected = false;
         notifyConnectionStatus(false, error);
     }
@@ -237,7 +242,8 @@ private:
     // handle data received
     void handleDataReceived(Buffer buffer) const {
         std::string data(buffer.data(), buffer.size());
-        LOG_INFO(std::format("Received {} bytes: {}", buffer.size(), data));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Received {} bytes: {}", buffer.size(), data));
         if (m_dataReceivedCallback) {
             m_dataReceivedCallback(std::move(buffer));
         }
@@ -285,7 +291,8 @@ public:
 
     // start listening on the specified port
     bool start(int port) {
-        LOG_INFO(std::format("Server starting on port {}", port));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Server starting on port {}", port));
             
         // stop if already listening
         if (m_listening) {
@@ -295,33 +302,37 @@ public:
         // create a socket
         m_socket = Socket::createTcp();
         if (!m_socket.isValid()) {
-            LOG_ERROR("Failed to create socket");
+            Logger::getInstance().log(LogLevel::ERROR, "Failed to create socket");
             return false;
         }
 
         // set socket options
         Error error = m_socket.setReuseAddress();
         if (error) {
-            LOG_ERROR(std::format("Failed to set socket options: {}", error.message()));
+            Logger::getInstance().log(LogLevel::ERROR, 
+                std::format("Failed to set socket options: {}", error.message()));
             return false;
         }
 
         // bind to the specified port
         error = m_socket.bind("0.0.0.0", port);
         if (error) {
-            LOG_ERROR(std::format("Failed to bind socket: {}", error.message()));
+            Logger::getInstance().log(LogLevel::ERROR, 
+                std::format("Failed to bind socket: {}", error.message()));
             return false;
         }
 
         // start listening
         error = m_socket.listen();
         if (error) {
-            LOG_ERROR(std::format("Failed to listen on socket: {}", error.message()));
+            Logger::getInstance().log(LogLevel::ERROR, 
+                std::format("Failed to listen on socket: {}", error.message()));
             return false;
         }
 
         m_listening = true;
-        LOG_INFO(std::format("Server listening on port {}", port));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Server listening on port {}", port));
 
         // start accepting connections
         accept();
@@ -331,7 +342,7 @@ public:
 
     // stop listening
     void stop() {
-        LOG_INFO("Server stopping");
+        Logger::getInstance().log(LogLevel::INFO, "Server stopping");
         m_socket.close();
         m_listening = false;
     }
@@ -344,9 +355,9 @@ public:
 private:
     // Accept a new connection
     void accept() {
-        LOG_INFO("Server accepting connections");
+        Logger::getInstance().log(LogLevel::INFO, "Server accepting connections");
         if (!m_listening) {
-            LOG_ERROR("Not listening");
+            Logger::getInstance().log(LogLevel::ERROR, "Not listening");
             return;
         }
 
@@ -365,7 +376,7 @@ private:
                         Socket clientSocket(result);
                         server->handleClientConnected(std::move(clientSocket));
                     } else {
-                        LOG_ERROR("Accept operation failed");
+                        Logger::getInstance().log(LogLevel::ERROR, "Accept operation failed");
                     }
 
                     // continue accepting connections
@@ -381,16 +392,16 @@ private:
         auto handler = std::make_shared<AcceptCompletionHandler>(shared_from_this());
         auto op = std::make_shared<AsyncAcceptOperation>(handler, m_socket);
         if (op->initiate(m_proactor)) {
-            LOG_INFO("Accept operation initiated successfully");
+            Logger::getInstance().log(LogLevel::INFO, "Accept operation initiated successfully");
         } else {
-            LOG_ERROR("Failed to initiate accept operation");
+            Logger::getInstance().log(LogLevel::ERROR, "Failed to initiate accept operation");
         }
     }
 
     // handle a new client connection
     void handleClientConnected(Socket clientSocket) const {
         // We can't get peer address directly from the socket anymore
-        LOG_INFO("Client connected");
+        Logger::getInstance().log(LogLevel::INFO, "Client connected");
         if (m_clientConnectedCallback) {
             m_clientConnectedCallback(std::move(clientSocket));
         }
@@ -460,7 +471,8 @@ private:
         void handleDataReceived(Buffer buffer) const {
             // echo the data back to the client
             std::string data(buffer.data(), buffer.size());
-            LOG_INFO(std::format("Echo server received: {}", data));
+            Logger::getInstance().log(LogLevel::INFO, 
+                std::format("Echo server received: {}", data));
             m_client->send(data);
 
             // continue receiving data
@@ -493,7 +505,7 @@ private:
 
 // Client test with single connection - this function would normally be in tests.cpp
 void runClientTest() {
-    LOG_INFO("Starting client test");
+    Logger::getInstance().log(LogLevel::INFO, "Starting client test");
 
     // Create a proactor
     auto proactor = std::make_shared<Proactor>();
@@ -510,13 +522,15 @@ void runClientTest() {
 
     // Set callbacks
     client->setConnectionStatusCallback([&connectPromise](bool connected, const Error& error) {
-        LOG_INFO(std::format("Connection status: {}", connected ? "connected" : "disconnected"));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Connection status: {}", connected ? "connected" : "disconnected"));
         connectPromise.set_value(connected);
     });
 
     client->setDataReceivedCallback([&dataPromise](Buffer buffer) {
         std::string data(buffer.data(), buffer.size());
-        LOG_INFO(std::format("Data received: {}", data));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("Data received: {}", data));
         dataPromise.set_value(data);
     });
 
@@ -525,14 +539,14 @@ void runClientTest() {
 
     // Wait for connection
     if (const auto connectStatus = connectFuture.wait_for(std::chrono::seconds(5)); connectStatus == std::future_status::timeout) {
-        LOG_ERROR("Connection timeout");
+        Logger::getInstance().log(LogLevel::ERROR, "Connection timeout");
         proactor->stop();
         return;
     }
 
     bool connected = connectFuture.get();
     if (!connected) {
-        LOG_ERROR("Failed to connect");
+        Logger::getInstance().log(LogLevel::ERROR, "Failed to connect");
         proactor->stop();
         return;
     }
@@ -542,16 +556,17 @@ void runClientTest() {
 
     // Wait for a response
     if (const auto dataStatus = dataFuture.wait_for(std::chrono::seconds(5)); dataStatus == std::future_status::timeout) {
-        LOG_ERROR("Data receive timeout");
+        Logger::getInstance().log(LogLevel::ERROR, "Data receive timeout");
         client->disconnect();
         proactor->stop();
-        LOG_ERROR("Test aborted, resources cleaned up");
+        Logger::getInstance().log(LogLevel::ERROR, "Test aborted, resources cleaned up");
         return;
     }
 
     // Get the response
     std::string receivedData = dataFuture.get();
-    LOG_INFO(std::format("Received response: {}", receivedData));
+    Logger::getInstance().log(LogLevel::INFO, 
+        std::format("Received response: {}", receivedData));
 
     // Disconnect
     client->disconnect();
@@ -559,12 +574,12 @@ void runClientTest() {
     // Stop the proactor
     proactor->stop();
 
-    LOG_INFO("Client test completed");
+    Logger::getInstance().log(LogLevel::INFO, "Client test completed");
 }
 
 // EchoServer test with multiple clients - this function would normally be in tests.cpp
 void runEchoServerTest() {
-    LOG_INFO("Starting echo server test");
+    Logger::getInstance().log(LogLevel::INFO, "Starting echo server test");
 
     // Create a proactor
     auto proactor = std::make_shared<Proactor>();
@@ -573,7 +588,7 @@ void runEchoServerTest() {
     // Create and start the echo server
     auto server = std::make_shared<EchoServer>(proactor);
     if (!server->start(8080)) {
-        LOG_ERROR("Failed to start server");
+        Logger::getInstance().log(LogLevel::ERROR, "Failed to start server");
         proactor->stop();
         return;
     }
@@ -596,14 +611,16 @@ void runEchoServerTest() {
         clients.push_back(client);
 
         client->setConnectionStatusCallback([ndx, &connectionPromises](const bool connected, const Error& error) {
-            LOG_INFO(std::format("Client {} connection status: {}",
+            Logger::getInstance().log(LogLevel::INFO,
+                std::format("Client {} connection status: {}",
                     ndx, connected ? "connected" : "disconnected"));
             connectionPromises[ndx].set_value(connected);
         });
 
         client->setDataReceivedCallback([ndx, &dataPromises](Buffer buffer) {
             std::string data(buffer.data(), buffer.size());
-            LOG_INFO(std::format("Client {} received: {}", ndx, data));
+            Logger::getInstance().log(LogLevel::INFO,
+                std::format("Client {} received: {}", ndx, data));
             dataPromises[ndx].set_value(data);
         });
     }
@@ -617,7 +634,8 @@ void runEchoServerTest() {
     for (int ndx = 0; ndx < numClients; ++ndx) {
         if (const auto clientConnectStatus = connectionFutures[ndx].wait_for(std::chrono::seconds(10));
                 clientConnectStatus == std::future_status::timeout) {
-            LOG_ERROR(std::format("Client {} connection timeout", ndx));
+            Logger::getInstance().log(LogLevel::ERROR,
+                std::format("Client {} connection timeout", ndx));
             // Stop all clients and the server
             for (const auto& client : clients) {
                 client->disconnect();
@@ -628,7 +646,8 @@ void runEchoServerTest() {
         }
 
         if (const bool connected = connectionFutures[ndx].get(); !connected) {
-            LOG_ERROR(std::format("Client {} failed to connect", ndx));
+            Logger::getInstance().log(LogLevel::ERROR,
+                std::format("Client {} failed to connect", ndx));
             return;
         }
     }
@@ -643,15 +662,18 @@ void runEchoServerTest() {
     for (int ndx = 0; ndx < numClients; ++ndx) {
         if (const auto clientDataStatus = dataFutures[ndx].wait_for(std::chrono::seconds(5));
                 clientDataStatus == std::future_status::timeout) {
-            LOG_ERROR(std::format("Client {} data receive timeout", ndx));
+            Logger::getInstance().log(LogLevel::ERROR,
+                std::format("Client {} data receive timeout", ndx));
             continue;
         }
 
         std::string receivedData = dataFutures[ndx].get();
         if (std::string expectedData = std::format("Hello from client {}!", ndx); receivedData != expectedData) {
-            LOG_ERROR(std::format("Client {} received unexpected data: {}", ndx, receivedData));
+            Logger::getInstance().log(LogLevel::ERROR,
+                std::format("Client {} received unexpected data: {}", ndx, receivedData));
         } else {
-            LOG_INFO(std::format("Client {} echo test passed", ndx));
+            Logger::getInstance().log(LogLevel::INFO,
+                std::format("Client {} echo test passed", ndx));
         }
     }
 
@@ -666,5 +688,5 @@ void runEchoServerTest() {
     // Stop the proactor
     proactor->stop();
 
-    LOG_INFO("Echo server test completed");
+    Logger::getInstance().log(LogLevel::INFO, "Echo server test completed");
 }

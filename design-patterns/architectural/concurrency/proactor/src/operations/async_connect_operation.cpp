@@ -21,11 +21,12 @@ AsyncConnectOperation::AsyncConnectOperation(const std::shared_ptr<CompletionHan
       m_port(port) {}
 
 bool AsyncConnectOperation::initiate(const std::shared_ptr<Proactor>& proactor) {
-    LOG_INFO(std::format("Initiating connect operation to {}:{} on socket {}", 
+    Logger::getInstance().log(LogLevel::INFO, 
+        std::format("Initiating connect operation to {}:{} on socket {}", 
             m_address, m_port, m_socket));
             
     if (m_socket < 0) {
-        LOG_ERROR("Invalid socket");
+        Logger::getInstance().log(LogLevel::ERROR, "Invalid socket");
         return false;
     }
 
@@ -35,7 +36,8 @@ bool AsyncConnectOperation::initiate(const std::shared_ptr<Proactor>& proactor) 
     // Set the socket to non-blocking mode
     Error error = socket.setNonBlocking();
     if (error) {
-        LOG_ERROR(std::format("Failed to set socket non-blocking: {}", error.message()));
+        Logger::getInstance().log(LogLevel::ERROR, 
+            std::format("Failed to set socket non-blocking: {}", error.message()));
         return false;
     }
     
@@ -43,25 +45,28 @@ bool AsyncConnectOperation::initiate(const std::shared_ptr<Proactor>& proactor) 
     int value = 0;
     socklen_t valueLen = sizeof(value);
     if (getsockopt(m_socket, SOL_SOCKET, SO_TYPE, &value, &valueLen) < 0) {
-        LOG_ERROR(std::format("Socket diagnostic failed: {} ({})", strerror(errno), errno));
+        Logger::getInstance().log(LogLevel::ERROR, 
+            std::format("Socket diagnostic failed: {} ({})", strerror(errno), errno));
         return false;
     }
-    LOG_INFO(std::format("Socket {} diagnostics - type: {}", m_socket, value));
+    Logger::getInstance().log(LogLevel::INFO, 
+        std::format("Socket {} diagnostics - type: {}", m_socket, value));
 
     // Ensure we're using TCP
     if (value != SOCK_STREAM) {
-        LOG_ERROR("Not a TCP socket");
+        Logger::getInstance().log(LogLevel::ERROR, "Not a TCP socket");
         return false;
     }
 
     // Start the asynchronous connection
     error = socket.connect(m_address, m_port);
     if (error) {
-        LOG_ERROR(std::format("Failed to connect: {}", error.message()));
+        Logger::getInstance().log(LogLevel::ERROR, 
+            std::format("Failed to connect: {}", error.message()));
         return false;
     }
     
-    LOG_INFO("Connection initiated");
+    Logger::getInstance().log(LogLevel::INFO, "Connection initiated");
 
     // Check connection status immediately - if already connected, it's a loopback 
     // connection which might succeed immediately
@@ -69,7 +74,7 @@ bool AsyncConnectOperation::initiate(const std::shared_ptr<Proactor>& proactor) 
     socklen_t errLen = sizeof(err);
     if (getsockopt(m_socket, SOL_SOCKET, SO_ERROR, &err, &errLen) >= 0 && err == 0) {
         if (const int result = connect(m_socket, nullptr, 0); result == 0 || (result < 0 && errno == EISCONN)) {
-            LOG_INFO("Connection completed immediately");
+            Logger::getInstance().log(LogLevel::INFO, "Connection completed immediately");
             // For immediate connections, we still register with the proactor
             // because the proactor pattern requires all operations to complete asynchronously
         }
@@ -78,7 +83,7 @@ bool AsyncConnectOperation::initiate(const std::shared_ptr<Proactor>& proactor) 
     // Register the socket with the proactor for write events
     // (write events are triggered when the connection is established)
     proactor->registerOperation(m_socket, shared_from_this());
-    LOG_INFO("Socket registered with proactor");
+    Logger::getInstance().log(LogLevel::INFO, "Socket registered with proactor");
     return true;
 }
 

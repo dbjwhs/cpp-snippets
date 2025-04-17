@@ -16,11 +16,12 @@ AsyncWriteOperation::AsyncWriteOperation(std::shared_ptr<CompletionHandler> hand
       m_bytesWritten(0) {}
 
 bool AsyncWriteOperation::initiate(const std::shared_ptr<Proactor>& proactor) {
-    LOG_INFO(std::format("Initiating write operation on socket {} ({} bytes",
-            m_socket, m_buffer.size())));
+    Logger::getInstance().log(LogLevel::INFO, 
+        std::format("Initiating write operation on socket {} ({} bytes)",
+            m_socket, m_buffer.size()));
             
     if (m_socket < 0) {
-        LOG_ERROR("Invalid socket");
+        Logger::getInstance().log(LogLevel::ERROR, "Invalid socket");
         return false;
     }
 
@@ -33,25 +34,29 @@ bool AsyncWriteOperation::initiate(const std::shared_ptr<Proactor>& proactor) {
         m_buffer.size() - m_bytesWritten);
 
     if (error) {
-        LOG_ERROR(std::format("Write error: {}", error.message()));
+        Logger::getInstance().log(LogLevel::ERROR, 
+            std::format("Write error: {}", error.message()));
         return false;
     }
 
     // Update the number of bytes written
     m_bytesWritten += bytesWritten;
-    LOG_INFO(std::format("Wrote {} bytes synchronously", bytesWritten));
+    Logger::getInstance().log(LogLevel::INFO, 
+        std::format("Wrote {} bytes synchronously", bytesWritten));
 
     // Check if all data has been written
     if (m_bytesWritten >= m_buffer.size()) {
         // All data written, complete the operation
-        LOG_INFO(std::format("All data written ({} bytes), completing operation", m_bytesWritten));
+        Logger::getInstance().log(LogLevel::INFO, 
+            std::format("All data written ({} bytes), completing operation", m_bytesWritten));
         complete(m_bytesWritten, Buffer());
         return true;
     }
 
     // More data to write, register for write events
-    LOG_INFO(std::format("{} bytes remaining, registering for write events", 
-            m_buffer.size( - m_bytesWritten)));
+    Logger::getInstance().log(LogLevel::INFO, 
+        std::format("{} bytes remaining, registering for write events", 
+            m_buffer.size() - m_bytesWritten));
     proactor->registerOperation(m_socket, shared_from_this());
     return true;
 }
