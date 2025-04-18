@@ -174,7 +174,7 @@ while IFS= read -r -d '' cmake_file; do
             break
         fi
     done
-    
+
     if [ "$skip" = true ]; then
         continue
     fi
@@ -255,6 +255,13 @@ if [ "$DRY_RUN" = false ]; then
                 log "SUMMARY" "-> Run failed: ${path}" "${RED}"
             done
         fi
+    fi
+
+    # Show excluded paths
+    if [ ${#EXCLUDE_DIRS[@]} -gt 0 ]; then
+        exclude_list=$(printf ", %s" "${EXCLUDE_DIRS[@]}")
+        exclude_list=${exclude_list:2}  # Remove leading comma and space
+        log "SUMMARY" "Excluded paths: ${exclude_list}" "${BLUE}"
     fi
 fi
 

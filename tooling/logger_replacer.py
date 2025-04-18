@@ -199,7 +199,13 @@ def main():
         else:
             print(f"  No changes needed in {file_path}")
 
+    # Print completion message with excluded directories in blue
     print(f"Logger replacement completed! Modified {modified_count} of {len(cpp_files)} files.")
+    
+    # Show excluded paths in blue
+    if EXCLUDE_DIRS:
+        exclude_list = ", ".join(EXCLUDE_DIRS)
+        print(f"\033[0;94mExcluded paths: {exclude_list}\033[0m")
 
 if __name__ == "__main__":
     main()
