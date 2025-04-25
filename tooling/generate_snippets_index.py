@@ -30,43 +30,6 @@ CATEGORIES = [
 # Design patterns subcategories
 DESIGN_PATTERN_TYPES = ["creational", "structural", "behavioral", "architectural"]
 
-def read_readme(path):
-    """Read the README file for a snippet to extract its description."""
-    try:
-        with open(path, 'r') as f:
-            content = f.read()
-
-            # Try to extract the first non-empty line after the title
-            match = re.search(r'^# .+?\n\s*\n(.+?)$', content, re.MULTILINE)
-            if match:
-                # Get the captured text and remove any markdown headers
-                description = match.group(1).strip()
-                if description.startswith('##'):
-                    # If it starts with a header, skip it and look for next content
-                    content_lines = [line.strip() for line in content.split('\n')
-                                   if line.strip() and not line.startswith('#')]
-                    if content_lines:
-                        return content_lines[0]
-                    return ""
-                return description
-
-            # If no match, try to get the first non-empty line that's not a header
-            content_lines = [line.strip() for line in content.split('\n')
-                           if line.strip() and not line.startswith('#')]
-            if content_lines:
-                return content_lines[0]
-            return ""
-    except Exception as e:
-        print(f"Error reading {path}: {e}")
-        return ""
-
-def get_snippet_description(snippet_path):
-    """Get description from the README of a snippet."""
-    readme_path = snippet_path / "README.md"
-    if readme_path.exists():
-        return read_readme(readme_path)
-    return ""
-
 def generate_index():
     """Generate the snippets index."""
     snippets = defaultdict(list)
@@ -89,16 +52,14 @@ def generate_index():
 
                 for snippet_dir in type_dir.iterdir():
                     if snippet_dir.is_dir() and (snippet_dir / "CMakeLists.txt").exists():
-                        desc = get_snippet_description(snippet_dir)
                         rel_path = snippet_dir.relative_to(BASE_DIR)
-                        design_patterns[pattern_type].append((snippet_dir.name, str(rel_path), desc))
+                        design_patterns[pattern_type].append((snippet_dir.name, str(rel_path)))
         else:
             # Process regular category
             for snippet_dir in category_dir.iterdir():
                 if snippet_dir.is_dir() and (snippet_dir / "CMakeLists.txt").exists():
-                    desc = get_snippet_description(snippet_dir)
                     rel_path = snippet_dir.relative_to(BASE_DIR)
-                    snippets[category].append((snippet_dir.name, str(rel_path), desc))
+                    snippets[category].append((snippet_dir.name, str(rel_path)))
 
     # Generate markdown
     markdown = []
@@ -114,20 +75,14 @@ def generate_index():
             for pattern_type in DESIGN_PATTERN_TYPES:
                 if design_patterns[pattern_type]:
                     markdown.append(f"#### {pattern_type.capitalize()}")
-                    for name, path, desc in sorted(design_patterns[pattern_type]):
-                        if desc:
-                            markdown.append(f"- [{name}/]({path}/) - {desc}")
-                        else:
-                            markdown.append(f"- [{name}/]({path}/)")
+                    for name, path in sorted(design_patterns[pattern_type]):
+                        markdown.append(f"- [{name}/]({path}/)")
                     markdown.append("")
         elif snippets[category]:
             category_title = " ".join(word.capitalize() for word in category.split('-'))
             markdown.append(f"### {category_title}")
-            for name, path, desc in sorted(snippets[category]):
-                if desc:
-                    markdown.append(f"- [{name}/]({path}/) - {desc}")
-                else:
-                    markdown.append(f"- [{name}/]({path}/)")
+            for name, path in sorted(snippets[category]):
+                markdown.append(f"- [{name}/]({path}/)")
             markdown.append("")
 
     return "\n".join(markdown)
