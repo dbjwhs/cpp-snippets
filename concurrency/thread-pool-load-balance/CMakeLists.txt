@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2025 dbjwhs
+
 cmake_minimum_required(VERSION 3.20)
 project(thread_pool_load_balance VERSION 1.0.0 LANGUAGES CXX)
 
