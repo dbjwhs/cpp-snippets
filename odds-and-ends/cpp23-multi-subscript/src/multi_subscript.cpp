@@ -92,6 +92,30 @@ public:
         return self.m_data[row * self.m_cols + col];
     }
 
+    // at() method for bounds checking (const version)
+    auto at(this Matrix const& self, int row, int col) -> double const& {
+        // check bounds - throws if out of range
+        if (row < 0 || row >= self.m_rows || col < 0 || col >= self.m_cols) {
+            LOG_ERROR(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
+            throw std::out_of_range(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
+        }
+
+        // calculate linear index from 2d coordinates
+        return self.m_data[row * self.m_cols + col];
+    }
+
+    // at() method for bounds checking (non-const version)
+    auto at(this Matrix& self, int row, int col) -> double& {
+        // check bounds - throws if out of range
+        if (row < 0 || row >= self.m_rows || col < 0 || col >= self.m_cols) {
+            LOG_ERROR(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
+            throw std::out_of_range(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
+        }
+
+        // calculate linear index from 2d coordinates
+        return self.m_data[row * self.m_cols + col];
+    }
+
     // getter for rows
     auto rows(this Matrix const& self) -> int {
         return self.m_rows;
@@ -156,6 +180,30 @@ public:
         if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
             LOG_ERROR(std::format("Tensor index out of bounds: [{}, {}, {}]", i, j, k));
             throw std::out_of_range("Tensor indices out of bounds");
+        }
+
+        // calculate linear index from 3d coordinates
+        return self.m_data[(i * self.m_dim2 * self.m_dim3) + (j * self.m_dim3) + k];
+    }
+
+    // at() method for bounds checking (const version)
+    auto at(this Tensor const& self, int i, int j, int k) -> double const& {
+        // check bounds - throws if out of range
+        if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
+            LOG_ERROR(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
+            throw std::out_of_range(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
+        }
+
+        // calculate linear index from 3d coordinates
+        return self.m_data[(i * self.m_dim2 * self.m_dim3) + (j * self.m_dim3) + k];
+    }
+
+    // at() method for bounds checking (non-const version)
+    auto at(this Tensor& self, int i, int j, int k) -> double& {
+        // check bounds - throws if out of range
+        if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
+            LOG_ERROR(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
+            throw std::out_of_range(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
         }
 
         // calculate linear index from 3d coordinates
@@ -304,6 +352,104 @@ void test_bounds_checking() {
     LOG_INFO("Bounds checking tests passed");
 }
 
+void test_matrix_at_method() {
+    LOG_INFO("Testing matrix at() method");
+
+    // create a 2x2 matrix
+    Matrix m(2, 2);
+
+    // set some values using operator[]
+    m[0, 0] = 1.0;
+    m[0, 1] = 2.0;
+    m[1, 0] = 3.0;
+    m[1, 1] = 4.0;
+
+    // test valid access with at()
+    if (m.at(0, 0) != 1.0) {
+        LOG_ERROR("Test failed: m.at(0, 0) != 1.0");
+    }
+
+    if (m.at(1, 1) != 4.0) {
+        LOG_ERROR("Test failed: m.at(1, 1) != 4.0");
+    }
+
+    // test modification with at()
+    m.at(0, 1) = 5.0;
+    if (m[0, 1] != 5.0) {
+        LOG_ERROR("Test failed: m[0, 1] != 5.0 after modifying with at()");
+    }
+
+    // test exception from at() for out-of-bounds
+    LOG_INFO("Intentionally testing out-of-bounds access with at() - expect an error log next");
+
+    bool exception_caught = false;
+    try {
+        Logger::StderrSuppressionGuard stderr_guard;
+        auto val = m.at(2, 0); // out of bounds
+        LOG_ERROR("Test failed: Failed to catch out-of-bounds access with at()");
+    } catch (const std::out_of_range& e) {
+        exception_caught = true;
+        LOG_INFO(std::format("Successfully caught exception as expected: {}", e.what()));
+    }
+
+    if (!exception_caught) {
+        LOG_ERROR("Test failed: Exception was not caught for out-of-bounds access with at()");
+    }
+
+    LOG_INFO("Matrix at() method tests passed");
+}
+
+void test_tensor_at_method() {
+    LOG_INFO("Testing tensor at() method");
+
+    // create a 2x2x2 tensor
+    Tensor t(2, 2, 2);
+
+    // set some values using operator[]
+    t[0, 0, 0] = 1.0;
+    t[0, 0, 1] = 2.0;
+    t[0, 1, 0] = 3.0;
+    t[0, 1, 1] = 4.0;
+    t[1, 0, 0] = 5.0;
+    t[1, 0, 1] = 6.0;
+    t[1, 1, 0] = 7.0;
+    t[1, 1, 1] = 8.0;
+
+    // test valid access with at()
+    if (t.at(0, 0, 0) != 1.0) {
+        LOG_ERROR("Test failed: t.at(0, 0, 0) != 1.0");
+    }
+
+    if (t.at(1, 1, 1) != 8.0) {
+        LOG_ERROR("Test failed: t.at(1, 1, 1) != 8.0");
+    }
+
+    // test modification with at()
+    t.at(0, 1, 1) = 9.0;
+    if (t[0, 1, 1] != 9.0) {
+        LOG_ERROR("Test failed: t[0, 1, 1] != 9.0 after modifying with at()");
+    }
+
+    // test exception from at() for out-of-bounds
+    LOG_INFO("Intentionally testing out-of-bounds access with at() - expect an error log next");
+
+    bool exception_caught = false;
+    try {
+        Logger::StderrSuppressionGuard stderr_guard;
+        auto val = t.at(0, 0, 2); // out of bounds in 3rd dimension
+        LOG_ERROR("Test failed: Failed to catch out-of-bounds access with at()");
+    } catch (const std::out_of_range& e) {
+        exception_caught = true;
+        LOG_INFO(std::format("Successfully caught exception as expected: {}", e.what()));
+    }
+
+    if (!exception_caught) {
+        LOG_ERROR("Test failed: Exception was not caught for out-of-bounds access with at()");
+    }
+
+    LOG_INFO("Tensor at() method tests passed");
+}
+
 void test_overload_pattern() {
     LOG_INFO("Testing overload pattern with explicit object parameter");
 
@@ -324,6 +470,8 @@ int main() {
     test_matrix_basic();
     test_tensor();
     test_bounds_checking();
+    test_matrix_at_method();
+    test_tensor_at_method();
     test_overload_pattern();
 
     LOG_INFO("All tests completed");
