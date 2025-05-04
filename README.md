@@ -1,5 +1,3 @@
-# WIP
-
 # C++ Code Snippets
 
 A collection of self-contained C++ code snippets, examples, and mini-projects. Each snippet is independently buildable and includes its own CMake configuration.
