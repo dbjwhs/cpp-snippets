@@ -124,6 +124,8 @@ Or you can elect to build everything at once.
 - [cpp20-ranges/](odds-and-ends/cpp20-ranges/)
 - [cpp20-spaceship/](odds-and-ends/cpp20-spaceship/)
 - [cpp20-test-macros/](odds-and-ends/cpp20-test-macros/)
+- [cpp23-multi-subscript/](odds-and-ends/cpp23-multi-subscript/)
+- [cpp23-this/](odds-and-ends/cpp23-this/)
 - [hoare-logic/](odds-and-ends/hoare-logic/)
 - [pagination/](odds-and-ends/pagination/)
 - [phone-number-to-char/](odds-and-ends/phone-number-to-char/)
