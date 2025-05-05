@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Start timing the script execution with millisecond precision
+TIMEFORMAT=%R
+start_time=$(date +%s.%N)
+
 # Directories to exclude from processing
 EXCLUDE_DIRS=(
     "../odds-and-ends/cpp20-modules"
@@ -17,6 +21,7 @@ EXCLUDE_DIRS=(
 RED='\033[0;31m'    # Normal red text
 GREEN='\033[0;32m'  # Normal green text
 BLUE='\033[0;94m'   # Normal blue text
+PURPLE='\033[0;35m' # Normal purple text
 NC='\033[0m'        # No Color - resets color to terminal default
 #
 # Usage example:
@@ -267,8 +272,20 @@ fi
 
 # Exit with failure if any builds failed or runs failed (only in non-dry-run mode)
 if [ "$DRY_RUN" = false ] && ([ ${failed_builds} -gt 0 ] || [ ${failed_runs} -gt 0 ]); then
-    exit 1
+    exit_code=1
+else
+    exit_code=0
 fi
 
-exit 0
+# Calculate and display the total execution time with millisecond precision
+end_time=$(date +%s.%N)
+execution_time=$(echo "$end_time - $start_time" | bc)
+total_seconds=$(echo "$execution_time / 1" | bc)
+milliseconds=$(echo "scale=3; ($execution_time - $total_seconds) * 1000 / 1" | bc | awk '{printf "%.0f", $0}')
+hours=$((total_seconds / 3600))
+minutes=$(( (total_seconds % 3600) / 60 ))
+seconds=$((total_seconds % 60))
+log "SUMMARY" "Total execution time: ${hours}h ${minutes}m ${seconds}s ${milliseconds}ms" "${PURPLE}"
+
+exit $exit_code
 
