@@ -17,10 +17,27 @@
 #include <filesystem>
 #include <iomanip>
 #include <format>
+#include <vector>
 
 // version information
 #define PROJECT_VERSION_MAJOR 1
 #define PROJECT_VERSION_MINOR 0
+
+// Utils namespace
+namespace utils {
+
+// Split a string by a delimiter
+inline std::vector<std::string> split(const std::string& str, const char delimiter) {
+    std::vector<std::string> tokens;
+    std::stringstream ss(str);
+    std::string token;
+    while (std::getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
+} // namespace utils
 
 // utility macros (use sparingly)
 #define DECLARE_NON_COPYABLE(ClassType) \
