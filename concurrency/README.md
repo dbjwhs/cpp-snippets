@@ -2,13 +2,13 @@
 
 ## Overview
 
-This README provides a comprehensive summary of Anthony Williams' talk "An Introduction to Multithreading in C++20" from CppCon 2022. The document covers key C++20 multithreading facilities, practical usage patterns, and best practices for writing safe and efficient concurrent code.
+This README comprehensively summarizes Anthony Williams' talk "An Introduction to Multithreading in C++20" from CppCon 2022. The document covers key C++20 multithreading facilities, practical usage patterns, and best practices for writing safe and efficient concurrent code.
 
 **Video Link:** [An Introduction to Multithreading in C++20 - Anthony Williams - CppCon 2022](https://www.youtube.com/watch?v=A7sVFJLJM-A)
 
-Anthony Williams is a multithreading expert, the author of "C++ Concurrency in Action," and has been instrumental in the development of the C++ Standard's thread library since C++11.
+Anthony Williams is a multithreading expert, the author of "C++ Concurrency in Action," and has been instrumental in developing the C++ Standard's thread library since C++11.
 
-I personally discovered Anthony's book in 2012 and it led to seeding many of the examples in this directory. It feels appropriate that he is not only called out in and around my example code. If you are interested in C++ concurrency, especially if you lived as I did in a time where there was no OS agnostic threading libraries, then take the time to at least watch the above video, if your interest is peeked then buy his book.
+I discovered Anthony's book in 2012, which became the foundation for many examples in this directory. Given its influence on this codebase, explicitly acknowledging his contributions is fitting. If you're working with C++ concurrency, particularly if you remember the days before portable threading libraries existed, I highly recommend watching the video above. If it sparks your interest, his book is worth the investment.
 
 ## Table of Contents
 
