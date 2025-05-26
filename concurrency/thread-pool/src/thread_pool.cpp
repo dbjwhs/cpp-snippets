@@ -1,8 +1,6 @@
-// mit license
+// MIT license
 // copyright (c) 2025 dbjwhs
 //
-
-// ensure c++17 or later is being used
 
 #include <thread>
 #include <queue>
@@ -16,29 +14,34 @@ class ThreadPool {
 private:
     // vector to store worker threads
     std::vector<std::thread> m_workers;
+
     // queue to store pending tasks
     std::queue<std::function<void()>> m_tasks;
+
     // mutex to protect access to the task queue
     std::mutex m_queueMutex;
+
     // condition variable for thread synchronization
     std::condition_variable m_condition;
+
     // flag to signal thread pool shutdown
     bool m_stop;
+
     // thread-safe logger
     Logger& m_logger;
 
-    // prevent default construction and copying of thread pool
+    // prevent default construction and copying of the thread pool
     DECLARE_NON_COPYABLE(ThreadPool);
     DECLARE_NON_MOVEABLE(ThreadPool);
 
 public:
-    // constructor creates specified number of worker threads
+    // the constructor creates a specified number of worker threads
     explicit ThreadPool(const size_t numThreads, Logger& logger)
         : m_stop(false), m_logger(logger) {
         m_logger.log(LogLevel::INFO, "Initializing thread pool with " + std::to_string(numThreads) + " threads");
 
         for (size_t i = 0; i < numThreads; ++i) {
-            // create worker threads using lambda function
+            // create worker threads using a lambda function
             m_workers.emplace_back([this] {
                 while (true) {
                     std::function<void()> task;
@@ -72,7 +75,7 @@ public:
         }
     }
 
-    // destructor ensures clean shutdown of thread pool
+    // destructor ensures clean shutdown of the thread pool
     ~ThreadPool() {
         {
             // signal threads to stop
@@ -108,17 +111,17 @@ public:
             }
         );
 
-        // get future for the task result
+        // get the future for the task result
         std::future<return_type> result = task->get_future();
         {
             // lock the queue mutex
             std::unique_lock<std::mutex> lock(m_queueMutex);
-            // check if thread pool is stopped
+            // check if the thread pool is stopped
             if (m_stop) {
                 throw std::runtime_error("Cannot enqueue on stopped ThreadPool");
             }
 
-            // add task to queue via lamda
+            // add task to queue via lambda
             m_tasks.emplace([task]() {
                 (*task)();
             });
@@ -135,7 +138,7 @@ int main() {
     Logger& logger = Logger::getInstance();
 
     try {
-        // thread pool will use maximum number of concurrent threads supported
+        // thread pool will use the maximum number of concurrent threads supported
         const unsigned int threadCount = std::thread::hardware_concurrency();
 
         if (threadCount == 0) {
@@ -155,7 +158,7 @@ int main() {
 
             // add tasks to the thread pool
             for (int i = 0; i < threadCount * 2; ++i) {
-                // enqueue task that prints thread id and returns square of input
+                // enqueue a task that prints the thread ID and returns the square of the input
                 results.emplace_back(
                     pool.enqueue([i, &logger] {
                         logger.log(LogLevel::INFO, "Task " + std::to_string(i) + " running on thread ", threadIdToString());
