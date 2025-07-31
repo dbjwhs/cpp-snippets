@@ -86,16 +86,22 @@ In traditional error handling, you must explicitly check for errors after each o
 
 ```cpp
 // Traditional approach - explicit error checking
-auto file_result = read_file();
-if (!file_result) return handle_file_error(file_result.error());
+auto file_result = read_file();                    // Returns std::expected<std::string, FileError>
+if (!file_result.has_value()) {                    // Check if operation failed
+    return handle_file_error(file_result.error()); // Handle the error
+}
 
-auto parse_result = parse_data(file_result.value());
-if (!parse_result) return handle_parse_error(parse_result.error());
+auto parse_result = parse_data(file_result.value());  // Returns std::expected<Data, ParseError>
+if (!parse_result.has_value()) {                     // Check if parsing failed
+    return handle_parse_error(parse_result.error()); // Handle the error
+}
 
-auto final_result = process_data(parse_result.value());
-if (!final_result) return handle_process_error(final_result.error());
+auto final_result = process_data(parse_result.value()); // Returns std::expected<Result, ProcessError>
+if (!final_result.has_value()) {                       // Check if processing failed
+    return handle_process_error(final_result.error()); // Handle the error
+}
 
-return final_result.value();
+return final_result.value(); // Finally get the actual result
 ```
 
 With railway-oriented programming, errors automatically propagate through the success/error tracks:
