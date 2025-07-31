@@ -62,6 +62,193 @@ auto recovered = risky_operation()
     });
 ```
 
+## Monadic Chaining
+
+One of the most powerful features of `std::expected` is its support for monadic operations, which enable clean composition
+of fallible operations without explicit error checking at each step. This pattern, borrowed from functional programming,
+allows you to build processing pipelines where errors automatically propagate through the chain.
+
+### Core Monadic Operations
+
+- **`and_then()`**: Chains operations that may fail, automatically propagating errors
+- **`or_else()`**: Provides error recovery by offering alternative operations
+- **`transform()`**: Modifies successful values while preserving errors unchanged
+
+### Railway-Oriented Programming
+
+The monadic interface enables "railway-oriented programming" where your code follows two tracks: a success track and an
+error track. Operations automatically switch to the error track when failures occur, eliminating the need for explicit
+error checking at each step.
+
+#### The Two-Track System
+
+In traditional error handling, you must explicitly check for errors after each operation:
+
+```cpp
+// Traditional approach - explicit error checking
+auto file_result = read_file();
+if (!file_result) return handle_file_error(file_result.error());
+
+auto parse_result = parse_data(file_result.value());
+if (!parse_result) return handle_parse_error(parse_result.error());
+
+auto final_result = process_data(parse_result.value());
+if (!final_result) return handle_process_error(final_result.error());
+
+return final_result.value();
+```
+
+With railway-oriented programming, errors automatically propagate through the success/error tracks:
+
+```cpp
+// Railway approach - automatic error propagation  
+return read_file()
+    .and_then(parse_data)
+    .and_then(process_data);
+```
+
+#### Visual Flow Diagram
+
+```
+Input ──→ read_file() ──┐
+                        │
+                        ├─ Success ──→ parse_data() ──┐
+                        │                             │
+                        │                             ├─ Success ──→ process_data() ──┐
+                        │                             │                               │
+                        │                             │                               ├─ Success ──→ RESULT
+                        │                             │                               │
+                        │                             │                               └─ Error ──────→ ERROR
+                        │                             │
+                        │                             └─ Error ──────────────────────────────────────→ ERROR
+                        │
+                        └─ Error ──────────────────────────────────────────────────────────────────────→ ERROR
+```
+
+#### Step-by-Step Error Propagation
+
+Consider this monadic chain:
+```cpp
+std::expected<int, std::string> process_pipeline() {
+    return file_to_string()                    // Step 1: std::expected<std::string, std::string>
+        .and_then(parse_to_string)             // Step 2: std::expected<std::vector<int>, std::string>  
+        .and_then([](const std::vector<int>& numbers) -> std::expected<int, std::string> {
+            return calculate_sum(numbers);      // Step 3: std::expected<int, std::string>
+        });
+}
+```
+
+**Scenario 1: All Steps Succeed**
+- Step 1 returns `std::expected<std::string, std::string>` with file content
+- Step 2 executes, receives the string, returns `std::expected<std::vector<int>, std::string>` with parsed numbers
+- Step 3 executes, receives the vector, returns `std::expected<int, std::string>` with calculated sum
+- Final result: Success with the sum value
+
+**Scenario 2: Step 1 Fails (File Error)**
+- Step 1 returns `std::unexpected{"file not found"}`
+- Step 2 **never executes** - error propagates automatically
+- Step 3 **never executes** - error propagates automatically
+- Final result: `std::unexpected{"file not found"}`
+
+**Scenario 3: Step 2 Fails (Parse Error)**
+- Step 1 succeeds, returns file content
+- Step 2 executes but returns `std::unexpected{"invalid format"}`
+- Step 3 **never executes** - error propagates automatically
+- Final result: `std::unexpected{"invalid format"}`
+
+**Scenario 4: Step 3 Fails (Processing Error)**
+- Step 1 succeeds, returns file content
+- Step 2 succeeds, returns parsed numbers
+- Step 3 executes but returns `std::unexpected{"calculation failed"}`
+- Final result: `std::unexpected{"calculation failed"}`
+
+#### Contrast with Traditional Error Handling
+
+**Traditional Approach Problems:**
+- **Verbose**: Explicit error checking after every operation
+- **Error-prone**: Easy to forget error checks or handle them inconsistently
+- **Deeply nested**: Success path gets buried in nested if statements
+- **Scattered logic**: Error handling code mixed with business logic
+
+**Railway-Oriented Benefits:**
+- **Concise**: Error propagation is automatic and implicit
+- **Safe**: Impossible to forget error handling - it's built into the type system
+- **Linear**: Success path reads as a clean sequence of operations
+- **Separated concerns**: Business logic flows naturally, error handling is orthogonal
+
+**Before (Traditional):**
+```cpp
+Result process_data(const Input& input) {
+    auto step1 = validate_input(input);
+    if (!step1.success) {
+        log_error("Validation failed: " + step1.error);
+        return Result::failure(step1.error);
+    }
+    
+    auto step2 = transform_data(step1.data);
+    if (!step2.success) {
+        log_error("Transform failed: " + step2.error);
+        return Result::failure(step2.error);
+    }
+    
+    auto step3 = save_data(step2.data);
+    if (!step3.success) {
+        log_error("Save failed: " + step3.error);
+        return Result::failure(step3.error);
+    }
+    
+    return Result::success(step3.data);
+}
+```
+
+**After (Railway-Oriented):**
+```cpp
+std::expected<Data, std::string> process_data(const Input& input) {
+    return validate_input(input)
+        .and_then(transform_data)
+        .and_then(save_data);
+}
+```
+
+The railway pattern transforms error handling from an explicit, repetitive concern into an implicit, composable feature
+of the type system, leading to more maintainable and less error-prone code.
+
+```cpp
+auto process_pipeline(const std::string& input) {
+    return validate_input(input)           // std::expected<Input, ValidationError>
+        .and_then(parse_data)              // std::expected<Data, ValidationError>  
+        .and_then(transform_data)          // std::expected<Result, ValidationError>
+        .and_then(save_result);            // std::expected<void, ValidationError>
+}
+```
+
+### Type Consistency Requirements
+
+For monadic chaining to work, all operations in the chain must have the same error type. When integrating functions
+with different error types, use adapter functions to convert to a common error type:
+
+```cpp
+// Original functions with different error types
+std::expected<std::string, FileError> read_file();
+std::expected<Data, ParseError> parse_data(const std::string&);
+
+// Adapter functions for type consistency
+auto read_file_adapted = []() -> std::expected<std::string, std::string> {
+    auto result = read_file();
+    return result ? result : std::unexpected{format_file_error(result.error())};
+};
+
+auto parse_adapted = [](const std::string& content) -> std::expected<Data, std::string> {
+    auto result = parse_data(content);
+    return result ? result : std::unexpected{format_parse_error(result.error())};
+};
+
+// Now chainable with consistent error types
+auto final_result = read_file_adapted()
+    .and_then(parse_adapted)
+    .and_then(process_data);
+```
+
 ## Advanced Usage Patterns
 
 ### File Processing Pipeline
