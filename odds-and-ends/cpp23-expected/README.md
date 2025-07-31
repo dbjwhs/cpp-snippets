@@ -336,6 +336,20 @@ Several influential books and resources have covered this pattern and its theore
 - **[C++ standardization papers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p0323r12.html)**: P0323R12 (std::expected) and related proposals provide detailed rationale
 - **["Railway Oriented Programming" by Scott Wlaschin](https://fsharpforfunandprofit.com/rop/)** - Seminal article on composable error handling patterns
 
+## Key Contributors and Implementations
+
+**Sy Brand (TartanLlama)** deserves special recognition for his foundational contributions to `std::expected`. His
+[TartanLlama/expected](https://github.com/TartanLlama/expected) repository provided a crucial pre-standard
+implementation that significantly influenced the C++23 standardization process. Written in 2017, this single-header
+C++11/14/17 implementation included the monadic operations (`and_then`, `or_else`, `transform`) and functional-style
+extensions that became integral to the final standard. Brand's work not only demonstrated the practical viability of
+the expected pattern but also educated the C++ community through comprehensive documentation and real-world usage
+examples. His implementation served as a reference for developers wanting to use expected-style error handling before
+C++23 adoption, and his contributions helped prove to the standards committee that these monadic patterns were
+valuable and should be included in the official specification. The railway-oriented programming concepts and monadic
+chaining patterns demonstrated in our examples trace directly back to the foundational work established in his
+implementation.
+
 The pattern has also been extensively discussed in C++ conference talks, particularly CppCon presentations on
 functional programming techniques and modern error handling strategies.
 
