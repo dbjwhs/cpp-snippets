@@ -333,8 +333,8 @@ Several influential books and resources have covered this pattern and its theore
 - **"C++ High Performance" by Björn Andrist and Viktor Sehr** - Performance implications of different error handling
 - **"Programming Rust" by Jim Blandy and Jason Orendorff** - Excellent coverage of Result types that inspired C++
 - **"Learn You a Haskell for Great Good!" by Miran Lipovača** - Foundational material on Either types and monads
-- **C++ standardization papers**: P0323R12 (std::expected) and related proposals provide detailed rationale
-- **"Railway Oriented Programming" by Scott Wlaschin** - Seminal article on composable error handling patterns
+- **[C++ standardization papers](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p0323r12.html)**: P0323R12 (std::expected) and related proposals provide detailed rationale
+- **["Railway Oriented Programming" by Scott Wlaschin](https://fsharpforfunandprofit.com/rop/)** - Seminal article on composable error handling patterns
 
 The pattern has also been extensively discussed in C++ conference talks, particularly CppCon presentations on
 functional programming techniques and modern error handling strategies.
