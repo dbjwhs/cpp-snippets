@@ -74,7 +74,7 @@ public:
 
         // simulate various failure conditions
         if (m_current_file_path.empty()) {
-            LOG_ERROR("file path is empty");
+            LOG_ERROR_PRINT("file path is empty");
             return std::unexpected{FileError::NOT_FOUND};
         }
 
@@ -104,7 +104,7 @@ public:
         LOG_INFO_PRINT("parsing integer data from string: {}", data);
 
         if (data.empty()) {
-            LOG_ERROR("cannot parse empty string");
+            LOG_ERROR_PRINT("cannot parse empty string");
             return std::unexpected{ParseError::EMPTY_INPUT};
         }
 
@@ -117,7 +117,7 @@ public:
         for (char c : data) {
             if (c == ',') {
                 if (current_number.empty()) {
-                    LOG_ERROR("found empty number in data");
+                    LOG_ERROR_PRINT("found empty number in data");
                     return std::unexpected{ParseError::INVALID_FORMAT};
                 }
 
@@ -160,7 +160,7 @@ public:
 
     // chained operation demonstrating monadic operations
     std::expected<int, std::string> process_file_and_sum() {
-        LOG_INFO("starting chained file processing operation");
+        LOG_INFO_PRINT("starting chained file processing operation");
 
         // first convert file result to a common error type, then chain operations
         auto file_result = read_file();
@@ -194,7 +194,7 @@ public:
 
     // demonstration of proper monadic chaining with uniform error types
     std::expected<int, std::string> process_file_monadic() {
-        LOG_INFO("starting monadic file processing operation");
+        LOG_INFO_PRINT("starting monadic file processing operation");
 
         // convert file operation to a uniform error type first
         auto file_to_string = [this]() -> std::expected<std::string, std::string> {
@@ -276,7 +276,7 @@ std::expected<double, std::string> safe_divide(double numerator, double denomina
     LOG_INFO_PRINT("attempting division: {} / {}", numerator, denominator);
 
     if (denominator == 0.0) {
-        LOG_ERROR("division by zero attempted");
+        LOG_ERROR_PRINT("division by zero attempted");
         return std::unexpected{"division by zero"};
     }
 
@@ -290,7 +290,7 @@ std::expected<int, std::string> safe_sqrt_and_round(double value) {
     LOG_INFO_PRINT("calculating square root and rounding for value: {}", value);
 
     if (value < 0) {
-        LOG_ERROR("cannot calculate square root of negative number");
+        LOG_ERROR_PRINT("cannot calculate square root of negative number");
         return std::unexpected{"negative input for square root"};
     }
 
@@ -303,32 +303,32 @@ std::expected<int, std::string> safe_sqrt_and_round(double value) {
 
 // comprehensive testing function
 void run_comprehensive_tests() {
-    LOG_INFO("starting comprehensive std::expected tests");
+    LOG_INFO_PRINT("starting comprehensive std::expected tests");
 
     // test 1: successful operations
-    LOG_INFO("test 1: successful file processing");
+    LOG_INFO_PRINT("test 1: successful file processing");
     {
         DataProcessor processor{"valid_data.txt"};
         auto result = processor.process_file_and_sum();
 
         assert(result.has_value());
         assert(result.value() == 1510); // 123+456+789+42+100
-        LOG_INFO("test 1 passed: successful processing");
+        LOG_INFO_PRINT("test 1 passed: successful processing");
     }
 
     // test 1b: successful monadic operations
-    LOG_INFO("test 1b: successful monadic file processing");
+    LOG_INFO_PRINT("test 1b: successful monadic file processing");
     {
         DataProcessor processor{"valid_data.txt"};
         auto result = processor.process_file_monadic();
 
         assert(result.has_value());
         assert(result.value() == 1510); // 123+456+789+42+100
-        LOG_INFO("test 1b passed: successful monadic processing");
+        LOG_INFO_PRINT("test 1b passed: successful monadic processing");
     }
 
     // test 2: file not found error
-    LOG_INFO("test 2: file not found error");
+    LOG_INFO_PRINT("test 2: file not found error");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         DataProcessor processor{""};
@@ -336,11 +336,11 @@ void run_comprehensive_tests() {
 
         assert(!result.has_value());
         assert(result.error() == "file not found");
-        LOG_INFO("test 2 passed: file not found handled correctly");
+        LOG_INFO_PRINT("test 2 passed: file not found handled correctly");
     }
 
     // test 3: permission denied error
-    LOG_INFO("test 3: permission denied error");
+    LOG_INFO_PRINT("test 3: permission denied error");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         DataProcessor processor{"data.pdf"};
@@ -348,11 +348,11 @@ void run_comprehensive_tests() {
 
         assert(!result.has_value());
         assert(result.error() == "permission denied");
-        LOG_INFO("test 3 passed: permission denied handled correctly");
+        LOG_INFO_PRINT("test 3 passed: permission denied handled correctly");
     }
 
     // test 4: file too large error
-    LOG_INFO("test 4: file too large error");
+    LOG_INFO_PRINT("test 4: file too large error");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         DataProcessor processor{"large_data.txt"};
@@ -360,11 +360,11 @@ void run_comprehensive_tests() {
 
         assert(!result.has_value());
         assert(result.error() == "file too large");
-        LOG_INFO("test 4 passed: file too large handled correctly");
+        LOG_INFO_PRINT("test 4 passed: file too large handled correctly");
     }
 
     // test 5: corrupted file error
-    LOG_INFO("test 5: corrupted file error");
+    LOG_INFO_PRINT("test 5: corrupted file error");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         DataProcessor processor{"corrupt_data.txt"};
@@ -372,49 +372,49 @@ void run_comprehensive_tests() {
 
         assert(!result.has_value());
         assert(result.error() == "file corrupted");
-        LOG_INFO("test 5 passed: corrupted file handled correctly");
+        LOG_INFO_PRINT("test 5 passed: corrupted file handled correctly");
     }
 
     // test 6: successful division
-    LOG_INFO("test 6: successful division");
+    LOG_INFO_PRINT("test 6: successful division");
     {
         auto result = safe_divide(10.0, 2.0);
         assert(result.has_value());
         assert(result.value() == 5.0);
-        LOG_INFO("test 6 passed: successful division");
+        LOG_INFO_PRINT("test 6 passed: successful division");
     }
 
     // test 7: division by zero
-    LOG_INFO("test 7: division by zero");
+    LOG_INFO_PRINT("test 7: division by zero");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         auto result = safe_divide(10.0, 0.0);
         assert(!result.has_value());
         assert(result.error() == "division by zero");
-        LOG_INFO("test 7 passed: division by zero handled correctly");
+        LOG_INFO_PRINT("test 7 passed: division by zero handled correctly");
     }
 
     // test 8: successful sqrt and round
-    LOG_INFO("test 8: successful square root and round");
+    LOG_INFO_PRINT("test 8: successful square root and round");
     {
         auto result = safe_sqrt_and_round(16.0);
         assert(result.has_value());
         assert(result.value() == 4);
-        LOG_INFO("test 8 passed: successful sqrt and round");
+        LOG_INFO_PRINT("test 8 passed: successful sqrt and round");
     }
 
     // test 9: negative sqrt error
-    LOG_INFO("test 9: negative square root error");
+    LOG_INFO_PRINT("test 9: negative square root error");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         auto result = safe_sqrt_and_round(-4.0);
         assert(!result.has_value());
         assert(result.error() == "negative input for square root");
-        LOG_INFO("test 9 passed: negative sqrt handled correctly");
+        LOG_INFO_PRINT("test 9 passed: negative sqrt handled correctly");
     }
 
     // test 10: chaining operations with transform
-    LOG_INFO("test 10: chaining operations with transform");
+    LOG_INFO_PRINT("test 10: chaining operations with transform");
     {
         // create wrapper functions with consistent error types
         auto safe_divide_string = [](double a, double b) -> std::expected<double, std::string> {
@@ -434,11 +434,11 @@ void run_comprehensive_tests() {
 
         assert(result.has_value());
         assert(result.value() == 5); // sqrt(25) = 5
-        LOG_INFO("test 10 passed: successful operation chaining");
+        LOG_INFO_PRINT("test 10 passed: successful operation chaining");
     }
 
     // test 11: chaining operations with error propagation
-    LOG_INFO("test 11: chaining with error propagation");
+    LOG_INFO_PRINT("test 11: chaining with error propagation");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         // create wrapper functions with consistent error types
@@ -459,11 +459,11 @@ void run_comprehensive_tests() {
 
         assert(!result.has_value());
         assert(result.error() == "division by zero");
-        LOG_INFO("test 11 passed: error propagation in chain");
+        LOG_INFO_PRINT("test 11 passed: error propagation in chain");
     }
 
     // test 12: using value_or for default values
-    LOG_INFO("test 12: value_or default handling");
+    LOG_INFO_PRINT("test 12: value_or default handling");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         auto success_result = safe_divide(10.0, 2.0);
@@ -474,18 +474,18 @@ void run_comprehensive_tests() {
 
         assert(successful_value == 5.0);
         assert(failed_value == -1.0);
-        LOG_INFO("test 12 passed: value_or defaults work correctly");
+        LOG_INFO_PRINT("test 12 passed: value_or defaults work correctly");
     }
 
-    LOG_INFO("all comprehensive tests passed successfully");
+    LOG_INFO_PRINT("all comprehensive tests passed successfully");
 }
 
 // demonstration of different std::expected usage patterns
 void demonstrate_usage_patterns() {
-    LOG_INFO("demonstrating various std::expected usage patterns");
+    LOG_INFO_PRINT("demonstrating various std::expected usage patterns");
 
     // pattern 1: basic success/failure checking
-    LOG_INFO("pattern 1: basic success/failure checking");
+    LOG_INFO_PRINT("pattern 1: basic success/failure checking");
     {
         if (auto result = safe_divide(20.0, 4.0)) {
             LOG_INFO_PRINT("division successful: {}", *result);
@@ -495,7 +495,7 @@ void demonstrate_usage_patterns() {
     }
 
     // pattern 2: value extraction with has_value()
-    LOG_INFO("pattern 2: explicit has_value() checking");
+    LOG_INFO_PRINT("pattern 2: explicit has_value() checking");
     {
         auto result = safe_divide(15.0, 3.0);
         if (result.has_value()) {
@@ -504,7 +504,7 @@ void demonstrate_usage_patterns() {
     }
 
     // pattern 3: error handling with error()
-    LOG_INFO("pattern 3: error extraction");
+    LOG_INFO_PRINT("pattern 3: error extraction");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         auto result = safe_divide(10.0, 0.0);
@@ -514,7 +514,7 @@ void demonstrate_usage_patterns() {
     }
 
     // pattern 4: monadic operations with and_then
-    LOG_INFO("pattern 4: monadic chaining with and_then");
+    LOG_INFO_PRINT("pattern 4: monadic chaining with and_then");
     {
         // create wrapper functions with consistent error types for proper chaining
         auto safe_divide_string = [](const double a, const double b) -> std::expected<double, std::string> {
@@ -542,7 +542,7 @@ void demonstrate_usage_patterns() {
     }
 
     // pattern 5: error recovery with or_else
-    LOG_INFO("pattern 5: error recovery with or_else");
+    LOG_INFO_PRINT("pattern 5: error recovery with or_else");
     {
         Logger::StderrSuppressionGuard stderr_guard;
         auto result = safe_divide(10.0, 0.0)
@@ -555,7 +555,7 @@ void demonstrate_usage_patterns() {
     }
 
     // pattern 6: transforming values with transform
-    LOG_INFO("pattern 6: value transformation");
+    LOG_INFO_PRINT("pattern 6: value transformation");
     {
         auto result = safe_divide(10.0, 2.0)
             .transform([](double val) { return val * 2.0; });
@@ -565,11 +565,11 @@ void demonstrate_usage_patterns() {
         }
     }
 
-    LOG_INFO("usage pattern demonstrations completed");
+    LOG_INFO_PRINT("usage pattern demonstrations completed");
 }
 
 int main() {
-    LOG_INFO("starting std::expected demonstration program");
+    LOG_INFO_PRINT("starting std::expected demonstration program");
 
     try {
         // run comprehensive test suite
@@ -578,14 +578,14 @@ int main() {
         // demonstrate various usage patterns
         demonstrate_usage_patterns();
 
-        LOG_INFO("std::expected demonstration completed successfully");
+        LOG_INFO_PRINT("std::expected demonstration completed successfully");
         return 0;
 
     } catch (const std::exception& e) {
         LOG_ERROR_PRINT("unexpected exception occurred: {}", e.what());
         return 1;
     } catch (...) {
-        LOG_ERROR("unknown exception occurred");
+        LOG_ERROR_PRINT("unknown exception occurred");
         return 1;
     }
 }

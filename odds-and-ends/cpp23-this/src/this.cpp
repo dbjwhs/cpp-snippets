@@ -39,7 +39,7 @@ public:
     }
 
     bool implementation(this auto&& self) {
-        LOG_INFO("Base implementation");
+        LOG_INFO_PRINT("Base implementation");
         return false;
     }
 };
@@ -47,7 +47,7 @@ public:
 class Derived : public Base<Derived> {
 public:
     bool implementation(this auto&& self) {
-        LOG_INFO("Derived implementation");
+        LOG_INFO_PRINT("Derived implementation");
         return true;
     }
 };
@@ -65,13 +65,13 @@ public:
     // traditional member function
     void traditional_increment() {
         m_value++;
-        LOG_INFO(std::format("traditional_increment: value = {}", m_value));
+        LOG_INFO_PRINT("traditional_increment: value = {}", m_value);
     }
 
     // explicit object parameter version - notice the 'this' parameter
     void explicit_increment(this BasicExample& self) {
         self.m_value++;
-        LOG_INFO(std::format("explicit_increment: value = {}", self.m_value));
+        LOG_INFO_PRINT("explicit_increment: value = {}", self.m_value);
     }
 
     // const qualified version
@@ -94,7 +94,7 @@ public:
     // a single function definition that works for both const and non-const contexts,
     // the auto&& deduces the reference type based on the calling context
     auto& get_data(this auto&& self) {
-        LOG_INFO("get_data called");
+        LOG_INFO_PRINT("get_data called");
         return self.m_data;
     }
 };
@@ -108,12 +108,12 @@ public:
     void double_value(this CRTPBase<Derived>& self) {
         // cast to a derived type using static_cast
         static_cast<Derived&>(self).double_impl();
-        LOG_INFO("double_value called from base");
+        LOG_INFO_PRINT("double_value called from base");
     }
 
     // method to demonstrate chaining with CRTP
     Derived& chain_call(this CRTPBase<Derived>& self, int value) {
-        LOG_INFO(std::format("chain_call with value: {}", value));
+        LOG_INFO_PRINT("chain_call with value: {}", value);
         return static_cast<Derived&>(self);
     }
 };
@@ -128,7 +128,7 @@ public:
     // implementation required by CRTP pattern
     void double_impl() {
         m_value *= 2;
-        LOG_INFO(std::format("double_impl: value now = {}", m_value));
+        LOG_INFO_PRINT("double_impl: value now = {}", m_value);
     }
 
     // getter for the value
@@ -165,10 +165,10 @@ public:
     // shows how && and & qualifiers can be handled with one function
     std::string get_status(this auto&& self) {
         if constexpr (std::is_lvalue_reference_v<decltype(self)>) {
-            LOG_INFO("Called on lvalue");
+            LOG_INFO_PRINT("Called on lvalue");
             return "lvalue: " + self.m_data;
         } else {
-            LOG_INFO("Called on rvalue");
+            LOG_INFO_PRINT("Called on rvalue");
             return "rvalue: " + self.m_data;
         }
     }
@@ -176,17 +176,17 @@ public:
 
 // function for testing the reference qualifier behavior
 void test_ref_qualifier() {
-    LOG_INFO("Testing reference qualification");
+    LOG_INFO_PRINT("Testing reference qualification");
 
     // create an lvalue
     RefQualifier lvalue;
     // call on lvalue
     std::string lvalue_result = lvalue.get_status();
-    LOG_INFO(std::format("Result: {}", lvalue_result));
+    LOG_INFO_PRINT("Result: {}", lvalue_result);
 
     // call on rvalue
     std::string rvalue_result = RefQualifier{}.get_status();
-    LOG_INFO(std::format("Result: {}", rvalue_result));
+    LOG_INFO_PRINT("Result: {}", rvalue_result);
 
     // assert that the results are different
     assert(lvalue_result != rvalue_result);
@@ -196,7 +196,7 @@ void test_ref_qualifier() {
 
 // function for testing basic functionality
 void test_basic_example() {
-    LOG_INFO("Testing basic explicit object parameter");
+    LOG_INFO_PRINT("Testing basic explicit object parameter");
 
     // create an instance
     BasicExample obj{5};
@@ -209,19 +209,19 @@ void test_basic_example() {
     obj.explicit_increment();
     assert(obj.get_value() == 7);
 
-    LOG_INFO("Basic test completed successfully");
+    LOG_INFO_PRINT("Basic test completed successfully");
 }
 
 // function for testing duplication avoidance
 void test_duplication_avoidance() {
-    LOG_INFO("Testing duplication avoidance");
+    LOG_INFO_PRINT("Testing duplication avoidance");
 
     // create an instance
     DuplicationAvoidance obj{1, 2, 3, 4, 5};
 
     // non-const reference
     auto& data = obj.get_data();
-    LOG_INFO(std::format("Size of data: {}", data.size()));
+    LOG_INFO_PRINT("Size of data: {}", data.size());
 
     // modify the data
     data.push_back(6);
@@ -229,32 +229,32 @@ void test_duplication_avoidance() {
     // const reference
     const DuplicationAvoidance& const_obj = obj;
     const auto& const_data = const_obj.get_data();
-    LOG_INFO(std::format("Size of const data: {}", const_data.size()));
+    LOG_INFO_PRINT("Size of const data: {}", const_data.size());
 
     // verify that both refer to the same data
     assert(data.size() == const_data.size());
     assert(data.size() == 6);
 
-    LOG_INFO("Duplication avoidance test completed successfully");
+    LOG_INFO_PRINT("Duplication avoidance test completed successfully");
 }
 
 // function for testing CRTP
 void test_crtp() {
-    LOG_INFO("Testing CRTP with explicit object parameter");
+    LOG_INFO_PRINT("Testing CRTP with explicit object parameter");
 
     // create an instance
     CRTPDerived derived;
 
     // initial value
     int initial_value = derived.get_value();
-    LOG_INFO(std::format("Initial value: {}", initial_value));
+    LOG_INFO_PRINT("Initial value: {}", initial_value);
 
     // call base class method which will invoke derived class implementation
     derived.double_value();
 
     // verify result
     int new_value = derived.get_value();
-    LOG_INFO(std::format("New value: {}", new_value));
+    LOG_INFO_PRINT("New value: {}", new_value);
     assert(new_value == initial_value * 2);
 
     // test method chaining
@@ -274,15 +274,15 @@ void test_crtp() {
 
     // verify final result
     int final_value = derived.get_value();
-    LOG_INFO(std::format("Final value: {}", final_value));
+    LOG_INFO_PRINT("Final value: {}", final_value);
     assert(final_value == new_value * 2);
 
-    LOG_INFO("CRTP test completed successfully");
+    LOG_INFO_PRINT("CRTP test completed successfully");
 }
 
 // function for a testing overload pattern
 void test_overload_pattern() {
-    LOG_INFO("Testing overload pattern");
+    LOG_INFO_PRINT("Testing overload pattern");
 
     // create an instance
     Printable obj{"Example", 12345};
@@ -290,7 +290,7 @@ void test_overload_pattern() {
     // using lambda as the output mechanism
     bool lambda_called = false;
     obj.print([&lambda_called](const std::string& output) {
-        LOG_INFO(std::format("Lambda output: {}", output));
+        LOG_INFO_PRINT("Lambda output: {}", output);
         lambda_called = true;
     });
 
@@ -301,7 +301,7 @@ void test_overload_pattern() {
     struct OutputFunctor {
         bool called{false};
         void operator()(const std::string& output) {
-            LOG_INFO(std::format("Functor output: {}", output));
+            LOG_INFO_PRINT("Functor output: {}", output);
             called = true;
         }
     };
@@ -312,7 +312,7 @@ void test_overload_pattern() {
     // verify functor was called
     assert(functor.called);
 
-    LOG_INFO("Overload pattern test completed successfully");
+    LOG_INFO_PRINT("Overload pattern test completed successfully");
 }
 
 void test_basic_crtp() {
@@ -323,7 +323,7 @@ void test_basic_crtp() {
 
 // main function
 int main() {
-    LOG_INFO("Starting explicit object parameter examples");
+    LOG_INFO_PRINT("Starting explicit object parameter examples");
 
     // run all tests
     test_basic_example();
@@ -334,6 +334,6 @@ int main() {
     test_ref_qualifier();
 
 
-    LOG_INFO("All tests completed successfully");
+    LOG_INFO_PRINT("All tests completed successfully");
     return 0;
 }

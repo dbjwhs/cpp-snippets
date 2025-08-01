@@ -65,14 +65,14 @@ public:
             m_data.emplace_back(0.0);
         }
 
-        LOG_INFO(std::format("Matrix created with dimensions {} x {}", rows, cols));
+        LOG_INFO_PRINT("Matrix created with dimensions {} x {}", rows, cols);
     }
 
     // multidimensional subscript operator for const access
     auto operator[](this Matrix const& self, int row, int col) -> double const& {
         // check bounds
         if (row < 0 || row >= self.m_rows || col < 0 || col >= self.m_cols) {
-            LOG_ERROR(std::format("Index out of bounds: [{}, {}]", row, col));
+            LOG_ERROR_PRINT("Index out of bounds: [{}, {}]", row, col);
             throw std::out_of_range("Matrix indices out of bounds");
         }
 
@@ -84,7 +84,7 @@ public:
     auto operator[](this Matrix& self, int row, int col) -> double& {
         // check bounds
         if (row < 0 || row >= self.m_rows || col < 0 || col >= self.m_cols) {
-            LOG_ERROR(std::format("Index out of bounds: [{}, {}]", row, col));
+            LOG_ERROR_PRINT("Index out of bounds: [{}, {}]", row, col);
             throw std::out_of_range("Matrix indices out of bounds");
         }
 
@@ -96,7 +96,7 @@ public:
     auto at(this Matrix const& self, int row, int col) -> double const& {
         // check bounds - throws if out of range
         if (row < 0 || row >= self.m_rows || col < 0 || col >= self.m_cols) {
-            LOG_ERROR(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
+            LOG_ERROR_PRINT("Matrix::at() - Index out of bounds: [{}, {}]", row, col);
             throw std::out_of_range(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
         }
 
@@ -108,7 +108,7 @@ public:
     auto at(this Matrix& self, int row, int col) -> double& {
         // check bounds - throws if out of range
         if (row < 0 || row >= self.m_rows || col < 0 || col >= self.m_cols) {
-            LOG_ERROR(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
+            LOG_ERROR_PRINT("Matrix::at() - Index out of bounds: [{}, {}]", row, col);
             throw std::out_of_range(std::format("Matrix::at() - Index out of bounds: [{}, {}]", row, col));
         }
 
@@ -133,7 +133,7 @@ public:
             for (int ndx_col = 0; ndx_col < self.m_cols; ++ndx_col) {
                 row_str += std::format("{:.1f} ", self[ndx_row, ndx_col]);
             }
-            LOG_INFO(row_str);
+            LOG_INFO_PRINT("{}", row_str);
         }
     }
 };
@@ -159,14 +159,14 @@ public:
             m_data.emplace_back(0.0);
         }
 
-        LOG_INFO(std::format("Tensor created with dimensions {}x{}x{}", dim1, dim2, dim3));
+        LOG_INFO_PRINT("Tensor created with dimensions {}x{}x{}", dim1, dim2, dim3);
     }
 
     // multidimensional subscript operator for 3d access (const)
     auto operator[](this Tensor const& self, int i, int j, int k) -> double const& {
         // check bounds
         if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
-            LOG_ERROR(std::format("Tensor index out of bounds: [{}, {}, {}]", i, j, k));
+            LOG_ERROR_PRINT("Tensor index out of bounds: [{}, {}, {}]", i, j, k);
             throw std::out_of_range("Tensor indices out of bounds");
         }
 
@@ -178,7 +178,7 @@ public:
     auto operator[](this Tensor& self, int i, int j, int k) -> double& {
         // check bounds
         if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
-            LOG_ERROR(std::format("Tensor index out of bounds: [{}, {}, {}]", i, j, k));
+            LOG_ERROR_PRINT("Tensor index out of bounds: [{}, {}, {}]", i, j, k);
             throw std::out_of_range("Tensor indices out of bounds");
         }
 
@@ -190,7 +190,7 @@ public:
     auto at(this Tensor const& self, int i, int j, int k) -> double const& {
         // check bounds - throws if out of range
         if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
-            LOG_ERROR(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
+            LOG_ERROR_PRINT("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k);
             throw std::out_of_range(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
         }
 
@@ -202,7 +202,7 @@ public:
     auto at(this Tensor& self, int i, int j, int k) -> double& {
         // check bounds - throws if out of range
         if (i < 0 || i >= self.m_dim1 || j < 0 || j >= self.m_dim2 || k < 0 || k >= self.m_dim3) {
-            LOG_ERROR(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
+            LOG_ERROR_PRINT("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k);
             throw std::out_of_range(std::format("Tensor::at() - Index out of bounds: [{}, {}, {}]", i, j, k));
         }
 
@@ -222,24 +222,24 @@ public:
     // print for integral types using explicit object parameter
     auto print(this Printer const&, auto value) -> void
         requires std::is_integral_v<decltype(value)> {
-        LOG_INFO(std::format("Integral value: {}", value));
+        LOG_INFO_PRINT("Integral value: {}", value);
     }
 
     // print for floating point types using explicit object parameter
     auto print(this Printer const&, auto value) -> void
         requires std::is_floating_point_v<decltype(value)> {
-        LOG_INFO(std::format("Floating point value: {:.4f}", value));
+        LOG_INFO_PRINT("Floating point value: {:.4f}", value);
     }
 
     // print for string types using explicit object parameter
     auto print(this Printer const&, const std::string& value) -> void {
-        LOG_INFO(std::format("String value: \"{}\"", value));
+        LOG_INFO_PRINT("String value: \"{}\"", value);
     }
 };
 
 // test functions
 void test_matrix_basic() {
-    LOG_INFO("Testing basic matrix operations");
+    LOG_INFO_PRINT("Testing basic matrix operations");
 
     // create a 3x3 matrix
     Matrix matrix(3, 3);
@@ -257,30 +257,30 @@ void test_matrix_basic() {
 
     // test accessing values - use if statements instead of asserting to avoid macro expansion issues
     if (matrix[0, 0] != 1.0) {
-        LOG_ERROR("Test failed: m[0, 0] != 1.0");
+        LOG_ERROR_PRINT("Test failed: m[0, 0] != 1.0");
     }
 
     if (matrix[1, 1] != 5.0) {
-        LOG_ERROR("Test failed: m[1, 1] != 5.0");
+        LOG_ERROR_PRINT("Test failed: m[1, 1] != 5.0");
     }
 
     if (matrix[2, 2] != 9.0) {
-        LOG_ERROR("Test failed: m[2, 2] != 9.0");
+        LOG_ERROR_PRINT("Test failed: m[2, 2] != 9.0");
     }
 
-    LOG_INFO("Matrix contents:");
+    LOG_INFO_PRINT("Matrix contents:");
     matrix.print();
 
     // test the at method from crtp base class
     if (matrix.at(1, 1) != 5.0) {
-        LOG_ERROR("Test failed: m.at(1, 1) != 5.0");
+        LOG_ERROR_PRINT("Test failed: m.at(1, 1) != 5.0");
     }
 
-    LOG_INFO("Basic matrix tests passed");
+    LOG_INFO_PRINT("Basic matrix tests passed");
 }
 
 void test_tensor() {
-    LOG_INFO("Testing tensor operations");
+    LOG_INFO_PRINT("Testing tensor operations");
 
     // create a 2x2x2 tensor
     Tensor tensor(2, 2, 2);
@@ -297,22 +297,22 @@ void test_tensor() {
 
     // test accessing values - use if statements instead of asserting to avoid macro expansion issues
     if (tensor[0, 0, 0] != 1.0) {
-        LOG_ERROR("Test failed: t[0, 0, 0] != 1.0");
+        LOG_ERROR_PRINT("Test failed: t[0, 0, 0] != 1.0");
     }
 
     if (tensor[0, 1, 1] != 4.0) {
-        LOG_ERROR("Test failed: t[0, 1, 1] != 4.0");
+        LOG_ERROR_PRINT("Test failed: t[0, 1, 1] != 4.0");
     }
 
     if (tensor[1, 1, 1] != 8.0) {
-        LOG_ERROR("Test failed: t[1, 1, 1] != 8.0");
+        LOG_ERROR_PRINT("Test failed: t[1, 1, 1] != 8.0");
     }
 
-    LOG_INFO("Tensor tests passed");
+    LOG_INFO_PRINT("Tensor tests passed");
 }
 
 void test_bounds_checking() {
-    LOG_INFO("Testing bounds checking");
+    LOG_INFO_PRINT("Testing bounds checking");
 
     Matrix m(2, 2);
 
@@ -324,36 +324,36 @@ void test_bounds_checking() {
 
     // test valid access
     if (m[0, 0] != 1.0) {
-        LOG_ERROR("Test failed: m[0, 0] != 1.0");
+        LOG_ERROR_PRINT("Test failed: m[0, 0] != 1.0");
     }
 
     if (m[1, 1] != 4.0) {
-        LOG_ERROR("Test failed: m[1, 1] != 4.0");
+        LOG_ERROR_PRINT("Test failed: m[1, 1] != 4.0");
     }
 
     // test invalid access (should throw)
     // note: you will see an "Index-out-of-bounds" error log before the exception is caught
     // this is expected behavior as the operator[] logs the error before throwing
-    LOG_INFO("Intentionally testing out-of-bounds access - expect an error log next");
+    LOG_INFO_PRINT("Intentionally testing out-of-bounds access - expect an error log next");
     bool exception_caught = false;
     try {
         Logger::StderrSuppressionGuard stderr_guard;
         auto val = m[2, 0]; // out of bounds - will log an error before throwing an exception
-        LOG_ERROR("Test failed: Failed to catch out-of-bounds access");
+        LOG_ERROR_PRINT("Test failed: Failed to catch out-of-bounds access");
     } catch (const std::out_of_range& e) {
         exception_caught = true;
-        LOG_INFO(std::format("Successfully caught exception as expected: {}", e.what()));
+        LOG_INFO_PRINT("Successfully caught exception as expected: {}", e.what());
     }
 
     if (!exception_caught) {
-        LOG_ERROR("Test failed: Exception was not caught for out-of-bounds access");
+        LOG_ERROR_PRINT("Test failed: Exception was not caught for out-of-bounds access");
     }
 
-    LOG_INFO("Bounds checking tests passed");
+    LOG_INFO_PRINT("Bounds checking tests passed");
 }
 
 void test_matrix_at_method() {
-    LOG_INFO("Testing matrix at() method");
+    LOG_INFO_PRINT("Testing matrix at() method");
 
     // create a 2x2 matrix
     Matrix m(2, 2);
@@ -366,41 +366,41 @@ void test_matrix_at_method() {
 
     // test valid access with at()
     if (m.at(0, 0) != 1.0) {
-        LOG_ERROR("Test failed: m.at(0, 0) != 1.0");
+        LOG_ERROR_PRINT("Test failed: m.at(0, 0) != 1.0");
     }
 
     if (m.at(1, 1) != 4.0) {
-        LOG_ERROR("Test failed: m.at(1, 1) != 4.0");
+        LOG_ERROR_PRINT("Test failed: m.at(1, 1) != 4.0");
     }
 
     // test modification with at()
     m.at(0, 1) = 5.0;
     if (m[0, 1] != 5.0) {
-        LOG_ERROR("Test failed: m[0, 1] != 5.0 after modifying with at()");
+        LOG_ERROR_PRINT("Test failed: m[0, 1] != 5.0 after modifying with at()");
     }
 
     // test exception from at() for out-of-bounds
-    LOG_INFO("Intentionally testing out-of-bounds access with at() - expect an error log next");
+    LOG_INFO_PRINT("Intentionally testing out-of-bounds access with at() - expect an error log next");
 
     bool exception_caught = false;
     try {
         Logger::StderrSuppressionGuard stderr_guard;
         auto val = m.at(2, 0); // out of bounds
-        LOG_ERROR("Test failed: Failed to catch out-of-bounds access with at()");
+        LOG_ERROR_PRINT("Test failed: Failed to catch out-of-bounds access with at()");
     } catch (const std::out_of_range& e) {
         exception_caught = true;
-        LOG_INFO(std::format("Successfully caught exception as expected: {}", e.what()));
+        LOG_INFO_PRINT("Successfully caught exception as expected: {}", e.what());
     }
 
     if (!exception_caught) {
-        LOG_ERROR("Test failed: Exception was not caught for out-of-bounds access with at()");
+        LOG_ERROR_PRINT("Test failed: Exception was not caught for out-of-bounds access with at()");
     }
 
-    LOG_INFO("Matrix at() method tests passed");
+    LOG_INFO_PRINT("Matrix at() method tests passed");
 }
 
 void test_tensor_at_method() {
-    LOG_INFO("Testing tensor at() method");
+    LOG_INFO_PRINT("Testing tensor at() method");
 
     // create a 2x2x2 tensor
     Tensor t(2, 2, 2);
@@ -417,41 +417,41 @@ void test_tensor_at_method() {
 
     // test valid access with at()
     if (t.at(0, 0, 0) != 1.0) {
-        LOG_ERROR("Test failed: t.at(0, 0, 0) != 1.0");
+        LOG_ERROR_PRINT("Test failed: t.at(0, 0, 0) != 1.0");
     }
 
     if (t.at(1, 1, 1) != 8.0) {
-        LOG_ERROR("Test failed: t.at(1, 1, 1) != 8.0");
+        LOG_ERROR_PRINT("Test failed: t.at(1, 1, 1) != 8.0");
     }
 
     // test modification with at()
     t.at(0, 1, 1) = 9.0;
     if (t[0, 1, 1] != 9.0) {
-        LOG_ERROR("Test failed: t[0, 1, 1] != 9.0 after modifying with at()");
+        LOG_ERROR_PRINT("Test failed: t[0, 1, 1] != 9.0 after modifying with at()");
     }
 
     // test exception from at() for out-of-bounds
-    LOG_INFO("Intentionally testing out-of-bounds access with at() - expect an error log next");
+    LOG_INFO_PRINT("Intentionally testing out-of-bounds access with at() - expect an error log next");
 
     bool exception_caught = false;
     try {
         Logger::StderrSuppressionGuard stderr_guard;
         auto val = t.at(0, 0, 2); // out of bounds in 3rd dimension
-        LOG_ERROR("Test failed: Failed to catch out-of-bounds access with at()");
+        LOG_ERROR_PRINT("Test failed: Failed to catch out-of-bounds access with at()");
     } catch (const std::out_of_range& e) {
         exception_caught = true;
-        LOG_INFO(std::format("Successfully caught exception as expected: {}", e.what()));
+        LOG_INFO_PRINT("Successfully caught exception as expected: {}", e.what());
     }
 
     if (!exception_caught) {
-        LOG_ERROR("Test failed: Exception was not caught for out-of-bounds access with at()");
+        LOG_ERROR_PRINT("Test failed: Exception was not caught for out-of-bounds access with at()");
     }
 
-    LOG_INFO("Tensor at() method tests passed");
+    LOG_INFO_PRINT("Tensor at() method tests passed");
 }
 
 void test_overload_pattern() {
-    LOG_INFO("Testing overload pattern with explicit object parameter");
+    LOG_INFO_PRINT("Testing overload pattern with explicit object parameter");
 
     Printer printer;
 
@@ -460,11 +460,11 @@ void test_overload_pattern() {
     printer.print(3.14159);   // floating point
     printer.print("Hello");   // string
 
-    LOG_INFO("Overload pattern tests passed");
+    LOG_INFO_PRINT("Overload pattern tests passed");
 }
 
 int main() {
-    LOG_INFO("Starting multidimensional subscript operator tests");
+    LOG_INFO_PRINT("Starting multidimensional subscript operator tests");
 
     // run all tests
     test_matrix_basic();
@@ -474,6 +474,6 @@ int main() {
     test_tensor_at_method();
     test_overload_pattern();
 
-    LOG_INFO("All tests completed");
+    LOG_INFO_PRINT("All tests completed");
     return 0;
 }

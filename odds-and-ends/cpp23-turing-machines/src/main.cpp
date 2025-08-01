@@ -31,7 +31,7 @@ void testUniversalTuringMachine();
  */
 int main() {
     try {
-        LOG_INFO("Starting Turing Machine Demonstration");
+        LOG_INFO_PRINT("Starting Turing Machine Demonstration");
 
         // test all turing machine implementations
         testBasicTuringMachine();
@@ -41,9 +41,9 @@ int main() {
         testComprehensiveTuringMachine();
         testUniversalTuringMachine();
 
-        LOG_INFO("All tests completed successfully");
+        LOG_INFO_PRINT("All tests completed successfully");
     } catch (const std::exception& e) {
-        LOG_WARNING(std::format("Caught exception during test execution: {}", e.what()));
+        LOG_WARNING_PRINT("Caught exception during test execution: {}", e.what());
         // Continue execution - this allows the program to complete even if there's an exception
     }
     
@@ -51,7 +51,7 @@ int main() {
     try {
         // Explicit cleanup code could go here
     } catch (const std::exception& e) {
-        LOG_WARNING(std::format("Caught exception during cleanup: {}", e.what()));
+        LOG_WARNING_PRINT("Caught exception during cleanup: {}", e.what());
     }
     
     return 0;
@@ -62,7 +62,7 @@ int main() {
  * creates a binary increment machine that adds 1 to a binary number
  */
 void testBasicTuringMachine() {
-    LOG_INFO("Testing Basic Turing Machine");
+    LOG_INFO_PRINT("Testing Basic Turing Machine");
 
     // create a turing machine to increment a binary number
     turing::BasicTuringMachine incrementer;
@@ -90,35 +90,35 @@ void testBasicTuringMachine() {
     incrementer.addTransition("carry", '1', "carry", '0', 'L');     // 1 → 0 (continue carry)
 
     // test cases
-    LOG_INFO("Testing binary increment: 0 → 1");
+    LOG_INFO_PRINT("Testing binary increment: 0 → 1");
     incrementer.setTape("0");
     incrementer.run();
     std::string result = incrementer.getTape();
-    LOG_INFO(std::format("Result: {} (expected: 1)", result));
+    LOG_INFO_PRINT("Result: {} (expected: 1)", result);
     assert(result == "1" && "Increment 0 to 1 failed");
 
-    LOG_INFO("Testing binary increment: 1 → 10");
+    LOG_INFO_PRINT("Testing binary increment: 1 → 10");
     incrementer.setTape("1");
     incrementer.run();
     result = incrementer.getTape();
-    LOG_INFO(std::format("Result: {} (expected: 10)", result));
+    LOG_INFO_PRINT("Result: {} (expected: 10)", result);
     assert(result == "10" && "Increment 1 to 10 failed");
 
-    LOG_INFO("Testing binary increment: 101 → 110");
+    LOG_INFO_PRINT("Testing binary increment: 101 → 110");
     incrementer.setTape("101");
     incrementer.run();
     result = incrementer.getTape();
-    LOG_INFO(std::format("Result: {} (expected: 110)", result));
+    LOG_INFO_PRINT("Result: {} (expected: 110)", result);
     assert(result == "110" && "Increment 101 to 110 failed");
 
-    LOG_INFO("Testing binary increment: 111 → 1000");
+    LOG_INFO_PRINT("Testing binary increment: 111 → 1000");
     incrementer.setTape("111");
     incrementer.run();
     result = incrementer.getTape();
-    LOG_INFO(std::format("Result: {} (expected: 1000)", result));
+    LOG_INFO_PRINT("Result: {} (expected: 1000)", result);
     assert(result == "1000" && "Increment 111 to 1000 failed");
 
-    LOG_INFO("Basic Turing Machine tests completed successfully");
+    LOG_INFO_PRINT("Basic Turing Machine tests completed successfully");
 }
 
 /**
@@ -126,7 +126,7 @@ void testBasicTuringMachine() {
  * creates a machine to check if a string has balanced parentheses
  */
 void testExtendedTuringMachine() {
-    LOG_INFO("Testing Extended Turing Machine");
+    LOG_INFO_PRINT("Testing Extended Turing Machine");
 
     // create a turing machine to check for balanced parentheses
     turing::ExtendedTuringMachine balancedChecker(2);  // 2 tracks
@@ -182,21 +182,21 @@ void testExtendedTuringMachine() {
     balancedChecker.addHaltingState("error");
 
     // test cases
-    LOG_INFO("Testing balanced parentheses: ()");
+    LOG_INFO_PRINT("Testing balanced parentheses: ()");
     balancedChecker.setTape("()", 0);
     balancedChecker.run();
     std::string result = balancedChecker.getCurrentState();
-    LOG_INFO(std::format("Result state: {} (expected: accept)", result));
+    LOG_INFO_PRINT("Result state: {} (expected: accept)", result);
 
-    LOG_INFO("Testing unbalanced parentheses: (");
+    LOG_INFO_PRINT("Testing unbalanced parentheses: (");
     balancedChecker.setTape("(", 0);
     balancedChecker.run();
     result = balancedChecker.getCurrentState();
-    LOG_INFO(std::format("Result state: {} (expected: error)", result));
+    LOG_INFO_PRINT("Result state: {} (expected: error)", result);
 
     // more comprehensive tests would be added for a complete implementation
 
-    LOG_INFO("Extended Turing Machine tests completed");
+    LOG_INFO_PRINT("Extended Turing Machine tests completed");
 }
 
 /**
@@ -204,7 +204,7 @@ void testExtendedTuringMachine() {
  * demonstrates binary addition and multiplication
  */
 void testArithmeticTuringMachine() {
-    LOG_INFO("Testing Arithmetic Turing Machine");
+    LOG_INFO_PRINT("Testing Arithmetic Turing Machine");
 
     // create an arithmetic turing machine
     turing::ArithmeticTuringMachine calculator;
@@ -219,7 +219,7 @@ void testArithmeticTuringMachine() {
         {"1101", "1011"}  // 13 + 11 = 24 (1101 + 1011 = 11000)
     };
 
-    LOG_INFO("Testing binary addition");
+    LOG_INFO_PRINT("Testing binary addition");
     for (const auto& [num1, num2] : additionTests) {
         // setup test
         auto [binaryResult, decimalExplanation] = calculator.add(num1, num2);
@@ -231,7 +231,7 @@ void testArithmeticTuringMachine() {
         int expected = dec1 + dec2;
 
         // verify result
-        LOG_INFO(std::format("{} + {} = {} ({})", num1, num2, binaryResult, decimalExplanation));
+        LOG_INFO_PRINT("{} + {} = {} ({})", num1, num2, binaryResult, decimalExplanation);
         assert(decResult == expected && "Binary addition gave incorrect result");
     }
 
@@ -244,7 +244,7 @@ void testArithmeticTuringMachine() {
         {"1101", "101"}   // 13 - 5 = 8 (1101 - 101 = 1000)
     };
 
-    LOG_INFO("Testing binary subtraction");
+    LOG_INFO_PRINT("Testing binary subtraction");
     for (const auto& [num1, num2] : subtractionTests) {
         // only test cases where num1 >= num2 (no negative results handled)
         if (turing::ArithmeticTuringMachine::binaryToDecimal(num1) >=
@@ -260,18 +260,18 @@ void testArithmeticTuringMachine() {
             int expected = dec1 - dec2;
 
             // verify result
-            LOG_INFO(std::format("{} - {} = {} ({})", num1, num2, binaryResult, decimalExplanation));
+            LOG_INFO_PRINT("{} - {} = {} ({})", num1, num2, binaryResult, decimalExplanation);
             assert(decResult == expected && "Binary subtraction gave incorrect result");
         }
     }
 
     // test binary multiplication (simplified example)
-    LOG_INFO("Testing binary multiplication (simplified)");
+    LOG_INFO_PRINT("Testing binary multiplication (simplified)");
     calculator.configureForMultiplication();
     std::string result = calculator.getTape(0);
-    LOG_INFO(std::format("Machine configured for multiplication: {}", result));
+    LOG_INFO_PRINT("Machine configured for multiplication: {}", result);
 
-    LOG_INFO("Arithmetic Turing Machine tests completed");
+    LOG_INFO_PRINT("Arithmetic Turing Machine tests completed");
 }
 
 /**
@@ -279,7 +279,7 @@ void testArithmeticTuringMachine() {
  * creates a program to search for a pattern in a string
  */
 void testProgrammableTuringMachine() {
-    LOG_INFO("Testing Programmable Turing Machine");
+    LOG_INFO_PRINT("Testing Programmable Turing Machine");
 
     // create a programmable turing machine
     turing::ProgrammableTuringMachine machine(1);
@@ -300,9 +300,9 @@ void testProgrammableTuringMachine() {
                                        machine.getCurrentState(), machine.getTape()[machine.getHeadPosition()], 'R');
                     machine.step();
                 }
-                LOG_INFO(std::format("Pattern '101' found at position {}", found));
+                LOG_INFO_PRINT("Pattern '101' found at position {}", found);
             } else {
-                LOG_WARNING("Pattern '101' not found in tape");
+                LOG_WARNING_PRINT("Pattern '101' not found in tape");
             }
         });
 
@@ -313,18 +313,18 @@ void testProgrammableTuringMachine() {
     machine.loadProgram(patternSearch);
 
     // test cases
-    LOG_INFO("Testing pattern search in: 11101001");
+    LOG_INFO_PRINT("Testing pattern search in: 11101001");
     machine.setTape("11101001");
     machine.executeProgram();
     int headPos = machine.getMachine().getHeadPosition();
-    LOG_INFO(std::format("Head position after execution: {} (expected: 2)", headPos));
+    LOG_INFO_PRINT("Head position after execution: {} (expected: 2)", headPos);
 
-    LOG_INFO("Testing pattern search in: 1100");
+    LOG_INFO_PRINT("Testing pattern search in: 1100");
     machine.setTape("1100");
     machine.executeProgram();
     // in this case, pattern not found
 
-    LOG_INFO("Programmable Turing Machine tests completed");
+    LOG_INFO_PRINT("Programmable Turing Machine tests completed");
 }
 
 /**
@@ -332,7 +332,7 @@ void testProgrammableTuringMachine() {
  * demonstrates a complex language recognition task
  */
 void testComprehensiveTuringMachine() {
-    LOG_INFO("Testing Comprehensive Turing Machine");
+    LOG_INFO_PRINT("Testing Comprehensive Turing Machine");
 
     // create a comprehensive turing machine to recognize palindromes
     turing::ComprehensiveTuringMachine machine("PalindromeTM", "Recognizes binary palindromes", turing::MachineType::Standard);
@@ -375,20 +375,20 @@ void testComprehensiveTuringMachine() {
     // this is just a simplified example
 
     // test cases
-    LOG_INFO("Testing palindrome recognition: 101");
+    LOG_INFO_PRINT("Testing palindrome recognition: 101");
     machine.setTapeContent("101");
     std::string result = machine.run();
-    LOG_INFO(std::format("Result: {} (expected: accept for palindrome 101)", result));
+    LOG_INFO_PRINT("Result: {} (expected: accept for palindrome 101)", result);
 
     // reset machine for next test
     machine.reset();
 
-    LOG_INFO("Testing palindrome recognition: 100");
+    LOG_INFO_PRINT("Testing palindrome recognition: 100");
     machine.setTapeContent("100");
     result = machine.run();
-    LOG_INFO(std::format("Result: {} (expected: reject for non-palindrome 100)", result));
+    LOG_INFO_PRINT("Result: {} (expected: reject for non-palindrome 100)", result);
 
-    LOG_INFO("Comprehensive Turing Machine tests completed");
+    LOG_INFO_PRINT("Comprehensive Turing Machine tests completed");
 }
 
 /**
@@ -396,7 +396,7 @@ void testComprehensiveTuringMachine() {
  * demonstrates simulation of other machines
  */
 void testUniversalTuringMachine() {
-    LOG_INFO("Testing Universal Turing Machine");
+    LOG_INFO_PRINT("Testing Universal Turing Machine");
 
     try {
         // create a universal turing machine
@@ -414,7 +414,7 @@ void testUniversalTuringMachine() {
             {"111", "1000"}  // 7 → 8
         };
 
-        LOG_INFO("Testing UTM simulation of binary increment machine");
+        LOG_INFO_PRINT("Testing UTM simulation of binary increment machine");
         for (const auto& [input, expected] : incrementTests) {
             try {
                 // load the machine and set the input
@@ -422,21 +422,21 @@ void testUniversalTuringMachine() {
                 utm.setInput(input);
 
                 // run the simulation
-                LOG_INFO(std::format("Testing increment of {}", input));
+                LOG_INFO_PRINT("Testing increment of {}", input);
                 std::string result = utm.simulateStepByStep(true, 100);
                 std::string output;
                 
                 try {
                     output = utm.getSimulationTape();
                 } catch (const std::exception& e) {
-                    LOG_WARNING(std::format("Error getting simulation tape: {}", e.what()));
+                    LOG_WARNING_PRINT("Error getting simulation tape: {}", e.what());
                     output = "error";
                 }
 
-                LOG_INFO(std::format("Simulation result: {}, Output: {} (Expected: {})",
-                        result, output, expected));
+                LOG_INFO_PRINT("Simulation result: {}, Output: {} (Expected: {})",
+                        result, output, expected);
             } catch (const std::exception& e) {
-                LOG_WARNING(std::format("Exception in increment test for {}: {}", input, e.what()));
+                LOG_WARNING_PRINT("Exception in increment test for {}: {}", input, e.what());
             }
         }
 
@@ -454,7 +454,7 @@ void testUniversalTuringMachine() {
             {"100", "reject"}     // 4 is not divisible by 3
         };
 
-        LOG_INFO("Testing UTM simulation of divisibility-by-3 checker");
+        LOG_INFO_PRINT("Testing UTM simulation of divisibility-by-3 checker");
         for (const auto& [input, expected] : div3Tests) {
             try {
                 // load the machine and set the input
@@ -462,17 +462,17 @@ void testUniversalTuringMachine() {
                 utm.setInput(input);
 
                 // run the simulation
-                LOG_INFO(std::format("Testing divisibility by 3 for {}", input));
+                LOG_INFO_PRINT("Testing divisibility by 3 for {}", input);
                 std::string result = utm.simulateStepByStep(false, 100);
 
-                LOG_INFO(std::format("Simulation result: {} (Expected: {})", result, expected));
+                LOG_INFO_PRINT("Simulation result: {} (Expected: {})", result, expected);
             } catch (const std::exception& e) {
-                LOG_WARNING(std::format("Exception in div3 test for {}: {}", input, e.what()));
+                LOG_WARNING_PRINT("Exception in div3 test for {}: {}", input, e.what());
             }
         }
 
         // demonstration of machine encoding/decoding
-        LOG_INFO("Demonstrating UTM machine encoding/decoding");
+        LOG_INFO_PRINT("Demonstrating UTM machine encoding/decoding");
         try {
             auto palindromeMachine = turing::UniversalTuringMachine::createPalindromeCheckerMachine();
             utm.addEncodedMachine(palindromeMachine);
@@ -483,9 +483,9 @@ void testUniversalTuringMachine() {
             // test decoding an encoded machine
             auto decodedMachine = turing::UniversalTuringMachine::decodeMachine(
                 utm.simulateStepByStep(false, 10)); // Just a placeholder, actual implementation would decode properly
-            LOG_INFO(std::format("Decoded machine description: {}", decodedMachine.m_description));
+            LOG_INFO_PRINT("Decoded machine description: {}", decodedMachine.m_description);
         } catch (const std::exception& e) {
-            LOG_WARNING(std::format("Exception in palindrome machine test: {}", e.what()));
+            LOG_WARNING_PRINT("Exception in palindrome machine test: {}", e.what());
         }
 
         // test a^n b^n language recognition
@@ -503,19 +503,19 @@ void testUniversalTuringMachine() {
             {"abb", "reject"}     // more b's than a's
         };
 
-        LOG_INFO("Testing UTM simulation of a^n b^n recognizer");
+        LOG_INFO_PRINT("Testing UTM simulation of a^n b^n recognizer");
         for (const auto& [input, expected] : anbnTests) {
             try {
                 // simulate the test case using the universal machine
-                LOG_INFO(std::format("Testing a^n b^n for input: {}", input));
+                LOG_INFO_PRINT("Testing a^n b^n for input: {}", input);
                 // In a real implementation, this would configure and run the UTM
             } catch (const std::exception& e) {
-                LOG_WARNING(std::format("Exception in a^n b^n test for {}: {}", input, e.what()));
+                LOG_WARNING_PRINT("Exception in a^n b^n test for {}: {}", input, e.what());
             }
         }
     } catch (const std::exception& e) {
-        LOG_WARNING(std::format("Exception in Universal Turing Machine tests: {}", e.what()));
+        LOG_WARNING_PRINT("Exception in Universal Turing Machine tests: {}", e.what());
     }
 
-    LOG_INFO("Universal Turing Machine tests completed");
+    LOG_INFO_PRINT("Universal Turing Machine tests completed");
 }

@@ -103,28 +103,28 @@ std::vector<std::string> get_supported_features() {
 
 // Main function with tests
 int main() {
-    LOG_INFO("C++23 Preprocessor Directives Example");
+    LOG_INFO_PRINT("C++23 Preprocessor Directives Example");
 
     // Test compiler detection
     const std::string compiler = detect_compiler();
-    LOG_INFO(std::format("Detected compiler: {}", compiler));
+    LOG_INFO_PRINT("Detected compiler: {}", compiler);
     assert(compiler == "GCC" && "Expected GCC compiler");
 
     // Test feature support check
     const std::string feature_status = check_feature_support("elifdef");
-    LOG_INFO(std::format("Feature status: {}", feature_status));
+    LOG_INFO_PRINT("Feature status: {}", feature_status);
     assert(feature_status == "elifdef is supported in C++23" && "Feature should be supported");
 
     // Test architecture detection with #elifndef
     const std::string architecture = detect_architecture();
-    LOG_INFO(std::format("Architecture detection: {}", architecture));
+    LOG_INFO_PRINT("Architecture detection: {}", architecture);
     assert(architecture == "Architecture is not x86_32" && "Expected non-x86_32 architecture");
 
     // Test nested conditionals with the new directives
     const std::vector<std::string> features = get_supported_features();
-    LOG_INFO("Supported features:");
+    LOG_INFO_PRINT("Supported features:");
     for (const auto & feature : features) {
-        LOG_INFO(std::format("  - {}", feature));
+        LOG_INFO_PRINT("  - {}", feature);
     }
     assert(features.size() >= 3 && "Expected at least 3 supported features");
 
@@ -138,6 +138,6 @@ int main() {
     }
     assert(has_elifdef && "elifdef should be in supported features");
 
-    LOG_INFO("All tests passed successfully!");
+    LOG_INFO_PRINT("All tests passed successfully!");
     return 0;
 }

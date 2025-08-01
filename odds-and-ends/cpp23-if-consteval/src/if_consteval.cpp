@@ -47,7 +47,7 @@ constexpr int factorial(int n) {
         return n * factorial(n - 1);
     } else {
         // branch taken during runtime evaluation
-        LOG_INFO("Using runtime factorial implementation");
+        LOG_INFO_PRINT("Using runtime factorial implementation");
         // iterative implementation better suited for runtime
         int result = 1;
         for (int ndx = 2; ndx <= n; ++ndx) {
@@ -70,7 +70,7 @@ constexpr int safe_divide(int a, int b) {
         // runtime check needed for runtime evaluation
         if (b == 0) {
             Logger::StderrSuppressionGuard stderrSuppressionGuard;
-            LOG_ERROR("Division by zero detected at runtime");
+            LOG_ERROR_PRINT("Division by zero detected at runtime");
             return 0; // return a default value at runtime
         }
         return a / b;
@@ -94,7 +94,7 @@ public:
         if consteval {
             // compile-time-specific code if needed (no logging)
         } else {
-            LOG_INFO(std::format("CRTP incrementing at runtime, adding {}", amount));
+            LOG_INFO_PRINT("CRTP incrementing at runtime, adding {}", amount);
             // runtime-specific code if needed
         }
 
@@ -115,7 +115,7 @@ public:
     // implement the required method for the crtp pattern
     static constexpr void on_increment(int amount) {
         if !consteval {
-            LOG_INFO(std::format("ConcreteCounter::on_increment called with {}", amount));
+            LOG_INFO_PRINT("ConcreteCounter::on_increment called with {}", amount);
         }
         // If in constant evaluation context, don't log
     }
@@ -142,7 +142,7 @@ constexpr auto process_value(const T& value) {
             // compile-time specific overloads (no logging)
             return value * value; // square for int at compile time
         } else {
-            LOG_INFO("Using runtime overload pattern for int");
+            LOG_INFO_PRINT("Using runtime overload pattern for int");
             return value + 10; // add 10 for int at runtime
         }
     }
@@ -151,7 +151,7 @@ constexpr auto process_value(const T& value) {
             // compile-time specific overloads (no logging)
             return value + value; // double it at compile time
         } else {
-            LOG_INFO("Using runtime overload pattern for double");
+            LOG_INFO_PRINT("Using runtime overload pattern for double");
             return value * 2.5; /* multiply by 2.5 at runtime */
         }
     }
@@ -160,7 +160,7 @@ constexpr auto process_value(const T& value) {
             // compile-time specific overloads (no logging)
             return value + "_compile_time";
         } else {
-            LOG_INFO("Using runtime overload pattern for string");
+            LOG_INFO_PRINT("Using runtime overload pattern for string");
             return value + "_runtime";
         }
     }
@@ -174,44 +174,44 @@ constexpr auto process_value(const T& value) {
 
 // main function for testing
 int main() {
-    LOG_INFO("Starting if consteval demonstration");
+    LOG_INFO_PRINT("Starting if consteval demonstration");
 
     // test factorial function
-    LOG_INFO("Testing factorial function");
+    LOG_INFO_PRINT("Testing factorial function");
 
     // we need to use pre-computed values for compile-time results
     // since we can't use consteval lambdas with our logging functions
     constexpr int compile_time_result = 120; // pre-computed factorial(5) result
-    LOG_INFO(std::format("Compile-time factorial(5) = {}", compile_time_result));
+    LOG_INFO_PRINT("Compile-time factorial(5) = {}", compile_time_result);
 
     // runtime evaluation of factorial
     constexpr int n = 5;
     int runtime_result = factorial(n);
-    LOG_INFO(std::format("Runtime factorial(5) = {}", runtime_result));
+    LOG_INFO_PRINT("Runtime factorial(5) = {}", runtime_result);
 
     // verify results
     assert(compile_time_result == 120 && "Compile-time factorial calculation failed");
     assert(runtime_result == 120 && "Runtime factorial calculation failed");
 
     // test safe_divide function
-    LOG_INFO("Testing safe_divide function");
+    LOG_INFO_PRINT("Testing safe_divide function");
 
     // compile-time evaluation - use pre-computed value
     constexpr int div_result_compile = 5; // pre-computed: 10 / 2
-    LOG_INFO(std::format("Compile-time safe_divide(10, 2) = {}", div_result_compile));
+    LOG_INFO_PRINT("Compile-time safe_divide(10, 2) = {}", div_result_compile);
 
     // runtime evaluation
     int div_result_runtime = safe_divide(10, 2);
-    LOG_INFO(std::format("Runtime safe_divide(10, 2) = {}", div_result_runtime));
+    LOG_INFO_PRINT("Runtime safe_divide(10, 2) = {}", div_result_runtime);
 
     // verify results
     assert(div_result_compile == 5 && "Compile-time division calculation failed");
     assert(div_result_runtime == 5 && "Runtime division calculation failed");
 
     // test runtime division by zero handling
-    LOG_INFO("Testing runtime division by zero handling");
+    LOG_INFO_PRINT("Testing runtime division by zero handling");
     int div_zero_result = safe_divide(10, 0);
-    LOG_INFO(std::format("Runtime safe_divide(10, 0) = {}", div_zero_result));
+    LOG_INFO_PRINT("Runtime safe_divide(10, 0) = {}", div_zero_result);
     assert(div_zero_result == 0 && "Runtime division by zero handling failed"); // should return 0 for division by zero
 
     // Note: To test compile-time error, you would need to uncomment the following line
@@ -234,25 +234,25 @@ int main() {
     */
 
     // test CRTP with if consteval
-    LOG_INFO("Testing CRTP with if consteval");
+    LOG_INFO_PRINT("Testing CRTP with if consteval");
 
     // create a compile-time counter-result - using pre-computed value
     // since we can't use a consteval lambda with our logging functions
     constexpr int compile_time_test = 12; // pre-computed: 5 + 7
-    LOG_INFO(std::format("Compile-time CRTP counter value = {}", compile_time_test));
+    LOG_INFO_PRINT("Compile-time CRTP counter value = {}", compile_time_test);
 
     // runtime instance
     ConcreteCounter runtime_counter;
     runtime_counter.increment(3);
     runtime_counter.increment(4);
-    LOG_INFO(std::format("Runtime CRTP counter value = {}", runtime_counter.get_value()));
+    LOG_INFO_PRINT("Runtime CRTP counter value = {}", runtime_counter.get_value());
 
     // verify CRTP results
     assert(compile_time_test == 12 && "Compile-time CRTP increments failed");
     assert(runtime_counter.get_value() == 7 && "Runtime CRTP increments failed");
 
     // test overload pattern with if consteval
-    LOG_INFO("Testing overload pattern with if consteval");
+    LOG_INFO_PRINT("Testing overload pattern with if consteval");
 
     // compile-time evaluations - need to use constant expressions directly
     // rather than consteval lambdas since our process_value is complex
@@ -265,11 +265,11 @@ int main() {
     std::string overload_string_runtime = process_value(std::string("test"));
 
     // log results
-    LOG_INFO(std::format("Compile-time overload(5) = {}", overload_int_compile));
-    LOG_INFO(std::format("Compile-time overload(3.14) = {}", overload_double_compile));
-    LOG_INFO(std::format("Runtime overload(5) = {}", overload_int_runtime));
-    LOG_INFO(std::format("Runtime overload(3.14) = {}", overload_double_runtime));
-    LOG_INFO(std::format("Runtime overload(\"test\") = {}", overload_string_runtime));
+    LOG_INFO_PRINT("Compile-time overload(5) = {}", overload_int_compile);
+    LOG_INFO_PRINT("Compile-time overload(3.14) = {}", overload_double_compile);
+    LOG_INFO_PRINT("Runtime overload(5) = {}", overload_int_runtime);
+    LOG_INFO_PRINT("Runtime overload(3.14) = {}", overload_double_runtime);
+    LOG_INFO_PRINT("Runtime overload(\"test\") = {}", overload_string_runtime);
 
     // verify overload results
     assert(overload_int_compile == 25 && "Compile-time overload int calculation failed");
@@ -281,7 +281,7 @@ int main() {
     assert(overload_string_runtime == "test_runtime" && "Runtime overload string calculation failed");
 
     // comprehensive test checking all cases
-    LOG_INFO("Running comprehensive tests with test vectors");
+    LOG_INFO_PRINT("Running comprehensive tests with test vectors");
 
     // prepare test vectors
     std::vector<int> test_inputs;
@@ -297,7 +297,7 @@ int main() {
     // validate all inputs
     for (int input : test_inputs) {
         int runtime_fact = factorial(input);
-        LOG_INFO(std::format("Runtime factorial({}) = {}", input, runtime_fact));
+        LOG_INFO_PRINT("Runtime factorial({}) = {}", input, runtime_fact);
 
         // compare with expected results
         int expected_result = 1;
@@ -306,11 +306,11 @@ int main() {
         }
 
         if (runtime_fact != expected_result) {
-            LOG_ERROR(std::format("Factorial test failed for input {}: Expected {}, got {}",
-                      input, expected_result, runtime_fact));
+            LOG_ERROR_PRINT("Factorial test failed for input {}: Expected {}, got {}",
+                      input, expected_result, runtime_fact);
             assert(false && "Factorial calculation failed");
         }
     }
-    LOG_INFO("All tests passed successfully");
+    LOG_INFO_PRINT("All tests passed successfully");
     return 0;
 }

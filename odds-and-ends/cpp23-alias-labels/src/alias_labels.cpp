@@ -96,13 +96,13 @@ public:
 
     // demonstrates the use of labels at the end of compound statements
     [[nodiscard]] bool demonstrateEndLabels(const std::string& targetKey, int targetValue) const {
-        LOG_INFO("Testing labels at the end of compound statements");
+        LOG_INFO_PRINT("Testing labels at the end of compound statements");
 
         // using a label to mark the end of a try-block for cleaner flow control
         try {
             // check if the key exists before proceeding
             if (!m_testData.contains(targetKey)) {
-                LOG_WARNING(std::format("Key '{}' not found in test data", targetKey));
+                LOG_WARNING_PRINT("Key '{}' not found in test data", targetKey);
                 goto cleanup;
             }
 
@@ -115,43 +115,43 @@ public:
 
             for (int ndx = 0; ndx < static_cast<int>(values.size()); ++ndx) {
                 if (values[ndx] == targetValue) {
-                    LOG_INFO(std::format("Found match at index {} with value {}", ndx, targetValue));
+                    LOG_INFO_PRINT("Found match at index {} with value {}", ndx, targetValue);
                     matchedIndices.emplace_back(ndx);
                 }
             }
 
             // check if we found any matches
             if (matchedIndices.empty()) {
-                LOG_WARNING(std::format("Value {} not found in key {}", targetValue, targetKey));
+                LOG_WARNING_PRINT("Value {} not found in key {}", targetValue, targetKey);
                 return false;
             }
 
             // output all matched indices
-            LOG_INFO(std::format("Found {} matches for value {}", matchedIndices.size(), targetValue));
+            LOG_INFO_PRINT("Found {} matches for value {}", matchedIndices.size(), targetValue);
             for (const auto& idx : matchedIndices) {
-                LOG_INFO(std::format("Match at index: {}", idx));
+                LOG_INFO_PRINT("Match at index: {}", idx);
             }
 
             return true;
         } catch (const std::exception& e) {
-            LOG_ERROR(std::format("Exception caught: {}", e.what()));
+            LOG_ERROR_PRINT("Exception caught: {}", e.what());
         } cleanup: // C++23 label at the end of the try block
 
         // any cleanup code would go here, guaranteed to be executed
-        LOG_INFO("Performing cleanup operations");
+        LOG_INFO_PRINT("Performing cleanup operations");
         return false;
     }
 
     // demonstrates the use of alias declarations in init-statements
     void demonstrateAliasInInit() {
-        LOG_INFO("Testing alias declarations in init-statements");
+        LOG_INFO_PRINT("Testing alias declarations in init-statements");
 
         // C++23 feature: alias declaration in if init-statement
         // this enhances code locality by defining the alias exactly where it's necessary
         // pre-C++23, this alias would have to be defined at a higher scope level,
         // potentially causing namespace pollution
         if (using ValueContainer = std::vector<int>; m_initialized) {
-            LOG_INFO("Using alias declaration in if init-statement");
+            LOG_INFO_PRINT("Using alias declaration in if init-statement");
 
             // the ValueContainer alias is only visible within this if block,
             // reducing scope pollution and improving code locality
@@ -167,7 +167,7 @@ public:
                     }
                 }
 
-                LOG_INFO(std::format("Key: {} has {} even values", key, filteredValues.size()));
+                LOG_INFO_PRINT("Key: {} has {} even values", key, filteredValues.size());
 
                 // testing with assertions
                 if (key == "first") {
@@ -179,13 +179,13 @@ public:
                 }
             }
         } else {
-            LOG_ERROR("Data not initialized");
+            LOG_ERROR_PRINT("Data not initialized");
         }
 
         // C++23 feature: alias declaration in for loop init-statement
         // this provides better context by keeping the alias definition close to its usage
         for (using KeyType = std::string; const auto& [key, values] : m_testData) {
-            LOG_INFO("Using alias declaration in for loop init-statement");
+            LOG_INFO_PRINT("Using alias declaration in for loop init-statement");
 
             // explicit use of KeyType to demonstrate alias is in scope
             KeyType keyUppercase = key;
@@ -194,7 +194,7 @@ public:
                 c = std::toupper(static_cast<unsigned char>(c));
             }
 
-            LOG_INFO(std::format("Processing key: {} (uppercase: {})", key, keyUppercase));
+            LOG_INFO_PRINT("Processing key: {} (uppercase: {})", key, keyUppercase);
 
             // calculate sum of values
             int sum = 0;
@@ -202,7 +202,7 @@ public:
                 sum += value;
             }
 
-            LOG_INFO(std::format("Sum of values for key {}: {}", key, sum));
+            LOG_INFO_PRINT("Sum of values for key {}: {}", key, sum);
 
             // verify calculations with assertions
             if (key == "first") {
@@ -220,14 +220,14 @@ public:
 
     // demonstrates both features combined in a practical example
     void combinedDemo() {
-        LOG_INFO("Demonstrating both features combined");
+        LOG_INFO_PRINT("Demonstrating both features combined");
 
         // using a switch statement with alias in an init-statement and labels at compound statement ends
         for (const auto& [key, values] : m_testData) {
             // alias declaration in a switch init-statement enhancing code locality
             switch (using Stats = struct { int min; int max; int sum; }; key[0]) {
                 case 'f': {
-                    LOG_INFO("Processing 'first' key");
+                    LOG_INFO_PRINT("Processing 'first' key");
 
                     // initialize stats using the locally defined Stats alias
                     Stats stats{values[0], values[0], 0};
@@ -239,8 +239,8 @@ public:
                         stats.sum += value;
                     }
 
-                    LOG_INFO(std::format("First key stats - Min: {}, Max: {}, Sum: {}",
-                                        stats.min, stats.max, stats.sum));
+                    LOG_INFO_PRINT("First key stats - Min: {}, Max: {}, Sum: {}",
+                                        stats.min, stats.max, stats.sum);
 
                     // verify calculations
                     assert(stats.min == 1 && "Expected min of 1");
@@ -251,7 +251,7 @@ public:
                 } case_f_end: // C++23 label at end of case block
 
                 case 's': {
-                    LOG_INFO("Processing 'second' key");
+                    LOG_INFO_PRINT("Processing 'second' key");
 
                     // initialize stats using the locally defined Stats alias
                     Stats stats{values[0], values[0], 0};
@@ -263,8 +263,8 @@ public:
                         stats.sum += value;
                     }
 
-                    LOG_INFO(std::format("Second key stats - Min: {}, Max: {}, Sum: {}",
-                                        stats.min, stats.max, stats.sum));
+                    LOG_INFO_PRINT("Second key stats - Min: {}, Max: {}, Sum: {}",
+                                        stats.min, stats.max, stats.sum);
 
                     // verify calculations
                     assert(stats.min == 10 && "Expected min of 10");
@@ -275,7 +275,7 @@ public:
                 } case_s_end: // C++23 label at end of case block
 
                 default: {
-                    LOG_INFO(std::format("Processing '{}' key", key));
+                    LOG_INFO_PRINT("Processing '{}' key", key);
 
                     // initialize stats using the locally defined Stats alias
                     Stats stats{values[0], values[0], 0};
@@ -287,8 +287,8 @@ public:
                         stats.sum += value;
                     }
 
-                    LOG_INFO(std::format("Key stats - Min: {}, Max: {}, Sum: {}",
-                                        stats.min, stats.max, stats.sum));
+                    LOG_INFO_PRINT("Key stats - Min: {}, Max: {}, Sum: {}",
+                                        stats.min, stats.max, stats.sum);
 
                     // For demonstration purposes, if we wanted to reprocess as if it were the 'first' case
                     // we could use: goto case_f_end;
@@ -301,13 +301,13 @@ public:
 };
 
 int main() {
-    LOG_INFO("Starting C++23 Features Demo");
+    LOG_INFO_PRINT("Starting C++23 Features Demo");
 
     // create the demo object
     LabelDemo demo;
 
     // test the end labels feature
-    LOG_INFO("=== Testing Labels at End of Compound Statements ===");
+    LOG_INFO_PRINT("=== Testing Labels at End of Compound Statements ===");
     bool foundTarget = demo.demonstrateEndLabels("first", 3);
     assert(foundTarget && "Should find value 3 in 'first' key");
 
@@ -315,13 +315,13 @@ int main() {
     assert(!foundTarget && "Should not find value 25 in 'second' key");
 
     // test the alias in init statements feature
-    LOG_INFO("=== Testing Alias Declarations in Init-Statements ===");
+    LOG_INFO_PRINT("=== Testing Alias Declarations in Init-Statements ===");
     demo.demonstrateAliasInInit();
 
     // test both features combined
-    LOG_INFO("=== Testing Combined Features ===");
+    LOG_INFO_PRINT("=== Testing Combined Features ===");
     demo.combinedDemo();
 
-    LOG_INFO("All tests completed successfully");
+    LOG_INFO_PRINT("All tests completed successfully");
     return 0;
 }

@@ -39,7 +39,7 @@ public:
     // equality operator for the state machine
     bool operator==(const VendingMachineState& other) const {
         const bool result = m_state == other.m_state;
-        LOG_INFO(std::format("State equality check: {} == {} => {}", name(), other.name(), result ? "true" : "false"));
+        LOG_INFO_PRINT("State equality check: {} == {} => {}", name(), other.name(), result ? "true" : "false");
         return result;
     }
     
@@ -52,7 +52,7 @@ public:
     struct Hash {
         std::size_t operator()(const VendingMachineState& state) const {
             auto hashValue = std::hash<int>{}(static_cast<int>(state.m_state));
-            LOG_INFO(std::format("Hashing state: {} => {}", state.name(), hashValue));
+            LOG_INFO_PRINT("Hashing state: {} => {}", state.name(), hashValue);
             return hashValue;
         }
     };
@@ -100,7 +100,7 @@ public:
     // equality operator for the state machine
     bool operator==(const VendingMachineEvent& other) const {
         const bool result = m_event == other.m_event;
-        LOG_INFO(std::format("Event equality check: {} == {} => {}", name(), other.name(), result ? "true" : "false"));
+        LOG_INFO_PRINT("Event equality check: {} == {} => {}", name(), other.name(), result ? "true" : "false");
         return result;
     }
     
@@ -113,7 +113,7 @@ public:
     struct Hash {
         std::size_t operator()(const VendingMachineEvent& event) const {
             auto hashValue = std::hash<int>{}(static_cast<int>(event.m_event));
-            LOG_INFO(std::format("Hashing event: {} => {}", event.name(), hashValue));
+            LOG_INFO_PRINT("Hashing event: {} => {}", event.name(), hashValue);
             return hashValue;
         }
     };
@@ -148,7 +148,7 @@ namespace std {
     struct hash<VendingMachineState> {
         std::size_t operator()(const VendingMachineState& state) const noexcept {
             auto result = std::hash<int>{}(static_cast<int>(state.getState()));
-            LOG_INFO(std::format("std::hash for state {}: {}", state.name(), result));
+            LOG_INFO_PRINT("std::hash for state {}: {}", state.name(), result);
             return result;
         }
     };
@@ -157,7 +157,7 @@ namespace std {
     struct hash<VendingMachineEvent> {
         std::size_t operator()(const VendingMachineEvent& event) const noexcept {
             auto result = std::hash<int>{}(static_cast<int>(event.getEvent()));
-            LOG_INFO(std::format("std::hash for event {}: {}", event.name(), result));
+            LOG_INFO_PRINT("std::hash for event {}: {}", event.name(), result);
             return result;
         }
     };
@@ -170,7 +170,7 @@ public:
     VendingMachine() : m_stateMachine{VendingMachineState(VendingMachineState::State::IDLE)}, m_inventory{5} {
         // define all the transitions for our vending machine
         setupStateMachine();
-        LOG_INFO("Vending machine initialized");
+        LOG_INFO_PRINT("Vending machine initialized");
     }
 
     // method to insert money into the machine
@@ -196,7 +196,7 @@ public:
     // method to restock the machine
     void restock(const int count) {
         m_inventory += count;
-        LOG_INFO(std::format("Restocked. New inventory: {}", m_inventory));
+        LOG_INFO_PRINT("Restocked. New inventory: {}", m_inventory);
         m_stateMachine.processEvent(VendingMachineEvent(VendingMachineEvent::Event::RESTOCK));
     }
 
@@ -207,17 +207,17 @@ public:
 
     // method to exit maintenance mode
     void exitMaintenance() {
-        LOG_INFO(std::format("Attempting to exit maintenance mode from state: {}", m_stateMachine.getCurrentState().name()));
+        LOG_INFO_PRINT("Attempting to exit maintenance mode from state: {}", m_stateMachine.getCurrentState().name());
 
         // Log all available transitions for debugging
-        LOG_INFO("Available transitions from current state:");
+        LOG_INFO_PRINT("Available transitions from current state:");
         for (const auto& transition : m_stateMachine.getPossibleTransitions()) {
-            LOG_INFO(std::format("  {}", transition.toString()));
+            LOG_INFO_PRINT("  {}", transition.toString());
         }
 
         // Check if we're in the correct state for this event
         if (m_stateMachine.getCurrentState().name() != "MAINTENANCE") {
-            LOG_WARNING("Cannot exit maintenance mode: machine is not in MAINTENANCE state");
+            LOG_WARNING_PRINT("Cannot exit maintenance mode: machine is not in MAINTENANCE state");
             return;
         }
 
@@ -225,12 +225,12 @@ public:
         const VendingMachineEvent exitMaintenanceEvent(VendingMachineEvent::Event::EXIT_MAINTENANCE);
         const bool result = m_stateMachine.processEvent(exitMaintenanceEvent);
         
-        LOG_INFO(std::format("Exit maintenance mode result: {}", result ? "success" : "failure"));
-        LOG_INFO(std::format("Current state after exit attempt: {}", m_stateMachine.getCurrentState().name()));
+        LOG_INFO_PRINT("Exit maintenance mode result: {}", result ? "success" : "failure");
+        LOG_INFO_PRINT("Current state after exit attempt: {}", m_stateMachine.getCurrentState().name());
         
         // If the transition failed, but we're in maintenance mode, log a warning
         if (!result && m_stateMachine.getCurrentState().name() == "MAINTENANCE") {
-            LOG_WARNING("Failed to exit maintenance mode - transition not properly configured");
+            LOG_WARNING_PRINT("Failed to exit maintenance mode - transition not properly configured");
         }
     }
 
@@ -293,7 +293,7 @@ private:
         auto dispenseAction = [this](const VendingMachineState&, const VendingMachineEvent&,
                                     const VendingMachineState&) {
             m_inventory--;
-            LOG_INFO(std::format("Item dispensed. Remaining inventory: {}", m_inventory));
+            LOG_INFO_PRINT("Item dispensed. Remaining inventory: {}", m_inventory);
         };
 
         m_stateMachine.addTransition(itemSelected, dispense, dispensing, dispenseAction);
@@ -309,7 +309,7 @@ private:
         auto outOfStockCheck = [this](const VendingMachineState&, const VendingMachineEvent&,
                                      const VendingMachineState&) {
             if (m_inventory <= 0) {
-                LOG_WARNING("Machine is out of stock!");
+                LOG_WARNING_PRINT("Machine is out of stock!");
                 // Instead of just issuing a CANCEL event, we should transition to out of stock then back to IDLE
                 // This helps ensure our state machine works correctly in all cases
                 m_stateMachine.processEvent(VendingMachineEvent(Event::CANCEL));
@@ -324,32 +324,32 @@ private:
         m_stateMachine.addTransition(outOfStock, enterMaintenance, maintenance);
 
         // maintenance state transitions
-        LOG_INFO("Adding critical MAINTENANCE -> IDLE transition");
+        LOG_INFO_PRINT("Adding critical MAINTENANCE -> IDLE transition");
         // Make sure this exit transition is properly implemented
         // Add extra logging to debug the transition
         auto exitMaintenanceAction = [this](const VendingMachineState& from, const VendingMachineEvent& event,
                                          const VendingMachineState& to) {
-            LOG_INFO(std::format("Executing exit maintenance action: {} --({})--> {}",
-                              from.name(), event.name(), to.name()));
+            LOG_INFO_PRINT("Executing exit maintenance action: {} --({})--> {}",
+                              from.name(), event.name(), to.name());
         };
         
         m_stateMachine.addTransition(maintenance, exitMaintenance, idle, exitMaintenanceAction);
 
         // Debug summary of all transitions
-        LOG_INFO("All state transitions configured:");
+        LOG_INFO_PRINT("All state transitions configured:");
         std::vector<fsm::Transition<VendingMachineState, VendingMachineEvent>> allTransitions;
 
         // For each possible state, get all possible transitions
         for (int stateVal = 0; stateVal <= static_cast<int>(State::MAINTENANCE); stateVal++) {
             VendingMachineState currentState(static_cast<State>(stateVal));
-            LOG_INFO(std::format("State: {}", currentState.name()));
+            LOG_INFO_PRINT("State: {}", currentState.name());
 
             // Try all possible events from this state
             for (int eventVal = 0; eventVal <= static_cast<int>(Event::EXIT_MAINTENANCE); eventVal++) {
                 VendingMachineEvent currentEvent(static_cast<Event>(eventVal));
 
                 if (m_stateMachine.canTransition(currentEvent)) {
-                    LOG_INFO(std::format("  Can transition with event: {}", currentEvent.name()));
+                    LOG_INFO_PRINT("  Can transition with event: {}", currentEvent.name());
                 }
             }
         }
@@ -364,7 +364,7 @@ private:
 
 // test method to directly verify transitions
 void testExitMaintenanceTransition() {
-    LOG_INFO("Testing EXIT_MAINTENANCE transition directly");
+    LOG_INFO_PRINT("Testing EXIT_MAINTENANCE transition directly");
 
     // Create states and events
     const VendingMachineState maintenance(VendingMachineState::State::MAINTENANCE);
@@ -373,131 +373,131 @@ void testExitMaintenanceTransition() {
 
     // Create a state machine
     fsm::StateMachine<VendingMachineState, VendingMachineEvent> testMachine(maintenance);
-    LOG_INFO(std::format("Initial state: {}", testMachine.getCurrentState().name()));
+    LOG_INFO_PRINT("Initial state: {}", testMachine.getCurrentState().name());
 
     // Add a simple transition
     testMachine.addTransition(maintenance, exitMaintenance, idle);
 
     // Test transition
     const bool result = testMachine.processEvent(exitMaintenance);
-    LOG_INFO(std::format("Transition result: {}", result ? "success" : "failure"));
-    LOG_INFO(std::format("Current state: {}", testMachine.getCurrentState().name()));
+    LOG_INFO_PRINT("Transition result: {}", result ? "success" : "failure");
+    LOG_INFO_PRINT("Current state: {}", testMachine.getCurrentState().name());
     assert(result);
     assert(testMachine.getCurrentState().name() == "IDLE");
-    LOG_INFO("Direct transition test passed");
+    LOG_INFO_PRINT("Direct transition test passed");
 }
 
 // test function to verify the vending machine fsm implementation
 void testVendingMachine() {
-    LOG_INFO("Starting vending machine tests");
+    LOG_INFO_PRINT("Starting vending machine tests");
 
     VendingMachine machine;
 
     // test initial state
     assert(machine.getCurrentState() == "IDLE");
     assert(machine.getInventory() == 5);
-    LOG_INFO("Initial state verified");
+    LOG_INFO_PRINT("Initial state verified");
 
     // test insert money
     machine.insertMoney();
     assert(machine.getCurrentState() == "MONEY_INSERTED");
-    LOG_INFO("Insert money transition verified");
+    LOG_INFO_PRINT("Insert money transition verified");
 
     // test cancel operation
     machine.cancel();
     assert(machine.getCurrentState() == "IDLE");
-    LOG_INFO("Cancel operation verified");
+    LOG_INFO_PRINT("Cancel operation verified");
 
     // test full purchase flow
     machine.insertMoney();
     assert(machine.getCurrentState() == "MONEY_INSERTED");
-    LOG_INFO("State after insertMoney(): MONEY_INSERTED");
+    LOG_INFO_PRINT("State after insertMoney(): MONEY_INSERTED");
 
     machine.selectItem();
     assert(machine.getCurrentState() == "ITEM_SELECTED");
-    LOG_INFO("State after selectItem(): ITEM_SELECTED");
+    LOG_INFO_PRINT("State after selectItem(): ITEM_SELECTED");
 
     machine.completeDispense();
     assert(machine.getCurrentState() == "DISPENSING");
     assert(machine.getInventory() == 4);
-    LOG_INFO(std::format("State after completeDispense(): {}, inventory: {}",
-             machine.getCurrentState(), machine.getInventory()));
-    LOG_INFO("Full purchase flow verified");
+    LOG_INFO_PRINT("State after completeDispense(): {}, inventory: {}",
+             machine.getCurrentState(), machine.getInventory());
+    LOG_INFO_PRINT("Full purchase flow verified");
 
     // test maintenance mode
-    LOG_INFO(std::format("Current state before maintenance: {}", machine.getCurrentState()));
+    LOG_INFO_PRINT("Current state before maintenance: {}", machine.getCurrentState());
     machine.enterMaintenance();
-    LOG_INFO(std::format("State after enterMaintenance(): {}", machine.getCurrentState()));
+    LOG_INFO_PRINT("State after enterMaintenance(): {}", machine.getCurrentState());
     assert(machine.getCurrentState() == "MAINTENANCE");
 
     // test exitMaintenance transition
-    LOG_INFO("=== TESTING MAINTENANCE EXIT TRANSITION ===");
+    LOG_INFO_PRINT("=== TESTING MAINTENANCE EXIT TRANSITION ===");
 
     // Start fresh with a new machine instance to avoid any state issues
     VendingMachine freshMachine;
 
     // Move to maintenance mode
-    LOG_INFO("Moving fresh machine to maintenance mode");
+    LOG_INFO_PRINT("Moving fresh machine to maintenance mode");
     freshMachine.enterMaintenance();
-    LOG_INFO(std::format("Current state: {}", freshMachine.getCurrentState()));
+    LOG_INFO_PRINT("Current state: {}", freshMachine.getCurrentState());
     assert(freshMachine.getCurrentState() == "MAINTENANCE");
 
     // Now test exit
-    LOG_INFO("Now trying to exit maintenance mode");
+    LOG_INFO_PRINT("Now trying to exit maintenance mode");
     freshMachine.exitMaintenance();
-    LOG_INFO(std::format("Current state after exit: {}", freshMachine.getCurrentState()));
+    LOG_INFO_PRINT("Current state after exit: {}", freshMachine.getCurrentState());
 
     // This is the failing assertion - let's see if our changes fixed it
     assert(freshMachine.getCurrentState() == "IDLE");
-    LOG_INFO("Maintenance exit verified successfully");
+    LOG_INFO_PRINT("Maintenance exit verified successfully");
 
     // Now continue with the original machine object
-    LOG_INFO("Continuing with original machine after maintenance exit testing");
+    LOG_INFO_PRINT("Continuing with original machine after maintenance exit testing");
     
     // Check current inventory and state
-    LOG_INFO(std::format("Current inventory: {}", machine.getInventory()));
-    LOG_INFO(std::format("Current state: {}", machine.getCurrentState()));
+    LOG_INFO_PRINT("Current inventory: {}", machine.getInventory());
+    LOG_INFO_PRINT("Current state: {}", machine.getCurrentState());
     
     // Get machine back to IDLE state if needed (it might be in maintenance or another state)
     if (machine.getCurrentState() == "MAINTENANCE") {
-        LOG_INFO("Original machine is in maintenance, exiting maintenance mode");
+        LOG_INFO_PRINT("Original machine is in maintenance, exiting maintenance mode");
         machine.exitMaintenance();
     }
     
     // Make sure we're in an IDLE state
     if (machine.getCurrentState() != "IDLE") {
-        LOG_WARNING("Machine not in IDLE state, attempting reset");
+        LOG_WARNING_PRINT("Machine not in IDLE state, attempting reset");
         // Try to get back to IDLE with cancel
         machine.cancel();
     }
     
     // Reset the machine to ensure that all previous tests have completed
     // and the machine is back in a valid state for our out-of-stock test
-    LOG_INFO("Creating a fresh machine for the out-of-stock test");
+    LOG_INFO_PRINT("Creating a fresh machine for the out-of-stock test");
     VendingMachine outOfStockMachine;
     
     // The machine starts with 5 items in inventory by default
     assert(outOfStockMachine.getInventory() == 5);
-    LOG_INFO(std::format("Fresh machine inventory: {}", outOfStockMachine.getInventory()));
+    LOG_INFO_PRINT("Fresh machine inventory: {}", outOfStockMachine.getInventory());
     
     // Buy all 5 items to deplete inventory to 0
     for (int ndx = 0; ndx < 5; ndx++) {
-        LOG_INFO(std::format("Buying item #{}: current inventory = {}", ndx+1, outOfStockMachine.getInventory()));
+        LOG_INFO_PRINT("Buying item #{}: current inventory = {}", ndx+1, outOfStockMachine.getInventory());
         outOfStockMachine.insertMoney();
         outOfStockMachine.selectItem();
         outOfStockMachine.completeDispense();
     }
 
     // Verify that inventory is exactly 0 after buying all items
-    LOG_INFO(std::format("Final inventory after buying all items: {}", outOfStockMachine.getInventory()));
+    LOG_INFO_PRINT("Final inventory after buying all items: {}", outOfStockMachine.getInventory());
     assert(outOfStockMachine.getInventory() == 0);
-    LOG_INFO("Out of stock scenario created");
+    LOG_INFO_PRINT("Out of stock scenario created");
 
     // When the machine is out of stock, let's move it to IDLE state manually 
     // to ensure the restock operation works properly
     if (outOfStockMachine.getCurrentState() != "IDLE") {
-        LOG_INFO(std::format("Machine is in {} state, moving to IDLE before restock", 
-                             outOfStockMachine.getCurrentState()));
+        LOG_INFO_PRINT("Machine is in {} state, moving to IDLE before restock", 
+                             outOfStockMachine.getCurrentState());
         outOfStockMachine.cancel(); // This should get us back to IDLE state in most cases
     }
     
@@ -506,16 +506,16 @@ void testVendingMachine() {
     assert(outOfStockMachine.getInventory() == 3);
     
     // Check state after restock - should be IDLE
-    LOG_INFO(std::format("Machine state after restock: {}", outOfStockMachine.getCurrentState()));
+    LOG_INFO_PRINT("Machine state after restock: {}", outOfStockMachine.getCurrentState());
     assert(outOfStockMachine.getCurrentState() == "IDLE");
-    LOG_INFO("Restock operation verified");
+    LOG_INFO_PRINT("Restock operation verified");
 
-    LOG_INFO("All vending machine tests passed successfully");
+    LOG_INFO_PRINT("All vending machine tests passed successfully");
 }
 
 // main function to run the example
 int main() {
-    LOG_INFO("Starting FSM demo application");
+    LOG_INFO_PRINT("Starting FSM demo application");
 
     // Test-specific transition
     testExitMaintenanceTransition();
@@ -524,40 +524,40 @@ int main() {
     testVendingMachine();
 
     // create and demonstrate a simple vending machine usage
-    LOG_INFO("Demonstrating vending machine usage");
+    LOG_INFO_PRINT("Demonstrating vending machine usage");
     VendingMachine vendingMachine;
 
-    LOG_INFO(std::format("Initial state: {}", vendingMachine.getCurrentState()));
-    LOG_INFO(std::format("Initial inventory: {}", vendingMachine.getInventory()));
+    LOG_INFO_PRINT("Initial state: {}", vendingMachine.getCurrentState());
+    LOG_INFO_PRINT("Initial inventory: {}", vendingMachine.getInventory());
 
     // demonstrate a purchase
-    LOG_INFO("Customer inserts money");
+    LOG_INFO_PRINT("Customer inserts money");
     vendingMachine.insertMoney();
-    LOG_INFO(std::format("Current state: {}", vendingMachine.getCurrentState()));
+    LOG_INFO_PRINT("Current state: {}", vendingMachine.getCurrentState());
 
-    LOG_INFO("Customer selects an item");
+    LOG_INFO_PRINT("Customer selects an item");
     vendingMachine.selectItem();
-    LOG_INFO(std::format("Current state: {}", vendingMachine.getCurrentState()));
+    LOG_INFO_PRINT("Current state: {}", vendingMachine.getCurrentState());
 
-    LOG_INFO("Machine dispenses item");
+    LOG_INFO_PRINT("Machine dispenses item");
     vendingMachine.completeDispense();
-    LOG_INFO(std::format("Current state: {}", vendingMachine.getCurrentState()));
-    LOG_INFO(std::format("Remaining inventory: {}", vendingMachine.getInventory()));
+    LOG_INFO_PRINT("Current state: {}", vendingMachine.getCurrentState());
+    LOG_INFO_PRINT("Remaining inventory: {}", vendingMachine.getInventory());
 
     // demonstrate maintenance mode
-    LOG_INFO("Entering maintenance mode");
+    LOG_INFO_PRINT("Entering maintenance mode");
     vendingMachine.enterMaintenance();
-    LOG_INFO(std::format("Current state: {}", vendingMachine.getCurrentState()));
+    LOG_INFO_PRINT("Current state: {}", vendingMachine.getCurrentState());
 
-    LOG_INFO("Exiting maintenance mode");
+    LOG_INFO_PRINT("Exiting maintenance mode");
     vendingMachine.exitMaintenance();
-    LOG_INFO(std::format("Current state after exit attempt: {}", vendingMachine.getCurrentState()));
+    LOG_INFO_PRINT("Current state after exit attempt: {}", vendingMachine.getCurrentState());
     
     // Verify the transition worked correctly
     if (vendingMachine.getCurrentState() != "IDLE") {
-        LOG_ERROR("Failed to exit maintenance mode properly!");
+        LOG_ERROR_PRINT("Failed to exit maintenance mode properly!");
     }
 
-    LOG_INFO("FSM demo completed successfully");
+    LOG_INFO_PRINT("FSM demo completed successfully");
     return 0;
 }
