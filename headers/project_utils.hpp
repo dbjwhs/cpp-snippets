@@ -18,6 +18,9 @@
 #include <iomanip>
 #include <format>
 #include <vector>
+#ifdef __cpp_lib_print
+#include <print>
+#endif
 
 // version information
 #define PROJECT_VERSION_MAJOR 1
@@ -212,6 +215,30 @@ public:
         write_log_message(level, message.str());
     }
 
+#ifdef __cpp_lib_print
+    // std::print-based logging methods for C++23
+    template<typename... Args>
+    void print_log(const LogLevel level, std::format_string<Args...> format, Args&&... args) {
+        if (!is_level_enabled(level)) {
+            return;
+        }
+        auto prefix = create_log_prefix(level);
+        auto formatted_message = std::format("{}{}\n", prefix.str(), std::format(format, std::forward<Args>(args)...));
+        write_log_message(level, formatted_message);
+    }
+
+    // std::print-based logging with depth for C++23
+    template<typename... Args>
+    void print_log_with_depth(const LogLevel level, const int depth, std::format_string<Args...> format, Args&&... args) {
+        if (!is_level_enabled(level)) {
+            return;
+        }
+        auto prefix = create_log_prefix(level);
+        auto formatted_message = std::format("{}{}{}\n", prefix.str(), getIndentation(depth), std::format(format, std::forward<Args>(args)...));
+        write_log_message(level, formatted_message);
+    }
+#endif
+
     // overload for logging with depth
     template<typename... Args>
     void log_with_depth(const LogLevel level, const int depth, const Args&... args) {
@@ -333,6 +360,16 @@ private:
 #define LOG_DEBUG(message, ...) LOG_BASE(LogLevel::DEBUG, message, ##__VA_ARGS__)
 #define LOG_ERROR(message, ...) LOG_BASE(LogLevel::ERROR, message, ##__VA_ARGS__)
 #define LOG_CRITICAL(message, ...) LOG_BASE(LogLevel::CRITICAL, message, ##__VA_ARGS__)
+
+#ifdef __cpp_lib_print
+// C++23 std::print-based logging macros
+#define LOG_INFO_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::INFO, format, ##__VA_ARGS__)
+#define LOG_NORMAL_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::NORMAL, format, ##__VA_ARGS__)
+#define LOG_WARNING_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::WARNING, format, ##__VA_ARGS__)
+#define LOG_DEBUG_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::DEBUG, format, ##__VA_ARGS__)
+#define LOG_ERROR_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::ERROR, format, ##__VA_ARGS__)
+#define LOG_CRITICAL_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::CRITICAL, format, ##__VA_ARGS__)
+#endif
 
 // no need to explicitly define static members when using inline
 
