@@ -132,6 +132,7 @@ Or you can elect to build everything at once.
 - [cpp23-if-consteval/](odds-and-ends/cpp23-if-consteval/)
 - [cpp23-multi-subscript/](odds-and-ends/cpp23-multi-subscript/)
 - [cpp23-new-preprocessor/](odds-and-ends/cpp23-new-preprocessor/)
+- [cpp23-print-println/](odds-and-ends/cpp23-print-println/)
 - [cpp23-this/](odds-and-ends/cpp23-this/)
 - [cpp23-turing-machines/](odds-and-ends/cpp23-turing-machines/)
 - [hoare-logic/](odds-and-ends/hoare-logic/)
