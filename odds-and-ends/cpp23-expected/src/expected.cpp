@@ -65,12 +65,12 @@ public:
     // constructor with braced initialization
     explicit DataProcessor(std::string file_path, size_t max_size = 1024 * 1024)
         : m_current_file_path{std::move(file_path)}, m_max_file_size{max_size} {
-        LOG_INFO(std::format("initializing data processor for file: {}", m_current_file_path));
+        LOG_INFO_PRINT("initializing data processor for file: {}", m_current_file_path);
     }
 
     // simulated file reading operation that may fail
     [[nodiscard]] std::expected<std::string, FileError> read_file() const {
-        LOG_INFO(std::format("attempting to read file: {}", m_current_file_path));
+        LOG_INFO_PRINT("attempting to read file: {}", m_current_file_path);
 
         // simulate various failure conditions
         if (m_current_file_path.empty()) {
@@ -79,29 +79,29 @@ public:
         }
 
         if (m_current_file_path.find(".txt") == std::string::npos) {
-            LOG_ERROR(std::format("file {} does not have .txt extension", m_current_file_path));
+            LOG_ERROR_PRINT("file {} does not have .txt extension", m_current_file_path);
             return std::unexpected{FileError::PERMISSION_DENIED};
         }
 
         if (m_current_file_path.find("large") != std::string::npos) {
-            LOG_ERROR(std::format("file {} is too large", m_current_file_path));
+            LOG_ERROR_PRINT("file {} is too large", m_current_file_path);
             return std::unexpected{FileError::TOO_LARGE};
         }
 
         if (m_current_file_path.find("corrupt") != std::string::npos) {
-            LOG_ERROR(std::format("file {} appears to be corrupted", m_current_file_path));
+            LOG_ERROR_PRINT("file {} appears to be corrupted", m_current_file_path);
             return std::unexpected{FileError::CORRUPTED};
         }
 
         // simulate successful file reading
         std::string content = "123,456,789,42,100";
-        LOG_INFO(std::format("successfully read file content: {}", content));
+        LOG_INFO_PRINT("successfully read file content: {}", content);
         return content;
     }
 
     // parsing operation that may fail
     std::expected<std::vector<int>, ParseError> parse_integers(const std::string& data) {
-        LOG_INFO(std::format("parsing integer data from string: {}", data));
+        LOG_INFO_PRINT("parsing integer data from string: {}", data);
 
         if (data.empty()) {
             LOG_ERROR("cannot parse empty string");
@@ -126,16 +126,16 @@ public:
                     result.emplace_back(value);
                     current_number.clear();
                 } catch (const std::invalid_argument&) {
-                    LOG_ERROR(std::format("invalid number format: {}", current_number));
+                    LOG_ERROR_PRINT("invalid number format: {}", current_number);
                     return std::unexpected{ParseError::INVALID_FORMAT};
                 } catch (const std::out_of_range&) {
-                    LOG_ERROR(std::format("number out of range: {}", current_number));
+                    LOG_ERROR_PRINT("number out of range: {}", current_number);
                     return std::unexpected{ParseError::OUT_OF_RANGE};
                 }
             } else if (std::isdigit(c) || c == '-') {
                 current_number += c;
             } else {
-                LOG_ERROR(std::format("invalid character found: {}", c));
+                LOG_ERROR_PRINT("invalid character found: {}", c);
                 return std::unexpected{ParseError::INVALID_CHARACTER};
             }
         }
@@ -146,15 +146,15 @@ public:
                 int value = std::stoi(current_number);
                 result.emplace_back(value);
             } catch (const std::invalid_argument&) {
-                LOG_ERROR(std::format("invalid number format: {}", current_number));
+                LOG_ERROR_PRINT("invalid number format: {}", current_number);
                 return std::unexpected{ParseError::INVALID_FORMAT};
             } catch (const std::out_of_range&) {
-                LOG_ERROR(std::format("number out of range: {}", current_number));
+                LOG_ERROR_PRINT("number out of range: {}", current_number);
                 return std::unexpected{ParseError::OUT_OF_RANGE};
             }
         }
 
-        LOG_INFO(std::format("successfully parsed {} integers", result.size()));
+        LOG_INFO_PRINT("successfully parsed {} integers", result.size());
         return result;
     }
 
@@ -166,7 +166,7 @@ public:
         auto file_result = read_file();
         if (!file_result) {
             std::string error_msg = format_file_error(file_result.error());
-            LOG_ERROR(std::format("file operation failed: {}", error_msg));
+            LOG_ERROR_PRINT("file operation failed: {}", error_msg);
             return std::unexpected{error_msg};
         }
 
@@ -174,7 +174,7 @@ public:
         auto parse_result = parse_integers(file_result.value());
         if (!parse_result) {
             std::string error_msg = format_parse_error(parse_result.error());
-            LOG_ERROR(std::format("parse operation failed: {}", error_msg));
+            LOG_ERROR_PRINT("parse operation failed: {}", error_msg);
             return std::unexpected{error_msg};
         }
 
@@ -188,7 +188,7 @@ public:
             sum += num;
         }
 
-        LOG_INFO(std::format("calculated sum: {}", sum));
+        LOG_INFO_PRINT("calculated sum: {}", sum);
         return sum;
     }
 
@@ -227,7 +227,7 @@ public:
                     sum += num;
                 }
 
-                LOG_INFO(std::format("monadic chain calculated sum: {}", sum));
+                LOG_INFO_PRINT("monadic chain calculated sum: {}", sum);
                 return sum;
             });
     }
@@ -273,7 +273,7 @@ private:
 
 // demonstration function for basic std::expected usage
 std::expected<double, std::string> safe_divide(double numerator, double denominator) {
-    LOG_INFO(std::format("attempting division: {} / {}", numerator, denominator));
+    LOG_INFO_PRINT("attempting division: {} / {}", numerator, denominator);
 
     if (denominator == 0.0) {
         LOG_ERROR("division by zero attempted");
@@ -281,13 +281,13 @@ std::expected<double, std::string> safe_divide(double numerator, double denomina
     }
 
     double result = numerator / denominator;
-    LOG_INFO(std::format("division result: {}", result));
+    LOG_INFO_PRINT("division result: {}", result);
     return result;
 }
 
 // demonstration function for transforming expected values
 std::expected<int, std::string> safe_sqrt_and_round(double value) {
-    LOG_INFO(std::format("calculating square root and rounding for value: {}", value));
+    LOG_INFO_PRINT("calculating square root and rounding for value: {}", value);
 
     if (value < 0) {
         LOG_ERROR("cannot calculate square root of negative number");
@@ -297,7 +297,7 @@ std::expected<int, std::string> safe_sqrt_and_round(double value) {
     double sqrt_result = std::sqrt(value);
     int rounded_result = static_cast<int>(std::round(sqrt_result));
 
-    LOG_INFO(std::format("square root and round result: {}", rounded_result));
+    LOG_INFO_PRINT("square root and round result: {}", rounded_result);
     return rounded_result;
 }
 
@@ -488,9 +488,9 @@ void demonstrate_usage_patterns() {
     LOG_INFO("pattern 1: basic success/failure checking");
     {
         if (auto result = safe_divide(20.0, 4.0)) {
-            LOG_INFO(std::format("division successful: {}", *result));
+            LOG_INFO_PRINT("division successful: {}", *result);
         } else {
-            LOG_ERROR(std::format("division failed: {}", result.error()));
+            LOG_ERROR_PRINT("division failed: {}", result.error());
         }
     }
 
@@ -499,7 +499,7 @@ void demonstrate_usage_patterns() {
     {
         auto result = safe_divide(15.0, 3.0);
         if (result.has_value()) {
-            LOG_INFO(std::format("extracted value: {}", result.value()));
+            LOG_INFO_PRINT("extracted value: {}", result.value());
         }
     }
 
@@ -509,7 +509,7 @@ void demonstrate_usage_patterns() {
         Logger::StderrSuppressionGuard stderr_guard;
         auto result = safe_divide(10.0, 0.0);
         if (!result.has_value()) {
-            LOG_WARNING(std::format("operation failed with error: {}", result.error()));
+            LOG_WARNING_PRINT("operation failed with error: {}", result.error());
         }
     }
 
@@ -537,7 +537,7 @@ void demonstrate_usage_patterns() {
             .and_then(safe_sqrt_string);
 
         if (final_result) {
-            LOG_INFO(std::format("chained operation result: {}", *final_result));
+            LOG_INFO_PRINT("chained operation result: {}", *final_result);
         }
     }
 
@@ -547,11 +547,11 @@ void demonstrate_usage_patterns() {
         Logger::StderrSuppressionGuard stderr_guard;
         auto result = safe_divide(10.0, 0.0)
             .or_else([](const std::string& error) -> std::expected<double, std::string> {
-                LOG_WARNING(std::format("recovering from error: {}", error));
+                LOG_WARNING_PRINT("recovering from error: {}", error);
                 return 0.0; // provide default value
             });
 
-        LOG_INFO(std::format("recovered value: {}", result.value()));
+        LOG_INFO_PRINT("recovered value: {}", result.value());
     }
 
     // pattern 6: transforming values with transform
@@ -561,7 +561,7 @@ void demonstrate_usage_patterns() {
             .transform([](double val) { return val * 2.0; });
 
         if (result) {
-            LOG_INFO(std::format("transformed value: {}", *result));
+            LOG_INFO_PRINT("transformed value: {}", *result);
         }
     }
 
@@ -582,7 +582,7 @@ int main() {
         return 0;
 
     } catch (const std::exception& e) {
-        LOG_ERROR(std::format("unexpected exception occurred: {}", e.what()));
+        LOG_ERROR_PRINT("unexpected exception occurred: {}", e.what());
         return 1;
     } catch (...) {
         LOG_ERROR("unknown exception occurred");
