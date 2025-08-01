@@ -65,7 +65,7 @@ private:
         );
 
         if (!symbols) {
-            LOG_ERROR("Failed to resolve backtrace symbols");
+            LOG_ERROR_PRINT("Failed to resolve backtrace symbols");
             return;
         }
 
@@ -152,14 +152,14 @@ public:
 void print_stacktrace() {
     const stacktrace_capture capture;
 
-    LOG_INFO(std::format("Stack trace ({} frames):", capture.frame_count()));
+    LOG_INFO_PRINT("Stack trace ({} frames):", capture.frame_count());
 
     const auto& raw_symbols = capture.get_raw_symbols();
     auto demangled_frames = capture.get_demangled_frames();
 
     // Debug output showing the processing steps
     for (size_t ndx = 0; ndx < raw_symbols.size(); ++ndx) {
-        LOG_INFO(std::format("  Raw frame: {}", raw_symbols[ndx]));
+        LOG_INFO_PRINT("  Raw frame: {}", raw_symbols[ndx]);
 
         // Extract mangled name for debug output
         const std::string& raw_frame = raw_symbols[ndx];
@@ -170,27 +170,27 @@ void print_stacktrace() {
                 mangled.erase(0, mangled.find_first_not_of(" \t"));
                 mangled.erase(mangled.find_last_not_of(" \t") + 1);
 
-                LOG_INFO(std::format("  Extracted symbol: '{}'", mangled));
+                LOG_INFO_PRINT("  Extracted symbol: '{}'", mangled);
 
                 // Check if this looks like a mangled C++ name (starts with _Z)
                 if (!mangled.empty() && mangled.length() > 2 && mangled.substr(0, 2) == "_Z") {
-                    LOG_INFO(std::format("  [{}] Found mangled C++ symbol: {}", ndx, mangled));
+                    LOG_INFO_PRINT("  [{}] Found mangled C++ symbol: {}", ndx, mangled);
                 } else if (!mangled.empty() && mangled.substr(0, 2) != "0x") {
-                    LOG_INFO(std::format("  [{}] Found C symbol or already demangled: {}", ndx, mangled));
+                    LOG_INFO_PRINT("  [{}] Found C symbol or already demangled: {}", ndx, mangled);
                 } else {
-                    LOG_INFO(std::format("  [{}] Address only: {}", ndx, mangled));
+                    LOG_INFO_PRINT("  [{}] Address only: {}", ndx, mangled);
                 }
             }
         }
-        LOG_INFO(std::format("  [{}] {}", ndx, demangled_frames[ndx]));
+        LOG_INFO_PRINT("  [{}] {}", ndx, demangled_frames[ndx]);
     }
 
     // Output the final cleaned stack trace
-    LOG_INFO("=== FINAL DEMANGLED STACK TRACE ===");
+    LOG_INFO_PRINT("=== FINAL DEMANGLED STACK TRACE ===");
     for (size_t ndx = 0; ndx < demangled_frames.size(); ++ndx) {
-        LOG_INFO(std::format("[{}] {}", ndx, demangled_frames[ndx]));
+        LOG_INFO_PRINT("[{}] {}", ndx, demangled_frames[ndx]);
     }
-    LOG_INFO("=== END STACK TRACE ===");
+    LOG_INFO_PRINT("=== END STACK TRACE ===");
 }
 
 // Test functions to demonstrate C++ name mangling
@@ -199,34 +199,34 @@ namespace test_namespace {
     class complex_class {
     public:
         static void template_method(const std::vector<T>& data, std::string_view name) {
-            LOG_INFO(std::format("In template_method with {} items", data.size()));
+            LOG_INFO_PRINT("In template_method with {} items", data.size());
             print_stacktrace();
         }
     };
 
     void overloaded_function(int x) {
-        LOG_INFO(std::format("overloaded_function(int): {}", x));
+        LOG_INFO_PRINT("overloaded_function(int): {}", x);
         complex_class<std::string>::template_method({"test", "data"}, "example");
     }
 
     void overloaded_function(double x, const std::string& name) {
-        LOG_INFO(std::format("overloaded_function(double, string): {} {}", x, name));
+        LOG_INFO_PRINT("overloaded_function(double, string): {} {}", x, name);
         print_stacktrace();
     }
 }
 
 void function_c() {
-    LOG_INFO("In function_c, calling C++ template function");
+    LOG_INFO_PRINT("In function_c, calling C++ template function");
     test_namespace::overloaded_function(42);
 }
 
 void function_b() {
-    LOG_INFO("In function_b, calling function_c");
+    LOG_INFO_PRINT("In function_b, calling function_c");
     function_c();
 }
 
 void function_a() {
-    LOG_INFO("In function_a, calling function_b");
+    LOG_INFO_PRINT("In function_a, calling function_b");
     function_b();
 }
 
@@ -235,10 +235,10 @@ void function_a() {
 #define ENABLE_TESTS
 
 int main() {
-    LOG_INFO("Starting main, calling function_a");
+    LOG_INFO_PRINT("Starting main, calling function_a");
     function_a();
 
-    LOG_INFO("--- Direct stack trace from main ---");
+    LOG_INFO_PRINT("--- Direct stack trace from main ---");
     print_stacktrace();
 
 #ifdef ENABLE_TESTS
@@ -259,10 +259,10 @@ void test_demangling() {
     int status;
 
     if (auto demangled = abi::__cxa_demangle(test_mangled, nullptr, nullptr, &status); status == 0 && demangled) {
-        LOG_INFO(std::format("Demangling test: '{}' -> '{}'", test_mangled, demangled));
+        LOG_INFO_PRINT("Demangling test: '{}' -> '{}'", test_mangled, demangled);
         free(demangled);
     } else {
-        LOG_ERROR(std::format("Demangling test failed for '{}', status: {}", test_mangled, status));
+        LOG_ERROR_PRINT("Demangling test failed for '{}', status: {}", test_mangled, status);
     }
 }
 
@@ -312,13 +312,13 @@ void test_stacktrace_capture() {
     }
 
     free(strings);
-    LOG_INFO("✓ Stacktrace capture test passed");
+    LOG_INFO_PRINT("✓ Stacktrace capture test passed");
 }
 
 void run_tests() {
-    LOG_INFO("=== Running Tests ===");
+    LOG_INFO_PRINT("=== Running Tests ===");
     test_demangling();
     test_stacktrace_capture();
-    LOG_INFO("=== All Tests Passed ===");
+    LOG_INFO_PRINT("=== All Tests Passed ===");
 }
 #endif
