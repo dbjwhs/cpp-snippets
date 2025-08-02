@@ -363,12 +363,13 @@ private:
 
 #ifdef __cpp_lib_print
 // C++23 std::print-based logging macros
-#define LOG_INFO_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::INFO, format, ##__VA_ARGS__)
-#define LOG_NORMAL_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::NORMAL, format, ##__VA_ARGS__)
-#define LOG_WARNING_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::WARNING, format, ##__VA_ARGS__)
-#define LOG_DEBUG_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::DEBUG, format, ##__VA_ARGS__)
-#define LOG_ERROR_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::ERROR, format, ##__VA_ARGS__)
-#define LOG_CRITICAL_PRINT(format, ...) Logger::getInstance().print_log(LogLevel::CRITICAL, format, ##__VA_ARGS__)
+#define LOG_BASE_PRINT(level, message, ...) Logger::getInstance().print_log(level, message, ##__VA_ARGS__)
+#define LOG_INFO_PRINT(message, ...) LOG_BASE_PRINT(LogLevel::INFO, message, ##__VA_ARGS__)
+#define LOG_NORMAL_PRINT(message, ...) LOG_BASE_PRINT(LogLevel::NORMAL, message, ##__VA_ARGS__)
+#define LOG_WARNING_PRINT(message, ...) LOG_BASE_PRINT(LogLevel::WARNING, message, ##__VA_ARGS__)
+#define LOG_DEBUG_PRINT(message, ...) LOG_BASE_PRINT(LogLevel::DEBUG, message, ##__VA_ARGS__)
+#define LOG_ERROR_PRINT(message, ...) LOG_BASE_PRINT(LogLevel::ERROR, message, ##__VA_ARGS__)
+#define LOG_CRITICAL_PRINT(message, ...) LOG_BASE_PRINT(LogLevel::CRITICAL, message, ##__VA_ARGS__)
 #endif
 
 // no need to explicitly define static members when using inline
