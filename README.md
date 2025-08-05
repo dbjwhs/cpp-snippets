@@ -67,6 +67,7 @@ Or you can elect to build everything at once.
 
 ### Data Structures
 - [binary-tree/](data-structures/binary-tree/)
+- [flat_maps_explored/](data-structures/flat_maps_explored/)
 - [linked-list/](data-structures/linked-list/)
 - [lru-cache/](data-structures/lru-cache/)
 
