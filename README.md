@@ -128,6 +128,7 @@ Or you can elect to build everything at once.
 - [cpp20-spaceship/](odds-and-ends/cpp20-spaceship/)
 - [cpp20-test-macros/](odds-and-ends/cpp20-test-macros/)
 - [cpp23-alias-labels/](odds-and-ends/cpp23-alias-labels/)
+- [cpp23-byteswap/](odds-and-ends/cpp23-byteswap/)
 - [cpp23-expected/](odds-and-ends/cpp23-expected/)
 - [cpp23-finite-state-machine/](odds-and-ends/cpp23-finite-state-machine/)
 - [cpp23-if-consteval/](odds-and-ends/cpp23-if-consteval/)
