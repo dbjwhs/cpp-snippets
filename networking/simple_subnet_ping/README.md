@@ -347,7 +347,3 @@ SOFTWARE.
 - **Boost Community**: Excellent networking libraries
 - **C++ Standards Committee**: Modern language features enabling clean network code
 - **Unix/Linux Community**: Decades of network programming patterns and practices
-
----
-
-*Built with ❤️ using Modern C++23 and Boost.Asio*
