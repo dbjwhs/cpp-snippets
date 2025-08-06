@@ -15,8 +15,7 @@ namespace NetworkScanner {
         : m_io_context{io_context}, m_sequence_number{1} {
         
         // attempt to initialize icmp socket
-        auto init_result = initialize_socket();
-        if (!init_result) {
+        if (const auto init_result = initialize_socket(); !init_result) {
             LOG_ERROR_PRINT("failed to initialize ping manager socket");
         } else {
             LOG_INFO_PRINT("ping manager initialized successfully");
@@ -25,8 +24,7 @@ namespace NetworkScanner {
     
     std::expected<PingResult, ScanError> PingManager::ping(const std::string& target_ip) {
         if (!m_socket) {
-            auto init_result = initialize_socket();
-            if (!init_result) {
+            if (auto init_result = initialize_socket(); !init_result) {
                 LOG_ERROR_PRINT("cannot ping - socket initialization failed");
                 return std::unexpected{init_result.error()};
             }
@@ -103,9 +101,7 @@ namespace NetworkScanner {
                     reply_buffer.resize(reply_bytes);
                     
                     // parse reply to get response time
-                    auto response_time_result = parse_icmp_reply(reply_buffer, send_time);
-                    
-                    if (response_time_result) {
+                    if (auto response_time_result = parse_icmp_reply(reply_buffer, send_time)) {
                         result.m_success = true;
                         result.m_response_time_ms = response_time_result.value();
                         LOG_INFO_PRINT("ping successful to {} - {:.2f}ms", 
@@ -184,7 +180,7 @@ namespace NetworkScanner {
         
         std::memcpy(&packet[icmp_header_size], &timestamp, sizeof(timestamp));
         
-        // fill remaining payload with pattern
+        // fill the remaining payload with pattern
         for (std::size_t ndx = icmp_header_size + sizeof(timestamp); ndx < total_size; ++ndx) {
             packet[ndx] = static_cast<std::uint8_t>(ndx & 0xff);
         }
@@ -199,7 +195,7 @@ namespace NetworkScanner {
     
     std::expected<double, ScanError> PingManager::parse_icmp_reply(
         const std::vector<std::uint8_t>& reply_data,
-        std::chrono::steady_clock::time_point send_time) const {
+        const std::chrono::steady_clock::time_point send_time) const {
         
         // minimum size check (ip header + icmp header)
         if (reply_data.size() < 28) {

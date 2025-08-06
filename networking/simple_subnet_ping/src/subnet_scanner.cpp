@@ -26,17 +26,13 @@ namespace NetworkScanner {
             LOG_INFO_PRINT("detected hostname: {}", hostname);
             
             // resolve hostname to get ip addresses
-            auto endpoints = resolver.resolve(hostname, "");
-            
-            // iterate through resolved addresses to find ipv4
-            for (const auto& endpoint : endpoints) {
-                const auto address = endpoint.endpoint().address();
-                
+            // to iterate through resolved addresses to find ipv4
+            for (const auto endpoints = resolver.resolve(hostname, ""); const auto& endpoint : endpoints) {
                 // check if it's ipv4 and not loopback
-                if (address.is_v4() && !address.is_loopback()) {
+                if (const auto address = endpoint.endpoint().address(); address.is_v4() && !address.is_loopback()) {
                     const std::string ip_str = address.to_string();
                     
-                    // skip common non-routable addresses
+                    // skip common non-routable addresses ### dbj little bit of a hack but hey...
                     if (ip_str.starts_with("169.254.") || ip_str.starts_with("127.")) {
                         continue;
                     }
@@ -75,9 +71,8 @@ namespace NetworkScanner {
     }
     
     std::expected<std::vector<std::string>, ScanError> SubnetScanner::generate_subnet_ips(const std::string& subnet_base) const {
-        // validate subnet base format (should be three octets)
-        const std::regex subnet_regex{R"(^\d{1,3}\.\d{1,3}\.\d{1,3}$)"};
-        if (!std::regex_match(subnet_base, subnet_regex)) {
+        // validate a subnet base format (should be three octets)
+        if (const std::regex subnet_regex{R"(^\d{1,3}\.\d{1,3}\.\d{1,3}$)"}; !std::regex_match(subnet_base, subnet_regex)) {
             LOG_ERROR_PRINT("invalid subnet base format: {}", subnet_base);
             return std::unexpected{ScanError::invalid_subnet};
         }
@@ -98,8 +93,8 @@ namespace NetworkScanner {
         return ip_addresses;
     }
     
-    std::expected<std::vector<DeviceInfo>, ScanError> SubnetScanner::scan_subnet(const std::string& subnet_base) {
-        // generate list of ip addresses to scan
+    std::expected<std::vector<DeviceInfo>, ScanError> SubnetScanner::scan_subnet(const std::string& subnet_base) const {
+        // generate a list of ip addresses to scan
         auto ip_list_result = generate_subnet_ips(subnet_base);
         if (!ip_list_result) {
             return std::unexpected{ip_list_result.error()};
@@ -151,8 +146,7 @@ namespace NetworkScanner {
                     device.m_response_time_ms = ping_result.m_response_time_ms;
                     
                     // attempt to resolve hostname
-                    auto hostname_result = resolve_hostname(device.m_ip_address);
-                    if (hostname_result) {
+                    if (auto hostname_result = resolve_hostname(device.m_ip_address)) {
                         device.m_hostname = hostname_result.value();
                     } else {
                         device.m_hostname = "unknown";
@@ -213,16 +207,14 @@ namespace NetworkScanner {
             // create resolver for hostname lookup
             boost::asio::ip::tcp::resolver resolver{m_io_context};
             
-            // convert ip string to address object
+            // convert ip string to an address object
             const boost::asio::ip::address addr = boost::asio::ip::make_address(ip_address);
             
             // create endpoint from address
             const boost::asio::ip::tcp::endpoint endpoint{addr, 0};
             
             // perform reverse dns lookup
-            auto results = resolver.resolve(endpoint);
-            
-            if (!results.empty()) {
+            if (const auto results = resolver.resolve(endpoint); !results.empty()) {
                 return results.begin()->host_name();
             }
             

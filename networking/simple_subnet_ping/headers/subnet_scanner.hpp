@@ -63,7 +63,7 @@ namespace NetworkScanner {
         [[nodiscard]] std::expected<std::vector<std::string>, ScanError> generate_subnet_ips(const std::string& subnet_base) const;
         
         // scan all devices in the given subnet
-        [[nodiscard]] std::expected<std::vector<DeviceInfo>, ScanError> scan_subnet(const std::string& subnet_base);
+        [[nodiscard]] std::expected<std::vector<DeviceInfo>, ScanError> scan_subnet(const std::string& subnet_base) const;
         
         // set timeout for ping operations (default 1000ms)
         void set_timeout(std::chrono::milliseconds timeout);
