@@ -61,7 +61,7 @@ function check_and_update_file() {
     fi
 
     # Preserve original file permissions
-    local orig_perms=$(stat -c %a "$file")
+    local orig_perms=$(stat -f %A "$file")
 
     # Add license header and original content
     echo "$mit_line" > "$temp_file"
@@ -97,11 +97,11 @@ function check_cpp_file_match() {
 # Process all CMakeLists.txt files
 while IFS= read -r -d '' cmake_file; do
     check_and_update_file "$cmake_file" "false"
-done < <(find "../" -name "CMakeLists.txt" -type f -print0)
+done < <(find "../" -name "CMakeLists.txt" -type f -not -path "*/build/*" -not -path "*/cmake-build-debug/*" -print0)
 
 # Process matching .cpp files
 while IFS= read -r -d '' cpp_file; do
     if check_cpp_file_match "$cpp_file"; then
         check_and_update_file "$cpp_file" "true"
     fi
-done < <(find "../" -name "*.cpp" -type f -print0)
+done < <(find "../" -name "*.cpp" -type f -not -path "*/build/*" -not -path "*/cmake-build-debug/*" -print0)

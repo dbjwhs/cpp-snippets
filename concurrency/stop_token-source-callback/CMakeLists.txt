@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2025 dbjwhs
+
 # CMakeLists.txt for stop_token_source_callback
 
 cmake_minimum_required(VERSION 3.12)
