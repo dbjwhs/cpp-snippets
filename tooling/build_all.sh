@@ -164,8 +164,8 @@ fi
 while IFS= read -r -d '' cmake_file; do
     project_dir=$(dirname "${cmake_file}")
 
-    # Skip if build directory is in path
-    if [[ "${project_dir}" == *"/build/"* ]]; then
+    # Skip if build directory or cmake-build-debug is in path
+    if [[ "${project_dir}" == *"/build/"* ]] || [[ "${project_dir}" == *"cmake-build-debug"* ]]; then
         log "INFO" "Skipping build directory: ${project_dir}" "${BLUE}"
         continue
     fi
