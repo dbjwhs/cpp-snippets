@@ -48,6 +48,7 @@ Or you can elect to build everything at once.
 
 ### Concurrency
 - [active-object-pattern/](concurrency/active-object-pattern/)
+- [atomic/](concurrency/atomic/)
 - [barrier-example/](concurrency/barrier-example/)
 - [cpp20-latch/](concurrency/cpp20-latch/)
 - [dining-philosophers/](concurrency/dining-philosophers/)
