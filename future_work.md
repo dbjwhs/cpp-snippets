@@ -8,7 +8,7 @@
 - [ ] **Geometric algorithms** (convex hull, line intersection, closest pair)
 
 ## Concurrency Enhancements
-- [ ] **Atomic operations** examples with memory ordering
+- [X] **Atomic operations** examples with memory ordering
 - [ ] **Lock-free data structures** (queue, stack, linked list)
 - [ ] **Coroutines with async I/O** patterns
 - [ ] **Work-stealing scheduler** implementation
