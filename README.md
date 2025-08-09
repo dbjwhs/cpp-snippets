@@ -133,6 +133,7 @@ Or you can elect to build everything at once.
 - [cpp23-expected/](odds-and-ends/cpp23-expected/)
 - [cpp23-finite-state-machine/](odds-and-ends/cpp23-finite-state-machine/)
 - [cpp23-if-consteval/](odds-and-ends/cpp23-if-consteval/)
+- [cpp23-mdspan/](odds-and-ends/cpp23-mdspan/)
 - [cpp23-multi-subscript/](odds-and-ends/cpp23-multi-subscript/)
 - [cpp23-new-preprocessor/](odds-and-ends/cpp23-new-preprocessor/)
 - [cpp23-print-println/](odds-and-ends/cpp23-print-println/)
