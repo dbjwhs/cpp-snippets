@@ -151,7 +151,7 @@ public:
 void
 ThreadGroupContainer::Add(void (*driverMethod)()) {
     LOG_INFO("ThreadGroupContainer::Add: thread group");
-    threadGroups.push_back(std::unique_ptr<ThreadGroup>(new ThreadGroup(driverMethod)));
+    threadGroups.push_back(std::make_unique<ThreadGroup>(driverMethod));
 }
 
 
