@@ -6,10 +6,10 @@
 #include <chrono>
 #include <vector>
 #include <map>
-#include <sstream>
 #include <ctime>
 #include <string>
 #include <atomic>
+#include <format>                                           // C++20 std::format for efficient string operations
 
 class ThreadUtility {
 private:
@@ -27,20 +27,20 @@ public:
     static void AddThreadName() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
         ThreadUtility::threadGroupCounter++;
-        std::stringstream threadIDStrm;
-        threadIDStrm << std::this_thread::get_id();
-        std::string threadIDStr = threadIDStrm.str();
 
-        std::stringstream threadNameStrm;
-        threadNameStrm << (ThreadUtility::IsMainThread() ? "Main   " : "Thread ") << ThreadUtility::threadGroupCounter << " | " << threadIDStr;
-        std::string threadNameStr = threadNameStrm.str();
+        // single-allocation string formatting using C++20 std::format
+        std::string threadName = std::format("{} {} | {}",
+                                             ThreadUtility::IsMainThread() ? "Main  " : "Thread",
+                                             ThreadUtility::threadGroupCounter,
+                                             std::this_thread::get_id()
+        );
 
         // each thread of each thread group will have a unique name in our local threadGroupNameCache in
         // the form of...
         // Main    1
         // Thread <n>
         // ... were <n> is the next monotonically increasing value starting at 1 which will always be the main thread
-        ThreadUtility::threadGroupNameCache[std::this_thread::get_id()] = threadNameStr;
+        ThreadUtility::threadGroupNameCache[std::this_thread::get_id()] = std::move(threadName);
     }
 
     static std::string ThreadIDStr() {
@@ -49,14 +49,12 @@ public:
         // Find the thread name safely without creating entries
         auto currentThreadId = std::this_thread::get_id();
         auto it = ThreadUtility::threadGroupNameCache.find(currentThreadId);
-        
+
         if (it != ThreadUtility::threadGroupNameCache.end()) {
             return it->second;
         } else {
             // Thread not found in cache - this shouldn't happen if AddThreadName was called
-            std::stringstream fallbackName;
-            fallbackName << "Unknown Thread | " << currentThreadId;
-            std::string fallbackStr = fallbackName.str();
+            std::string fallbackStr = std::format("Unknown Thread | {}", currentThreadId);
             LOG_WARNING("Thread not found in name cache, using fallback: ", fallbackStr);
             return fallbackStr;
         }
@@ -66,7 +64,7 @@ public:
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
         return (ThreadUtility::threadGroupCounter);
     }
-    
+
     // Clean up thread-specific resources (call when thread is done)
     static void CleanupThread() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
@@ -74,7 +72,7 @@ public:
         threadGroupNameCache.erase(currentThreadId);
         threadGroupLogCache.erase(currentThreadId);
     }
-    
+
     // Clean up all resources (call at program shutdown)
     static void CleanupAll() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
@@ -85,8 +83,11 @@ public:
 };
 
 int ThreadUtility::threadGroupCounter = 0;
+
 std::mutex ThreadUtility::ThreadUtilityMutex;
+
 std::thread::id ThreadUtility::mainThreadID = std::this_thread::get_id();
+
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupNameCache;
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupLogCache;
 // RAII-based thread log cache manager for safe automatic cleanup
@@ -167,7 +168,7 @@ ThreadGroup::threadGroupPromiseMethod(std::promise<std::string> promiseObj) {
         ThreadUtility::AddThreadName();
         // RAII-based log management - automatically cleaned up on scope exit
         ThreadLogCacheManager logManager;
-        logManager.appendLog("ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")");
+        logManager.appendLog(std::format("ThreadGroup::threadGroupPromiseMethod: (group id:{})", thisThreadGroupUUID));
         
         // Set value at thread exit - this will be called even if exception occurs
         promiseObj.set_value_at_thread_exit(logManager.getLog());
@@ -332,7 +333,7 @@ ThreadGroupContainer::Join() {
 void driverMethod() {
     static std::atomic<int> driverCnt{0};                   // thread-safe counter for multiple calls to this method
     int currentCount = ++driverCnt;
-    std::string msg = "hi from driver method " + std::to_string(currentCount);
+    std::string msg = std::format("in driver method {}", currentCount);
 
      // ### test code to delay some threads to show correct asynchronous behavior
     switch(currentCount) {
