@@ -11,6 +11,29 @@
 #include <atomic>
 #include <format>                                           // C++20 std::format for efficient string operations
 
+// Configuration constants - replace hardcoded magic numbers
+namespace Config {
+    // Thread configuration
+    constexpr int DEFAULT_THREAD_COUNT = 1000;
+    
+    // Sleep duration configuration (in seconds)
+    constexpr int SLEEP_DURATION_SHORT = 4;
+    constexpr int SLEEP_DURATION_MEDIUM = 5;
+    constexpr int SLEEP_DURATION_LONG = 10;
+    constexpr int SLEEP_DURATION_VERY_LONG = 11;
+    constexpr int SLEEP_DURATION_EXTENDED = 12;
+    constexpr int SLEEP_DURATION_MAX = 15;
+    
+    // Thread case configuration - specific thread numbers for delayed execution
+    constexpr int DELAY_CASE_1 = 3;      // Thread 3 gets maximum delay
+    constexpr int DELAY_CASE_2 = 5;      // Thread 5 gets medium delay
+    constexpr int DELAY_CASE_3 = 15;     // Thread 15 gets long delay
+    constexpr int DELAY_CASE_4 = 30;     // Thread 30 gets short delay
+    constexpr int DELAY_CASE_5 = 55;     // Thread 55 gets very long delay
+    constexpr int DELAY_CASE_6 = 180;    // Thread 180 gets extended delay
+    constexpr int DELAY_CASE_7 = 750;    // Thread 750 gets extended delay
+}
+
 class ThreadUtility {
 private:
     static bool IsMainThread() {
@@ -587,28 +610,31 @@ void driverMethod() {
     int currentCount = ++driverCnt;
     std::string msg = std::format("in driver method {}", currentCount);
 
-     // ### test code to delay some threads to show correct asynchronous behavior
+     // Test code to delay specific threads to demonstrate asynchronous behavior using configurable constants
     switch(currentCount) {
-        case 3:
-            std::this_thread::sleep_for(std::chrono::seconds(15));
+        case Config::DELAY_CASE_1:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_MAX));
             break;
-        case 5:
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+        case Config::DELAY_CASE_2:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_MEDIUM));
             break;
-        case 15:
-            std::this_thread::sleep_for(std::chrono::seconds(10));
+        case Config::DELAY_CASE_3:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_LONG));
             break;
-        case 30:
-            std::this_thread::sleep_for(std::chrono::seconds(4));
+        case Config::DELAY_CASE_4:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_SHORT));
             break;
-        case 55:
-            std::this_thread::sleep_for(std::chrono::seconds(11));
+        case Config::DELAY_CASE_5:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_VERY_LONG));
             break;
-        case 180:
-            std::this_thread::sleep_for(std::chrono::seconds(12));
+        case Config::DELAY_CASE_6:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_EXTENDED));
             break;
-        case 750:
-            std::this_thread::sleep_for(std::chrono::seconds(12));
+        case Config::DELAY_CASE_7:
+            std::this_thread::sleep_for(std::chrono::seconds(Config::SLEEP_DURATION_EXTENDED));
+            break;
+        default:
+            // No delay for other thread numbers
             break;
     }
 
@@ -620,9 +646,9 @@ int main() {
     try {
         ThreadUtility::AddThreadName();                         // will add main thread to our thread name list
 
-        // test ThreadGroupContainer
+        // test ThreadGroupContainer using configurable thread count
         ThreadGroupContainer threadGroupContainer;
-        for (int thrdex = 0; thrdex < 1000; ++thrdex)
+        for (int thrdex = 0; thrdex < Config::DEFAULT_THREAD_COUNT; ++thrdex)
             threadGroupContainer.Add(driverMethod);
 
         threadGroupContainer.Start();
