@@ -66,6 +66,22 @@ public:
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
         return (ThreadUtility::threadGroupCounter);
     }
+    
+    // Clean up thread-specific resources (call when thread is done)
+    static void CleanupThread() {
+        std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
+        auto currentThreadId = std::this_thread::get_id();
+        threadGroupNameCache.erase(currentThreadId);
+        threadGroupLogCache.erase(currentThreadId);
+    }
+    
+    // Clean up all resources (call at program shutdown)
+    static void CleanupAll() {
+        std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
+        threadGroupNameCache.clear();
+        threadGroupLogCache.clear();
+        threadGroupCounter = 0;
+    }
 };
 
 int ThreadUtility::threadGroupCounter = 0;
@@ -73,17 +89,42 @@ std::mutex ThreadUtility::ThreadUtilityMutex;
 std::thread::id ThreadUtility::mainThreadID = std::this_thread::get_id();
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupNameCache;
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupLogCache;
-// Safe helper functions to replace unsafe macros
-static std::string& getThreadLogCache() {
-    auto currentThreadId = std::this_thread::get_id();
-    // This will create entry if it doesn't exist, but that's intentional here
-    return ThreadUtility::threadGroupLogCache[currentThreadId];
-}
-
-static void deleteThreadLogCache() {
-    auto currentThreadId = std::this_thread::get_id();
-    ThreadUtility::threadGroupLogCache.erase(currentThreadId);
-}
+// RAII-based thread log cache manager for safe automatic cleanup
+class ThreadLogCacheManager {
+private:
+    std::thread::id threadId;
+    std::string logData;
+    
+public:
+    ThreadLogCacheManager() : threadId(std::this_thread::get_id()) {
+        // Initialize with empty log data
+    }
+    
+    ~ThreadLogCacheManager() {
+        // Automatic cleanup using RAII - always executes
+        std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
+        ThreadUtility::threadGroupLogCache.erase(threadId);
+    }
+    
+    // Non-copyable, non-movable for safety
+    ThreadLogCacheManager(const ThreadLogCacheManager&) = delete;
+    ThreadLogCacheManager& operator=(const ThreadLogCacheManager&) = delete;
+    ThreadLogCacheManager(ThreadLogCacheManager&&) = delete;
+    ThreadLogCacheManager& operator=(ThreadLogCacheManager&&) = delete;
+    
+    // Thread-safe append to log data
+    void appendLog(const std::string& data) {
+        std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
+        logData += data;
+        ThreadUtility::threadGroupLogCache[threadId] = logData;
+    }
+    
+    // Thread-safe get log data
+    std::string getLog() const {
+        std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
+        return logData;
+    }
+};
 
 
 
@@ -124,11 +165,13 @@ void
 ThreadGroup::threadGroupPromiseMethod(std::promise<std::string> promiseObj) {
     try {
         ThreadUtility::AddThreadName();
-        getThreadLogCache() += "ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")";
+        // RAII-based log management - automatically cleaned up on scope exit
+        ThreadLogCacheManager logManager;
+        logManager.appendLog("ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")");
         
         // Set value at thread exit - this will be called even if exception occurs
-        promiseObj.set_value_at_thread_exit(getThreadLogCache());
-        deleteThreadLogCache();
+        promiseObj.set_value_at_thread_exit(logManager.getLog());
+        // No manual cleanup needed - RAII handles it automatically
         
         // Call external driver method with exception handling
         if (this->externalDriverMethod) {
@@ -227,6 +270,8 @@ ThreadGroup::Join() {
                 nextThread.join();
             }
         }
+        // Clean up thread resources after successful join
+        // Note: Each thread cleans up its own resources via RAII
     }
     catch (const std::exception& e) {
         LOG_ERROR("Exception in ThreadGroup::Join: ", e.what());
@@ -319,15 +364,43 @@ void driverMethod() {
 
 
 int main() {
-    ThreadUtility::AddThreadName();                         // will add main thread to our thread name list
+    try {
+        ThreadUtility::AddThreadName();                         // will add main thread to our thread name list
 
-    // test ThreadGroupContainer
-    ThreadGroupContainer ThreadGroupContainer;
-    for (int thrdex = 0; thrdex < 1000; ++thrdex)
-        ThreadGroupContainer.Add(driverMethod);
+        // test ThreadGroupContainer
+        ThreadGroupContainer threadGroupContainer;
+        for (int thrdex = 0; thrdex < 1000; ++thrdex)
+            threadGroupContainer.Add(driverMethod);
 
-    ThreadGroupContainer.Start();
-    ThreadGroupContainer.Join();
-
-    return 0;
+        threadGroupContainer.Start();
+        threadGroupContainer.Join();
+        
+        // Clean up all ThreadUtility resources before program exit
+        ThreadUtility::CleanupAll();
+        
+        LOG_INFO("All thread groups completed successfully");
+        return 0;
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Fatal exception in main: ", e.what());
+        // Attempt cleanup even on failure
+        try {
+            ThreadUtility::CleanupAll();
+        }
+        catch (...) {
+            // Suppress cleanup exceptions
+        }
+        return 1;
+    }
+    catch (...) {
+        LOG_ERROR("Unknown fatal exception in main");
+        // Attempt cleanup even on failure
+        try {
+            ThreadUtility::CleanupAll();
+        }
+        catch (...) {
+            // Suppress cleanup exceptions
+        }
+        return 1;
+    }
 }
