@@ -46,8 +46,20 @@ public:
     static std::string ThreadIDStr() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
 
-        // return our unique thread name
-        return (ThreadUtility::threadGroupNameCache[std::this_thread::get_id()]);
+        // Find the thread name safely without creating entries
+        auto currentThreadId = std::this_thread::get_id();
+        auto it = ThreadUtility::threadGroupNameCache.find(currentThreadId);
+        
+        if (it != ThreadUtility::threadGroupNameCache.end()) {
+            return it->second;
+        } else {
+            // Thread not found in cache - this shouldn't happen if AddThreadName was called
+            std::stringstream fallbackName;
+            fallbackName << "Unknown Thread | " << currentThreadId;
+            std::string fallbackStr = fallbackName.str();
+            LOG_WARNING("Thread not found in name cache, using fallback: ", fallbackStr);
+            return fallbackStr;
+        }
     }
 
     static int GetThreadCounter() {
@@ -61,8 +73,17 @@ std::mutex ThreadUtility::ThreadUtilityMutex;
 std::thread::id ThreadUtility::mainThreadID = std::this_thread::get_id();
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupNameCache;
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupLogCache;
-#define threadGroupLogCacheAt  ThreadUtility::threadGroupLogCache[std::this_thread::get_id()]
-#define threadGroupLogCacheDel ThreadUtility::threadGroupLogCache.erase(std::this_thread::get_id())
+// Safe helper functions to replace unsafe macros
+static std::string& getThreadLogCache() {
+    auto currentThreadId = std::this_thread::get_id();
+    // This will create entry if it doesn't exist, but that's intentional here
+    return ThreadUtility::threadGroupLogCache[currentThreadId];
+}
+
+static void deleteThreadLogCache() {
+    auto currentThreadId = std::this_thread::get_id();
+    ThreadUtility::threadGroupLogCache.erase(currentThreadId);
+}
 
 
 
@@ -103,11 +124,11 @@ void
 ThreadGroup::threadGroupPromiseMethod(std::promise<std::string> promiseObj) {
     try {
         ThreadUtility::AddThreadName();
-        threadGroupLogCacheAt += "ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")";
+        getThreadLogCache() += "ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")";
         
         // Set value at thread exit - this will be called even if exception occurs
-        promiseObj.set_value_at_thread_exit(threadGroupLogCacheAt);
-        threadGroupLogCacheDel;
+        promiseObj.set_value_at_thread_exit(getThreadLogCache());
+        deleteThreadLogCache();
         
         // Call external driver method with exception handling
         if (this->externalDriverMethod) {
