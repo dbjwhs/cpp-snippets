@@ -295,13 +295,47 @@ class ThreadGroupContainer
 {
 private:
     std::vector<std::unique_ptr<ThreadGroup>> threadGroups;
+    bool started = false;
+    bool joined = false;
 public:
     ThreadGroupContainer() { this->Reset(); };
-    virtual ~ThreadGroupContainer() {}
+    
+    // Proper resource management - ensure all threads are joined before destruction
+    ~ThreadGroupContainer() {
+        try {
+            // If threads were started but not joined, attempt to join them
+            if (started && !joined) {
+                LOG_WARNING("ThreadGroupContainer destructor: threads not properly joined, attempting cleanup");
+                Join();
+            }
+        }
+        catch (const std::exception& e) {
+            LOG_ERROR("Exception during ThreadGroupContainer cleanup: ", e.what());
+            // Continue with destruction even if join fails
+        }
+        catch (...) {
+            LOG_ERROR("Unknown exception during ThreadGroupContainer cleanup");
+            // Continue with destruction even if join fails
+        }
+    }
+    
     void Add(void (*driverMethod)());
     void Start();
     void Join();
-    void Reset() { threadGroups.clear(); }
+    void Reset() { 
+        // Ensure threads are properly joined before clearing
+        if (started && !joined) {
+            try {
+                Join();
+            }
+            catch (...) {
+                LOG_ERROR("Failed to join threads during Reset()");
+            }
+        }
+        threadGroups.clear(); 
+        started = false;
+        joined = false;
+    }
 };
 
 
@@ -314,19 +348,74 @@ ThreadGroupContainer::Add(void (*driverMethod)()) {
 
 void
 ThreadGroupContainer::Start() {
+    if (started) {
+        LOG_WARNING("ThreadGroupContainer::Start: already started");
+        return;
+    }
+    
     LOG_INFO("ThreadGroupContainer::Start: starting thread groups");
-    for (auto& nextThreadGroup : threadGroups)
-        nextThreadGroup->Start();
-
+    
+    std::vector<std::unique_ptr<ThreadGroup>*> startedGroups;
+    try {
+        // Start all thread groups with exception safety
+        for (auto& nextThreadGroup : threadGroups) {
+            nextThreadGroup->Start();
+            startedGroups.push_back(&nextThreadGroup);
+        }
+        started = true;
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Exception during ThreadGroupContainer::Start: ", e.what());
+        
+        // Clean up any thread groups that were started before the failure
+        LOG_INFO("Attempting to join already started thread groups...");
+        for (auto* startedGroup : startedGroups) {
+            try {
+                (*startedGroup)->Join();
+            }
+            catch (...) {
+                // Suppress exceptions during cleanup
+            }
+        }
+        throw; // Re-throw original exception
+    }
 }
 
 
 void
 ThreadGroupContainer::Join() {
+    if (!started) {
+        LOG_WARNING("ThreadGroupContainer::Join: threads not started yet");
+        return;
+    }
+    
+    if (joined) {
+        LOG_WARNING("ThreadGroupContainer::Join: already joined");
+        return;
+    }
+    
     LOG_INFO("ThreadGroupContainer::Join: joining thread groups");
-    for (auto& nextThreadGroup : threadGroups)
-        nextThreadGroup->Join();
-
+    
+    // Track any exceptions but continue trying to join all threads
+    std::vector<std::exception_ptr> exceptions;
+    
+    for (auto& nextThreadGroup : threadGroups) {
+        try {
+            nextThreadGroup->Join();
+        }
+        catch (...) {
+            // Store the exception but continue joining other thread groups
+            exceptions.push_back(std::current_exception());
+        }
+    }
+    
+    joined = true;
+    
+    // If there were any exceptions during joining, rethrow the first one
+    if (!exceptions.empty()) {
+        LOG_ERROR("Exceptions occurred during thread joining");
+        std::rethrow_exception(exceptions.front());
+    }
 }
 
 
