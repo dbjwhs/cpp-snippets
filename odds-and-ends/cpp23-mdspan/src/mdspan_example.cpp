@@ -310,8 +310,8 @@ auto MdspanExample<ElementType>::demonstrate_performance() -> Result<void> {
         LOG_ERROR_PRINT("no data available for performance demonstration");
         return std::unexpected(MdspanError::invalid_dimensions);
     }
-    
-    const size_t iterations{1000000};
+
+    constexpr size_t iterations{1000000};
     
     // benchmark direct array access
     auto start = std::chrono::high_resolution_clock::now();

@@ -4,6 +4,9 @@
 #include "../headers/mdspan_example.hpp"
 #include <cassert>
 
+#define ERR 1
+#define NOERR 0
+
 // comprehensive demonstration of C++23 std::mdspan functionality
 // showcasing multidimensional array views, layout policies, and performance characteristics
 auto main() -> int {
@@ -15,42 +18,42 @@ auto main() -> int {
         auto result = mdspan_demo::demonstrate_basic_usage();
         if (!result) {
             LOG_ERROR_PRINT("basic usage demonstration failed");
-            return 1;
+            return ERR;
         }
         
         // demonstrate layout policies
         result = mdspan_demo::demonstrate_layout_policies();
         if (!result) {
             LOG_ERROR_PRINT("layout policies demonstration failed");
-            return 1;
+            return ERR;
         }
         
         // demonstrate subcommand operations
         result = mdspan_demo::demonstrate_submdspan_operations();
         if (!result) {
             LOG_ERROR_PRINT("submdspan operations demonstration failed");
-            return 1;
+            return ERR;
         }
         
         // demonstrate accessor policies
         result = mdspan_demo::demonstrate_accessor_policies();
         if (!result) {
             LOG_ERROR_PRINT("accessor policies demonstration failed");
-            return 1;
+            return ERR;
         }
         
         // demonstrate extents usage
         result = mdspan_demo::demonstrate_extents_usage();
         if (!result) {
             LOG_ERROR_PRINT("extents usage demonstration failed");
-            return 1;
+            return ERR;
         }
         
         // demonstrate performance characteristics
         result = mdspan_demo::demonstrate_performance_characteristics();
         if (!result) {
             LOG_ERROR_PRINT("performance characteristics demonstration failed");
-            return 1;
+            return ERR;
         }
         
         // comprehensive class-based examples
@@ -61,7 +64,7 @@ auto main() -> int {
         result = example_1d.run_comprehensive_tests();
         if (!result) {
             LOG_ERROR_PRINT("1d comprehensive tests failed");
-            return 1;
+            return ERR;
         }
         
         // test 2d example
@@ -69,7 +72,7 @@ auto main() -> int {
         result = example_2d.run_comprehensive_tests();
         if (!result) {
             LOG_ERROR_PRINT("2d comprehensive tests failed");
-            return 1;
+            return ERR;
         }
         
         // test 3d example
@@ -77,7 +80,7 @@ auto main() -> int {
         result = example_3d.run_comprehensive_tests();
         if (!result) {
             LOG_ERROR_PRINT("3d comprehensive tests failed");
-            return 1;
+            return ERR;
         }
         
         LOG_INFO_PRINT("all mdspan demonstrations completed successfully");
@@ -89,9 +92,9 @@ auto main() -> int {
     } catch (...) {
         Logger::StderrSuppressionGuard guard{};
         LOG_ERROR_PRINT("unknown exception occurred in mdspan demonstration");
-        return 1;
+        return ERR;
     }
     
     LOG_INFO_PRINT("mdspan demonstration program completed successfully");
-    return 0;
+    return NOERR;
 }

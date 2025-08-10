@@ -28,7 +28,7 @@ auto test_1d_functionality() -> bool {
     
     // create test data
     std::vector<int> data{1, 2, 3, 4, 5};
-    std::mdspan<int, std::extents<size_t, std::dynamic_extent>> span{data.data(), 5};
+    const std::mdspan<int, std::extents<size_t, std::dynamic_extent>> span{data.data(), 5};
     
     // test basic properties
     assert(span.size() == 5);
@@ -55,7 +55,7 @@ auto test_2d_layouts() -> bool {
     std::vector<int> data{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     
     // test row-major (default) layout
-    std::mdspan<int, std::extents<size_t, std::dynamic_extent, std::dynamic_extent>> row_major{data.data(), 3, 4};
+    const std::mdspan<int, std::extents<size_t, std::dynamic_extent, std::dynamic_extent>> row_major{data.data(), 3, 4};
     assert(row_major.size() == 12);
     assert(row_major.extent(0) == 3);
     assert(row_major.extent(1) == 4);
@@ -218,7 +218,7 @@ auto test_custom_accessors() -> bool {
     
     // test scaling accessor concept (using standard accessor for compatibility)
     mdspan_demo::ScalingAccessor<double> scaling_acc{2.5};
-    std::mdspan<double, std::extents<size_t, std::dynamic_extent>> scaled_span{data.data(), 5};
+    const std::mdspan<double, std::extents<size_t, std::dynamic_extent>> scaled_span{data.data(), 5};
     
     assert(scaled_span.size() == 5);
     assert(scaled_span.extent(0) == 5);
@@ -239,7 +239,7 @@ auto test_algorithm_integration() -> bool {
     LOG_INFO_PRINT("testing algorithm integration");
     
     std::vector<int> data{5, 2, 8, 1, 9, 3, 7, 4, 6};
-    std::mdspan<int, std::extents<size_t, std::dynamic_extent>> span{data.data(), data.size()};
+    const std::mdspan<int, std::extents<size_t, std::dynamic_extent>> span{data.data(), data.size()};
     
     // test element access for algorithm compatibility
     int sum{};
@@ -251,7 +251,7 @@ auto test_algorithm_integration() -> bool {
     assert(sum == expected_sum);
     
     // test with 2d span
-    std::mdspan<int, std::extents<size_t, std::dynamic_extent, std::dynamic_extent>> span_2d{data.data(), 3, 3};
+    const std::mdspan<int, std::extents<size_t, std::dynamic_extent, std::dynamic_extent>> span_2d{data.data(), 3, 3};
     int sum_2d{};
     for (size_t row{0}; row < span_2d.extent(0); ++row) {
         for (size_t col{0}; col < span_2d.extent(1); ++col) {
@@ -282,7 +282,7 @@ auto test_performance_overhead() -> bool {
     const auto direct_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
     
     // measure mdspan access
-    std::mdspan<double, std::extents<size_t, std::dynamic_extent>> span{data.data(), size};
+    const std::mdspan<double, std::extents<size_t, std::dynamic_extent>> span{data.data(), size};
     start = std::chrono::high_resolution_clock::now();
     double sum_mdspan{};
     for (size_t ndx{0}; ndx < span.extent(0); ++ndx) {
@@ -365,11 +365,10 @@ auto main() -> int {
     
     LOG_INFO_PRINT("starting mdspan test suite");
 
-    if (const bool rall_tests_passed = mdspan_tests::run_all_tests()) {
+    if (mdspan_tests::run_all_tests()) {
         LOG_INFO_PRINT("all tests passed successfully");
         return 0;
-    } else {
-        LOG_ERROR_PRINT("some tests failed");
-        return 1;
     }
+    LOG_ERROR_PRINT("some tests failed");
+    return 1;
 }
