@@ -80,6 +80,15 @@ public:
         threadGroupLogCache.clear();
         threadGroupCounter = 0;
     }
+
+    // Get current memory usage statistics for monitoring
+    static std::pair<size_t, size_t> GetMemoryUsage() {
+        std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
+        return {threadGroupNameCache.size(), threadGroupLogCache.size()};
+    }
+
+    // Clean up stale entries (for long-running applications) - IMPLEMENTATION MOVED AFTER ThreadLifecycleManager
+    static size_t CleanupStaleEntries();
 };
 
 int ThreadUtility::threadGroupCounter = 0;
@@ -136,7 +145,7 @@ public:
             state = std::uncaught_exceptions() > 0 ? ThreadLifecycleState::FAILED : ThreadLifecycleState::COMPLETED;
             threadStates[threadId] = state;
             
-            // Clean up all thread-specific resources
+            // Clean up all thread-specific resources from both ThreadUtility and ThreadLifecycleManager
             ThreadUtility::threadGroupLogCache.erase(threadId);
             ThreadUtility::threadGroupNameCache.erase(threadId);
             
@@ -149,9 +158,10 @@ public:
                 threadId, stateStr, duration.count()));
                 
         } catch (...) {
-            // Ensure cleanup continues even if logging fails
+            // Ensure cleanup continues even if logging fails - comprehensive fallback cleanup
             try {
                 std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
+                // Clean up all possible thread-related resources
                 ThreadUtility::threadGroupLogCache.erase(threadId);
                 ThreadUtility::threadGroupNameCache.erase(threadId);
                 threadStates.erase(threadId);
@@ -211,6 +221,42 @@ public:
 // Static member definitions for ThreadLifecycleManager
 std::map<std::thread::id, ThreadLifecycleState> ThreadLifecycleManager::threadStates;
 std::map<std::thread::id, std::chrono::steady_clock::time_point> ThreadLifecycleManager::threadStartTimes;
+
+// Implementation of ThreadUtility::CleanupStaleEntries (moved here due to dependency on ThreadLifecycleManager)
+size_t ThreadUtility::CleanupStaleEntries() {
+    std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
+    
+    // Get currently active thread IDs from lifecycle manager
+    auto activeThreads = ThreadLifecycleManager::getAllThreadStates();
+    
+    size_t cleanedCount = 0;
+    
+    // Clean up name cache for threads not in active tracking
+    for (auto it = threadGroupNameCache.begin(); it != threadGroupNameCache.end();) {
+        if (!activeThreads.contains(it->first)) {
+            it = threadGroupNameCache.erase(it);
+            ++cleanedCount;
+        } else {
+            ++it;
+        }
+    }
+    
+    // Clean up log cache for threads not in active tracking
+    for (auto it = threadGroupLogCache.begin(); it != threadGroupLogCache.end();) {
+        if (!activeThreads.contains(it->first)) {
+            it = threadGroupLogCache.erase(it);
+            ++cleanedCount;
+        } else {
+            ++it;
+        }
+    }
+    
+    if (cleanedCount > 0) {
+        LOG_INFO(std::format("Cleaned up {} stale thread entries", cleanedCount));
+    }
+    
+    return cleanedCount;
+}
 
 
 
