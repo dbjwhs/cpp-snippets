@@ -100,7 +100,7 @@ std::thread::id ThreadUtility::mainThreadID = std::this_thread::get_id();
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupNameCache;
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupLogCache;
 // Thread lifecycle states for tracking
-enum class ThreadLifecycleState {
+enum class ThreadLifeCycleState {
     CREATED,    // Thread object created but not started
     RUNNING,    // Thread is actively executing
     COMPLETED,  // Thread completed successfully
@@ -109,31 +109,31 @@ enum class ThreadLifecycleState {
 };
 
 // RAII-based thread lifecycle manager for complete thread resource management
-class ThreadLifecycleManager {
+class ThreadLifeCycleManager {
 private:
     std::thread::id threadId;
     std::string logData;
-    ThreadLifecycleState state;
+    ThreadLifeCycleState state;
     std::chrono::steady_clock::time_point startTime;
     std::chrono::steady_clock::time_point endTime;
     
     // Static tracking for all thread lifecycles
-    static std::map<std::thread::id, ThreadLifecycleState> threadStates;
+    static std::map<std::thread::id, ThreadLifeCycleState> threadStates;
     static std::map<std::thread::id, std::chrono::steady_clock::time_point> threadStartTimes;
     
 public:
-    ThreadLifecycleManager() : threadId(std::this_thread::get_id()), state(ThreadLifecycleState::CREATED) {
+    ThreadLifeCycleManager() : threadId(std::this_thread::get_id()), state(ThreadLifeCycleState::CREATED) {
         startTime = std::chrono::steady_clock::now();
         
         // Register thread lifecycle start
         std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
-        threadStates[threadId] = ThreadLifecycleState::RUNNING;
+        threadStates[threadId] = ThreadLifeCycleState::RUNNING;
         threadStartTimes[threadId] = startTime;
         
         LOG_INFO(std::format("Thread lifecycle started for thread {}", threadId));
     }
     
-    ~ThreadLifecycleManager() {
+    ~ThreadLifeCycleManager() {
         endTime = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
         
@@ -142,7 +142,7 @@ public:
             std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
             
             // Update state to completed or failed based on whether we're in an exception context
-            state = std::uncaught_exceptions() > 0 ? ThreadLifecycleState::FAILED : ThreadLifecycleState::COMPLETED;
+            state = std::uncaught_exceptions() > 0 ? ThreadLifeCycleState::FAILED : ThreadLifeCycleState::COMPLETED;
             threadStates[threadId] = state;
             
             // Clean up all thread-specific resources from both ThreadUtility and ThreadLifecycleManager
@@ -153,7 +153,7 @@ public:
             threadStates.erase(threadId);
             threadStartTimes.erase(threadId);
             
-            const char* stateStr = (state == ThreadLifecycleState::COMPLETED) ? "COMPLETED" : "FAILED";
+            const char* stateStr = (state == ThreadLifeCycleState::COMPLETED) ? "COMPLETED" : "FAILED";
             LOG_INFO(std::format("Thread lifecycle ended for thread {} - State: {} - Duration: {}ms", 
                 threadId, stateStr, duration.count()));
                 
@@ -173,10 +173,10 @@ public:
     }
     
     // Non-copyable, non-movable for safety
-    ThreadLifecycleManager(const ThreadLifecycleManager&) = delete;
-    ThreadLifecycleManager& operator=(const ThreadLifecycleManager&) = delete;
-    ThreadLifecycleManager(ThreadLifecycleManager&&) = delete;
-    ThreadLifecycleManager& operator=(ThreadLifecycleManager&&) = delete;
+    ThreadLifeCycleManager(const ThreadLifeCycleManager&) = delete;
+    ThreadLifeCycleManager& operator=(const ThreadLifeCycleManager&) = delete;
+    ThreadLifeCycleManager(ThreadLifeCycleManager&&) = delete;
+    ThreadLifeCycleManager& operator=(ThreadLifeCycleManager&&) = delete;
     
     // Thread-safe append to log data
     void appendLog(const std::string& data) {
@@ -192,12 +192,12 @@ public:
     }
     
     // Get current thread state
-    [[nodiscard]] ThreadLifecycleState getState() const {
+    [[nodiscard]] ThreadLifeCycleState getState() const {
         return state;
     }
     
     // Static methods for thread lifecycle monitoring
-    [[nodiscard]] static std::map<std::thread::id, ThreadLifecycleState> getAllThreadStates() {
+    [[nodiscard]] static std::map<std::thread::id, ThreadLifeCycleState> getAllThreadStates() {
         std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
         return threadStates;
     }
@@ -218,16 +218,16 @@ public:
     }
 };
 
-// Static member definitions for ThreadLifecycleManager
-std::map<std::thread::id, ThreadLifecycleState> ThreadLifecycleManager::threadStates;
-std::map<std::thread::id, std::chrono::steady_clock::time_point> ThreadLifecycleManager::threadStartTimes;
+// Static member definitions for ThreadLifeCycleManager
+std::map<std::thread::id, ThreadLifeCycleState> ThreadLifeCycleManager::threadStates;
+std::map<std::thread::id, std::chrono::steady_clock::time_point> ThreadLifeCycleManager::threadStartTimes;
 
 // Implementation of ThreadUtility::CleanupStaleEntries (moved here due to dependency on ThreadLifecycleManager)
 size_t ThreadUtility::CleanupStaleEntries() {
     std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
     
     // Get currently active thread IDs from lifecycle manager
-    auto activeThreads = ThreadLifecycleManager::getAllThreadStates();
+    auto activeThreads = ThreadLifeCycleManager::getAllThreadStates();
     
     size_t cleanedCount = 0;
     
@@ -298,7 +298,7 @@ ThreadGroup::threadGroupPromiseMethod(std::promise<std::string> promiseObj) {
     try {
         ThreadUtility::AddThreadName();
         // RAII-based lifecycle management - automatically tracks thread lifecycle
-        ThreadLifecycleManager lifecycleManager;
+        ThreadLifeCycleManager lifecycleManager;
         lifecycleManager.appendLog(std::format("ThreadGroup::threadGroupPromiseMethod: (group id:{})", thisThreadGroupUUID));
         
         // Set value at thread exit - this will be called even if exception occurs
@@ -336,7 +336,7 @@ ThreadGroup::threadGroupFutureMethod(std::future<std::string> futureObj) {
     try {
         ThreadUtility::AddThreadName();
         // RAII-based lifecycle management - automatically tracks thread lifecycle
-        ThreadLifecycleManager lifecycleManager;
+        ThreadLifeCycleManager lifecycleManager;
         
         // Validate future before waiting - this is a programming error if invalid
         if (!futureObj.valid()) {
