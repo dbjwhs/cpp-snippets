@@ -56,7 +56,7 @@ public:
     }
 };
 
-int ThreadUtility::threadGroupCounter;
+int ThreadUtility::threadGroupCounter = 0;
 std::mutex ThreadUtility::ThreadUtilityMutex;
 std::thread::id ThreadUtility::mainThreadID = std::this_thread::get_id();
 std::map<std::thread::id, std::string> ThreadUtility::threadGroupNameCache;
@@ -89,12 +89,10 @@ public:
     void Join();
 
     static int GetThreadGroupUUID() {
-        static int threadGroupUUID;                         // static; global to all classes
-        threadGroupUUID++;
-        return (threadGroupUUID);
+        static std::atomic<int> threadGroupUUID{0};         // thread-safe static; global to all classes
+        return ++threadGroupUUID;
     }
 };
-int threadGroupUUID = 0;
 
 ThreadGroup::ThreadGroup(void (*driverMethod)()) {
     externalDriverMethod = driverMethod;
@@ -176,11 +174,12 @@ ThreadGroupContainer::Join() {
 
 
 void driverMethod() {
-    static int driverCnt;                                   // keep track of multiple calls to this method
-    std::string msg = "hi from driver method " + std::to_string(++driverCnt);
+    static std::atomic<int> driverCnt{0};                   // thread-safe counter for multiple calls to this method
+    int currentCount = ++driverCnt;
+    std::string msg = "hi from driver method " + std::to_string(currentCount);
 
      // ### test code to delay some threads to show correct asynchronous behavior
-    switch(driverCnt) {
+    switch(currentCount) {
         case 3:
             std::this_thread::sleep_for(std::chrono::seconds(15));
             break;
