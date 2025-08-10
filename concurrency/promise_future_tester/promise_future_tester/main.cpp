@@ -178,18 +178,25 @@ ThreadGroup::threadGroupPromiseMethod(std::promise<std::string> promiseObj) {
         if (this->externalDriverMethod) {
             this->externalDriverMethod();
         } else {
-            LOG_ERROR("External driver method is null");
+            // This is a programming error - null driver method
+            const std::string errorMsg = std::format("External driver method is null for ThreadGroup {}", thisThreadGroupUUID);
+            LOG_ERROR(errorMsg);
+            // Don't throw from thread method - promise will be set at thread exit
         }
         
         LOG_INFO("ThreadGroup::threadGroupPromiseMethod: end");
     }
     catch (const std::exception& e) {
-        LOG_ERROR("Exception in threadGroupPromiseMethod: ", e.what());
-        // Promise will be set at thread exit regardless
+        // General exceptions should be logged with context
+        const std::string errorMsg = std::format("Exception in threadGroupPromiseMethod (ID {}): {}", thisThreadGroupUUID, e.what());
+        LOG_ERROR(errorMsg);
+        // Promise will be set at thread exit regardless - don't re-throw from thread methods
     }
     catch (...) {
-        LOG_ERROR("Unknown exception in threadGroupPromiseMethod");
-        // Promise will be set at thread exit regardless
+        // Unknown exceptions should be logged with context
+        const std::string errorMsg = std::format("Unknown exception in threadGroupPromiseMethod (ID {})", thisThreadGroupUUID);
+        LOG_ERROR(errorMsg);
+        // Promise will be set at thread exit regardless - don't re-throw from thread methods
     }
 }
 
@@ -198,10 +205,11 @@ ThreadGroup::threadGroupFutureMethod(std::future<std::string> futureObj) {
     try {
         ThreadUtility::AddThreadName();
         
-        // Validate future before waiting
+        // Validate future before waiting - this is a programming error if invalid
         if (!futureObj.valid()) {
-            LOG_ERROR("Invalid future in threadGroupFutureMethod");
-            return;
+            const std::string errorMsg = std::format("Invalid future in threadGroupFutureMethod for ThreadGroup {}", thisThreadGroupUUID);
+            LOG_ERROR(errorMsg);
+            return; // Cannot continue without valid future, but don't throw from thread method
         }
         
         // Wait for promise to be fulfilled
@@ -213,13 +221,22 @@ ThreadGroup::threadGroupFutureMethod(std::future<std::string> futureObj) {
         LOG_INFO(result);
     }
     catch (const std::future_error& e) {
-        LOG_ERROR("Future error in threadGroupFutureMethod: ", e.what());
+        // Future errors are expected when promises are broken or invalid
+        const std::string errorMsg = std::format("Future error in threadGroupFutureMethod (ID {}): {}", thisThreadGroupUUID, e.what());
+        LOG_ERROR(errorMsg);
+        // Don't re-throw from thread methods - log and continue
     }
     catch (const std::exception& e) {
-        LOG_ERROR("Exception in threadGroupFutureMethod: ", e.what());
+        // General exceptions should be logged with context
+        const std::string errorMsg = std::format("Exception in threadGroupFutureMethod (ID {}): {}", thisThreadGroupUUID, e.what());
+        LOG_ERROR(errorMsg);
+        // Don't re-throw from thread methods - log and continue
     }
     catch (...) {
-        LOG_ERROR("Unknown exception in threadGroupFutureMethod");
+        // Unknown exceptions should be logged with context
+        const std::string errorMsg = std::format("Unknown exception in threadGroupFutureMethod (ID {})", thisThreadGroupUUID);
+        LOG_ERROR(errorMsg);
+        // Don't re-throw from thread methods - log and continue
     }
 }
 
@@ -227,19 +244,21 @@ ThreadGroup::threadGroupFutureMethod(std::future<std::string> futureObj) {
 void
 ThreadGroup::Start() {
     try {
-        // Ensure we haven't already started
+        // Ensure we haven't already started - this is a programming error
         if (!threadGroupThreadPair.empty()) {
-            LOG_ERROR("ThreadGroup already started");
-            return;
+            const std::string errorMsg = std::format("ThreadGroup {} already started", thisThreadGroupUUID);
+            LOG_ERROR(errorMsg);
+            throw std::logic_error(errorMsg);
         }
 
         // Get future before moving promise - this validates the promise
         threadGroupFuture = threadGroupPromise.get_future();
         
-        // Validate future is valid before proceeding
+        // Validate future is valid before proceeding - this is a resource issue
         if (!threadGroupFuture.valid()) {
-            LOG_ERROR("Invalid future obtained from promise");
-            return;
+            const std::string errorMsg = std::format("Invalid future obtained from promise in ThreadGroup {}", thisThreadGroupUUID);
+            LOG_ERROR(errorMsg);
+            throw std::runtime_error(errorMsg);
         }
 
         // Create threads with moved objects - order is important
@@ -250,8 +269,19 @@ ThreadGroup::Start() {
             std::thread(&ThreadGroup::threadGroupPromiseMethod, this, std::move(threadGroupPromise))
         );
     }
+    catch (const std::logic_error&) {
+        // Re-throw logic errors (programming errors) without modification
+        throw;
+    }
+    catch (const std::runtime_error&) {
+        // Re-throw runtime errors (resource issues) without modification  
+        throw;
+    }
     catch (const std::exception& e) {
-        LOG_ERROR("Exception in ThreadGroup::Start: ", e.what());
+        // Wrap unexpected exceptions with context
+        const std::string errorMsg = std::format("Unexpected exception in ThreadGroup::Start (ID {}): {}", thisThreadGroupUUID, e.what());
+        LOG_ERROR(errorMsg);
+        
         // Clean up any created threads
         for (auto& thread : threadGroupThreadPair) {
             if (thread.joinable()) {
@@ -259,7 +289,7 @@ ThreadGroup::Start() {
             }
         }
         threadGroupThreadPair.clear();
-        throw; // Re-throw for caller to handle
+        throw std::runtime_error(errorMsg);
     }
 }
 
