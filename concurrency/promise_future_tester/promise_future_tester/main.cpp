@@ -43,7 +43,7 @@ public:
         ThreadUtility::threadGroupNameCache[std::this_thread::get_id()] = std::move(threadName);
     }
 
-    static std::string ThreadIDStr() {
+    [[nodiscard]] static std::string ThreadIDStr() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
 
         // Find the thread name safely without creating entries
@@ -60,7 +60,7 @@ public:
         }
     }
 
-    static int GetThreadCounter() {
+    [[nodiscard]] static int GetThreadCounter() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
         return (ThreadUtility::threadGroupCounter);
     }
@@ -82,13 +82,13 @@ public:
     }
 
     // Get current memory usage statistics for monitoring
-    static std::pair<size_t, size_t> GetMemoryUsage() {
+    [[nodiscard]] static std::pair<size_t, size_t> GetMemoryUsage() {
         std::unique_lock<std::mutex> autoLock(ThreadUtilityMutex);
         return {threadGroupNameCache.size(), threadGroupLogCache.size()};
     }
 
     // Clean up stale entries (for long-running applications) - IMPLEMENTATION MOVED AFTER ThreadLifecycleManager
-    static size_t CleanupStaleEntries();
+    [[nodiscard]] static size_t CleanupStaleEntries();
 };
 
 int ThreadUtility::threadGroupCounter = 0;
@@ -186,28 +186,28 @@ public:
     }
     
     // Thread-safe get log data
-    std::string getLog() const {
+    [[nodiscard]] std::string getLog() const {
         std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
         return logData;
     }
     
     // Get current thread state
-    ThreadLifecycleState getState() const {
+    [[nodiscard]] ThreadLifecycleState getState() const {
         return state;
     }
     
     // Static methods for thread lifecycle monitoring
-    static std::map<std::thread::id, ThreadLifecycleState> getAllThreadStates() {
+    [[nodiscard]] static std::map<std::thread::id, ThreadLifecycleState> getAllThreadStates() {
         std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
         return threadStates;
     }
     
-    static size_t getActiveThreadCount() {
+    [[nodiscard]] static size_t getActiveThreadCount() {
         std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
         return threadStates.size();
     }
     
-    static std::chrono::milliseconds getThreadRuntime(std::thread::id id) {
+    [[nodiscard]] static std::chrono::milliseconds getThreadRuntime(std::thread::id id) {
         std::unique_lock<std::mutex> autoLock(ThreadUtility::ThreadUtilityMutex);
         auto it = threadStartTimes.find(id);
         if (it != threadStartTimes.end()) {
@@ -282,7 +282,7 @@ public:
     void Start();
     void Join();
 
-    static int GetThreadGroupUUID() {
+    [[nodiscard]] static int GetThreadGroupUUID() {
         static std::atomic<int> threadGroupUUID{0};         // thread-safe static; global to all classes
         return ++threadGroupUUID;
     }
