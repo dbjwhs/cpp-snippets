@@ -101,37 +101,127 @@ ThreadGroup::ThreadGroup(void (*driverMethod)()) {
 
 void
 ThreadGroup::threadGroupPromiseMethod(std::promise<std::string> promiseObj) {
-    ThreadUtility::AddThreadName();
-    threadGroupLogCacheAt += "ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")";
-    promiseObj.set_value_at_thread_exit(threadGroupLogCacheAt);
-    threadGroupLogCacheDel;
-    this->externalDriverMethod();
-    LOG_INFO("ThreadGroup::threadGroupPromiseMethod: end");
+    try {
+        ThreadUtility::AddThreadName();
+        threadGroupLogCacheAt += "ThreadGroup::threadGroupPromiseMethod: (group id:" + std::to_string(thisThreadGroupUUID) + ")";
+        
+        // Set value at thread exit - this will be called even if exception occurs
+        promiseObj.set_value_at_thread_exit(threadGroupLogCacheAt);
+        threadGroupLogCacheDel;
+        
+        // Call external driver method with exception handling
+        if (this->externalDriverMethod) {
+            this->externalDriverMethod();
+        } else {
+            LOG_ERROR("External driver method is null");
+        }
+        
+        LOG_INFO("ThreadGroup::threadGroupPromiseMethod: end");
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Exception in threadGroupPromiseMethod: ", e.what());
+        // Promise will be set at thread exit regardless
+    }
+    catch (...) {
+        LOG_ERROR("Unknown exception in threadGroupPromiseMethod");
+        // Promise will be set at thread exit regardless
+    }
 }
 
 void
 ThreadGroup::threadGroupFutureMethod(std::future<std::string> futureObj) {
-    ThreadUtility::AddThreadName();
-    futureObj.wait();
-    LOG_INFO("ThreadGroup::threadGroupFutureMethod: trigger (group id:", thisThreadGroupUUID, ")");
-    LOG_INFO(futureObj.get());
+    try {
+        ThreadUtility::AddThreadName();
+        
+        // Validate future before waiting
+        if (!futureObj.valid()) {
+            LOG_ERROR("Invalid future in threadGroupFutureMethod");
+            return;
+        }
+        
+        // Wait for promise to be fulfilled
+        futureObj.wait();
+        LOG_INFO("ThreadGroup::threadGroupFutureMethod: trigger (group id:", thisThreadGroupUUID, ")");
+        
+        // Get the result - this can throw if promise was set with exception
+        std::string result = futureObj.get();
+        LOG_INFO(result);
+    }
+    catch (const std::future_error& e) {
+        LOG_ERROR("Future error in threadGroupFutureMethod: ", e.what());
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Exception in threadGroupFutureMethod: ", e.what());
+    }
+    catch (...) {
+        LOG_ERROR("Unknown exception in threadGroupFutureMethod");
+    }
 }
 
 
 void
 ThreadGroup::Start() {
-    // send future to new thread
-    threadGroupFuture = threadGroupPromise.get_future();    // engage our promise with future
-    threadGroupThreadPair.push_back(std::thread(&ThreadGroup::threadGroupFutureMethod, this, std::move(this->threadGroupFuture)));
+    try {
+        // Ensure we haven't already started
+        if (!threadGroupThreadPair.empty()) {
+            LOG_ERROR("ThreadGroup already started");
+            return;
+        }
 
-    // send promise to new thread which will fullfill our promise
-    threadGroupThreadPair.push_back(std::thread(&ThreadGroup::threadGroupPromiseMethod, this, std::move(this->threadGroupPromise)));
+        // Get future before moving promise - this validates the promise
+        threadGroupFuture = threadGroupPromise.get_future();
+        
+        // Validate future is valid before proceeding
+        if (!threadGroupFuture.valid()) {
+            LOG_ERROR("Invalid future obtained from promise");
+            return;
+        }
+
+        // Create threads with moved objects - order is important
+        threadGroupThreadPair.push_back(
+            std::thread(&ThreadGroup::threadGroupFutureMethod, this, std::move(threadGroupFuture))
+        );
+        threadGroupThreadPair.push_back(
+            std::thread(&ThreadGroup::threadGroupPromiseMethod, this, std::move(threadGroupPromise))
+        );
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Exception in ThreadGroup::Start: ", e.what());
+        // Clean up any created threads
+        for (auto& thread : threadGroupThreadPair) {
+            if (thread.joinable()) {
+                thread.join();
+            }
+        }
+        threadGroupThreadPair.clear();
+        throw; // Re-throw for caller to handle
+    }
 }
 
 void
 ThreadGroup::Join() {
-    for (auto& nextThread : threadGroupThreadPair)
-        nextThread.join();
+    try {
+        for (auto& nextThread : threadGroupThreadPair) {
+            if (nextThread.joinable()) {
+                nextThread.join();
+            }
+        }
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Exception in ThreadGroup::Join: ", e.what());
+        // Still try to join remaining threads
+        for (auto& nextThread : threadGroupThreadPair) {
+            if (nextThread.joinable()) {
+                try {
+                    nextThread.join();
+                }
+                catch (...) {
+                    // Suppress exceptions during cleanup
+                }
+            }
+        }
+        throw; // Re-throw original exception
+    }
 }
 
 class ThreadGroupContainer
