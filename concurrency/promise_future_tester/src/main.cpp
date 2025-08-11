@@ -10,6 +10,7 @@
 #include <string>
 #include <atomic>
 #include <format>                                           // C++20 std::format for efficient string operations
+#include <expected>                                         // C++23 std::expected for railway-oriented programming
 
 // Configuration constants - replace hardcoded magic numbers
 namespace Config {
@@ -618,6 +619,42 @@ ThreadGroupContainer::Join() {
 }
 
 
+void driverMethod();
+
+// Railway-oriented programming helpers for std::expected
+auto safeCleanup() -> std::expected<void, std::string> {
+    try {
+        ThreadUtility::CleanupAll();
+        return {};
+    } catch (const std::exception& e) {
+        return std::unexpected(std::format("Cleanup failed: {}", e.what()));
+    } catch (...) {
+        return std::unexpected("Unknown cleanup error");
+    }
+}
+
+auto runThreadGroups() -> std::expected<void, std::string> {
+    try {
+        ThreadUtility::AddThreadName();
+        
+        ThreadGroupContainer threadGroupContainer;
+        for (int thrdex = 0; thrdex < Config::DEFAULT_THREAD_COUNT; ++thrdex) {
+            threadGroupContainer.Add(driverMethod);
+        }
+        
+        threadGroupContainer.Start();
+        threadGroupContainer.Join();
+        
+        LOG_INFO("All thread groups completed successfully");
+        return {};
+        
+    } catch (const std::exception& e) {
+        return std::unexpected(std::format("Thread execution failed: {}", e.what()));
+    } catch (...) {
+        return std::unexpected("Unknown thread execution error");
+    }
+}
+
 void driverMethod() {
     static std::atomic<int> driverCnt{0};                   // thread-safe counter for multiple calls to this method
     int currentCount = ++driverCnt;
@@ -655,44 +692,19 @@ void driverMethod() {
 }
 
 
+// Clean, railway-oriented main function using std::expected
 int main() {
-    try {
-        ThreadUtility::AddThreadName();                         // will add main thread to our thread name list
-
-        // test ThreadGroupContainer using configurable thread count
-        ThreadGroupContainer threadGroupContainer;
-        for (int thrdex = 0; thrdex < Config::DEFAULT_THREAD_COUNT; ++thrdex)
-            threadGroupContainer.Add(driverMethod);
-
-        threadGroupContainer.Start();
-        threadGroupContainer.Join();
-        
-        // Clean up all ThreadUtility resources before program exit
-        ThreadUtility::CleanupAll();
-        
-        LOG_INFO("All thread groups completed successfully");
-        return 0;
-    }
-    catch (const std::exception& e) {
-        LOG_ERROR("Fatal exception in main: ", e.what());
-        // Attempt cleanup even on failure
-        try {
-            ThreadUtility::CleanupAll();
-        }
-        catch (...) {
-            // Suppress cleanup exceptions
-        }
-        return 1;
-    }
-    catch (...) {
-        LOG_ERROR("Unknown fatal exception in main");
-        // Attempt cleanup even on failure
-        try {
-            ThreadUtility::CleanupAll();
-        }
-        catch (...) {
-            // Suppress cleanup exceptions
-        }
+    // Railway pattern: chain operations that can fail
+    auto threadResult = runThreadGroups();
+    
+    if (threadResult.has_value()) {
+        // Success path - attempt cleanup
+        auto cleanupResult = safeCleanup();
+        return cleanupResult.has_value() ? 0 : 1;
+    } else {
+        // Error path - log error and attempt cleanup
+        LOG_ERROR("Application failed: ", threadResult.error());
+        safeCleanup();  // Attempt cleanup on failure
         return 1;
     }
 }

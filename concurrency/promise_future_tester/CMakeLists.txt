@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Threads REQUIRED)
 
 add_executable(promise_future_tester
-    promise_future_tester/main.cpp
+    src/main.cpp
 )
 
 target_link_libraries(promise_future_tester Threads::Threads)
