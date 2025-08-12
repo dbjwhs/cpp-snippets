@@ -27,7 +27,7 @@
 #include <functional>
 #include <sstream>
 #include <iomanip>
-#include "../../../headers/project_utils.hpp"
+#include "../../../../headers/project_utils.hpp"
 #include "extended_turing_machine.hpp"
 
 namespace turing {

@@ -13,7 +13,7 @@
 #include "../headers/programmable_turing_machine.hpp"
 #include "../headers/comprehensive_turing_machine.hpp"
 #include "../headers/universal_turing_machine.hpp"
-#include "../../../headers/project_utils.hpp"
+#include "../../../../headers/project_utils.hpp"
 
 // forward declarations
 void testBasicTuringMachine();

@@ -11,7 +11,7 @@
 #include <cassert>
 #include <format>
 #include "../include/fsm.hpp"
-#include "../../../headers/project_utils.hpp"
+#include "../../../../headers/project_utils.hpp"
 
 // forward declarations
 class VendingMachineState;

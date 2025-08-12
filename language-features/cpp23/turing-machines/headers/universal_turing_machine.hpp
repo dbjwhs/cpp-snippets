@@ -33,7 +33,7 @@
 #include <functional>
 #include <fstream>
 #include <sstream>
-#include "../../../headers/project_utils.hpp"
+#include "../../../../headers/project_utils.hpp"
 #include "comprehensive_turing_machine.hpp"
 
 namespace turing {
