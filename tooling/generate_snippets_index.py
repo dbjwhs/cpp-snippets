@@ -20,22 +20,28 @@ CATEGORIES = [
     "concurrency",
     "data-structures",
     "design-patterns",
-    "utilities",
+    "language-features",
+    "networking", 
     "programming-paradigms",
-    "headers",
-    "odds-and-ends",
+    "system-programming",
+    "utilities",
+    "examples",
     "tooling"
 ]
 
 # Design patterns subcategories
 DESIGN_PATTERN_TYPES = ["creational", "structural", "behavioral", "architectural"]
 
+# Language features subcategories
+LANGUAGE_FEATURE_TYPES = ["cpp20", "cpp23", "core"]
+
 def generate_index():
     """Generate the snippets index."""
     snippets = defaultdict(list)
 
-    # Process design patterns separately due to nested structure
+    # Process design patterns and language features separately due to nested structure
     design_patterns = defaultdict(list)
+    language_features = defaultdict(list)
 
     # Scan all categories
     for category in CATEGORIES:
@@ -54,6 +60,18 @@ def generate_index():
                     if snippet_dir.is_dir() and (snippet_dir / "CMakeLists.txt").exists():
                         rel_path = snippet_dir.relative_to(BASE_DIR)
                         design_patterns[pattern_type].append((snippet_dir.name, str(rel_path)))
+        
+        # Special handling for language features
+        elif category == "language-features":
+            for feature_type in LANGUAGE_FEATURE_TYPES:
+                type_dir = category_dir / feature_type
+                if not type_dir.is_dir():
+                    continue
+
+                for snippet_dir in type_dir.iterdir():
+                    if snippet_dir.is_dir() and (snippet_dir / "CMakeLists.txt").exists():
+                        rel_path = snippet_dir.relative_to(BASE_DIR)
+                        language_features[feature_type].append((snippet_dir.name, str(rel_path)))
         else:
             # Process regular category
             for snippet_dir in category_dir.iterdir():
@@ -78,6 +96,27 @@ def generate_index():
                     for name, path in sorted(design_patterns[pattern_type]):
                         markdown.append(f"- [{name}/]({path}/)")
                     markdown.append("")
+        
+        elif category == "language-features":
+            markdown.append(f"### Language Features")
+            markdown.append("")
+
+            for feature_type in LANGUAGE_FEATURE_TYPES:
+                if language_features[feature_type]:
+                    if feature_type == "cpp20":
+                        type_title = "C++20 Features"
+                    elif feature_type == "cpp23":
+                        type_title = "C++23 Features"
+                    elif feature_type == "core":
+                        type_title = "Core Language Features"
+                    else:
+                        type_title = feature_type.capitalize()
+                    
+                    markdown.append(f"#### {type_title}")
+                    for name, path in sorted(language_features[feature_type]):
+                        markdown.append(f"- [{name}/]({path}/)")
+                    markdown.append("")
+                    
         elif snippets[category]:
             category_title = " ".join(word.capitalize() for word in category.split('-'))
             markdown.append(f"### {category_title}")

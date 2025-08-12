@@ -1,5 +1,15 @@
 # Future Work - C++ Snippets Punch List
 
+## Recent Reorganization ✅
+- [X] **Repository restructuring** - Moved from "odds-and-ends" to organized categories:
+  - `language-features/cpp20/` - C++20 specific features
+  - `language-features/cpp23/` - C++23 specific features  
+  - `language-features/core/` - Core language features
+  - `system-programming/` - Low-level system code
+  - `examples/` - Educational/demo code
+- [X] **Naming standardization** - Consistent kebab-case naming
+- [X] **Documentation updates** - Updated README and tooling
+
 ## Algorithm Additions
 - [ ] **Graph algorithms** (dijkstra, A*, BFS/DFS, topological sort)
 - [ ] **String algorithms** (KMP, Rabin-Karp, suffix trees/arrays)

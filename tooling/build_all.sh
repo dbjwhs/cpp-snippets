@@ -6,7 +6,7 @@ start_time=$(date +%s.%N)
 
 # Directories to exclude from processing
 EXCLUDE_DIRS=(
-    "../odds-and-ends/cpp20-modules"
+    "../language-features/cpp20/modules"
 )
 
 # ANSI Color Codes Explanation

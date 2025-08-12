@@ -57,6 +57,7 @@ Or you can elect to build everything at once.
 - [latch/](concurrency/latch/)
 - [pipelining/](concurrency/pipelining/)
 - [producer-consumer/](concurrency/producer-consumer/)
+- [promise-future/](concurrency/promise-future/)
 - [reader-writer/](concurrency/reader-writer/)
 - [shared_mutex/](concurrency/shared_mutex/)
 - [stop_token-source-callback/](concurrency/stop_token-source-callback/)
@@ -95,6 +96,7 @@ Or you can elect to build everything at once.
 - [chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/)
 - [command/](design-patterns/behavioral/command/)
 - [fail-fast/](design-patterns/behavioral/fail-fast/)
+- [finite-state-machine/](design-patterns/behavioral/finite-state-machine/)
 - [interpreter/](design-patterns/behavioral/interpreter/)
 - [iterator/](design-patterns/behavioral/iterator/)
 - [mediator/](design-patterns/behavioral/mediator/)
@@ -103,7 +105,7 @@ Or you can elect to build everything at once.
 - [state/](design-patterns/behavioral/state/)
 - [strategy/](design-patterns/behavioral/strategy/)
 - [template-method/](design-patterns/behavioral/template-method/)
-- [vistor/](design-patterns/behavioral/vistor/)
+- [visitor/](design-patterns/behavioral/visitor/)
 
 ### Utilities
 - [dates/](utilities/dates/)
@@ -113,41 +115,55 @@ Or you can elect to build everything at once.
 - [timer/](utilities/timer/)
 
 ### Programming Paradigms
-- [diammond-problem/](programming-paradigms/diammond-problem/)
+- [diamond-problem/](programming-paradigms/diamond-problem/)
 - [negative-space/](programming-paradigms/negative-space/)
 
-### Odds And Ends
-- [backtrace/](odds-and-ends/backtrace/)
-- [boost-asio/](odds-and-ends/boost-asio/)
-- [const-constexper/](odds-and-ends/const-constexper/)
-- [cpp20-concepts/](odds-and-ends/cpp20-concepts/)
-- [cpp20-coroutines/](odds-and-ends/cpp20-coroutines/)
-- [cpp20-counting_semaphore/](odds-and-ends/cpp20-counting_semaphore/)
-- [cpp20-designated-initializers/](odds-and-ends/cpp20-designated-initializers/)
-- [cpp20-modules/](odds-and-ends/cpp20-modules/)
-- [cpp20-ranges/](odds-and-ends/cpp20-ranges/)
-- [cpp20-spaceship/](odds-and-ends/cpp20-spaceship/)
-- [cpp20-test-macros/](odds-and-ends/cpp20-test-macros/)
-- [cpp23-alias-labels/](odds-and-ends/cpp23-alias-labels/)
-- [cpp23-byteswap/](odds-and-ends/cpp23-byteswap/)
-- [cpp23-expected/](odds-and-ends/cpp23-expected/)
-- [cpp23-finite-state-machine/](odds-and-ends/cpp23-finite-state-machine/)
-- [cpp23-if-consteval/](odds-and-ends/cpp23-if-consteval/)
-- [cpp23-mdspan/](odds-and-ends/cpp23-mdspan/)
-- [cpp23-multi-subscript/](odds-and-ends/cpp23-multi-subscript/)
-- [cpp23-new-preprocessor/](odds-and-ends/cpp23-new-preprocessor/)
-- [cpp23-print-println/](odds-and-ends/cpp23-print-println/)
-- [cpp23-this/](odds-and-ends/cpp23-this/)
-- [cpp23-turing-machines/](odds-and-ends/cpp23-turing-machines/)
-- [hoare-logic/](odds-and-ends/hoare-logic/)
-- [pagination/](odds-and-ends/pagination/)
-- [phone-number-to-char/](odds-and-ends/phone-number-to-char/)
-- [slicing/](odds-and-ends/slicing/)
-- [std-function/](odds-and-ends/std-function/)
-- [std-move/](odds-and-ends/std-move/)
-- [std-optional/](odds-and-ends/std-optional/)
-- [std-regex/](odds-and-ends/std-regex/)
-- [template-progression/](odds-and-ends/template-progression/)
+### Language Features
+
+#### C++20 Features
+- [concepts/](language-features/cpp20/concepts/)
+- [coroutines/](language-features/cpp20/coroutines/)
+- [counting-semaphore/](language-features/cpp20/counting-semaphore/)
+- [designated-initializers/](language-features/cpp20/designated-initializers/)
+- [modules/](language-features/cpp20/modules/)
+- [ranges/](language-features/cpp20/ranges/)
+- [spaceship/](language-features/cpp20/spaceship/)
+- [test-macros/](language-features/cpp20/test-macros/)
+
+#### C++23 Features
+- [alias-labels/](language-features/cpp23/alias-labels/)
+- [byteswap/](language-features/cpp23/byteswap/)
+- [expected/](language-features/cpp23/expected/)
+- [if-consteval/](language-features/cpp23/if-consteval/)
+- [mdspan/](language-features/cpp23/mdspan/)
+- [multi-subscript/](language-features/cpp23/multi-subscript/)
+- [new-preprocessor/](language-features/cpp23/new-preprocessor/)
+- [print-println/](language-features/cpp23/print-println/)
+- [this/](language-features/cpp23/this/)
+- [turing-machines/](language-features/cpp23/turing-machines/)
+
+#### Core Language Features
+- [const-constexpr/](language-features/core/const-constexpr/)
+- [decltype/](language-features/core/decltype/)
+- [slicing/](language-features/core/slicing/)
+- [std-function/](language-features/core/std-function/)
+- [std-move/](language-features/core/std-move/)
+- [std-optional/](language-features/core/std-optional/)
+- [std-regex/](language-features/core/std-regex/)
+- [template-progression/](language-features/core/template-progression/)
+
+### Networking
+- [boost-asio/](networking/boost-asio/)
+- [simple_client_server/](networking/simple_client_server/)
+- [simple_subnet_ping/](networking/simple_subnet_ping/)
+
+### System Programming
+- [backtrace/](system-programming/backtrace/)
+
+### Examples
+- [hoare-logic/](examples/hoare-logic/)
+- [pagination/](examples/pagination/)
+- [phone-number-to-char/](examples/phone-number-to-char/)
 
 ## Contributing
 
