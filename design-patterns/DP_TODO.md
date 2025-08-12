@@ -1,17 +1,5 @@
 # Design Patterns TODO List
 
-## Current Pattern Categorization Issues
-
-### Patterns that should be moved:
-1. **Fail-Fast** (currently in `behavioral/`) → Should be moved to a new `idioms/` or `programming-techniques/` folder
-   - This is a defensive programming technique, not a GoF behavioral pattern
-
-2. **Finite State Machine** (currently in `behavioral/`) → Should be moved to a new `idioms/` or `implementation-patterns/` folder
-   - This is an implementation technique, not a GoF behavioral pattern
-
-3. **Pimpl** (currently in `structural/`) → Should be moved to a new `idioms/` or `cpp-specific/` folder
-   - This is a C++-specific idiom, not a GoF structural pattern
-
 ## Missing GoF Patterns to Add
 
 ### Behavioral Patterns (to add to `behavioral/`)
