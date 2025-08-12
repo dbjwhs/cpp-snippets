@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2025 dbjwhs
+
 cmake_minimum_required(VERSION 3.25)
 project(cpp23_mdspan VERSION 1.0.0 LANGUAGES CXX)
 
