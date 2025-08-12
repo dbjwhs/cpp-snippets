@@ -107,17 +107,6 @@ Or you can elect to build everything at once.
 - [template-method/](design-patterns/behavioral/template-method/)
 - [visitor/](design-patterns/behavioral/visitor/)
 
-### Utilities
-- [dates/](utilities/dates/)
-- [dir_scanner/](utilities/dir_scanner/)
-- [mock-filesystem/](utilities/mock-filesystem/)
-- [string-utils/](utilities/string-utils/)
-- [timer/](utilities/timer/)
-
-### Programming Paradigms
-- [diamond-problem/](programming-paradigms/diamond-problem/)
-- [negative-space/](programming-paradigms/negative-space/)
-
 ### Language Features
 
 #### C++20 Features
@@ -157,8 +146,19 @@ Or you can elect to build everything at once.
 - [simple_client_server/](networking/simple_client_server/)
 - [simple_subnet_ping/](networking/simple_subnet_ping/)
 
+### Programming Paradigms
+- [diamond-problem/](programming-paradigms/diamond-problem/)
+- [negative-space/](programming-paradigms/negative-space/)
+
 ### System Programming
 - [backtrace/](system-programming/backtrace/)
+
+### Utilities
+- [dates/](utilities/dates/)
+- [dir_scanner/](utilities/dir_scanner/)
+- [mock-filesystem/](utilities/mock-filesystem/)
+- [string-utils/](utilities/string-utils/)
+- [timer/](utilities/timer/)
 
 ### Examples
 - [hoare-logic/](examples/hoare-logic/)
