@@ -40,6 +40,37 @@ inline std::vector<std::string> split(const std::string& str, const char delimit
     return tokens;
 }
 
+// generate a unique guid/uuid v4 for instance identification
+inline std::string generate_guid() {
+    static std::random_device rd{};
+    static std::mt19937 gen{rd()};
+    static std::uniform_int_distribution<> dis{0, 15};
+    
+    std::stringstream ss;
+    ss << std::hex;
+    for (int ndx = 0; ndx < 8; ++ndx) {
+        ss << dis(gen);
+    }
+    ss << "-";
+    for (int ndx = 0; ndx < 4; ++ndx) {
+        ss << dis(gen);
+    }
+    ss << "-4"; // version 4 uuid
+    for (int ndx = 0; ndx < 3; ++ndx) {
+        ss << dis(gen);
+    }
+    ss << "-";
+    ss << std::hex << ((dis(gen) & 0x3) | 0x8); // variant bits
+    for (int ndx = 0; ndx < 3; ++ndx) {
+        ss << dis(gen);
+    }
+    ss << "-";
+    for (int ndx = 0; ndx < 12; ++ndx) {
+        ss << dis(gen);
+    }
+    return ss.str();
+}
+
 } // namespace utils
 
 // utility macros (use sparingly)
