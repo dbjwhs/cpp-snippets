@@ -109,7 +109,7 @@ real_service->configure("production_config");
 
 auto result = real_service->process_message("Hello, World!");
 if (result.has_value() && result.value()) {
-    std::cout << "Message processed successfully\n";
+    std::print("Message processed successfully\n");
 }
 
 // Create a null service for testing or disabled scenarios

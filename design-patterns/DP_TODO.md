@@ -168,3 +168,86 @@ design-patterns/
 - Provide CMake build configuration for each pattern
 - Include unit tests where applicable
 - Add performance benchmarks for performance-critical patterns
+
+Targeting C++23 I like to create a basic example of the pattern I just picked. I want this to be a deep dive. It should also have comprehensive testing via output and asserts. All key points should have robust and detailed comments, all comments on their own line above the code or variable they are describing, all class variables names to start with m_, and all C++ comments using // with single line comments all lower case and block comments standard case. I have my own logging class Logger that logs in the following manner, so please include this when coding for output.
+
+Please move all cpp files into a src directory and all hpp files into a headers directory.
+
+Please move the main.cpp files into the src directory.
+
+Feel free to overwrite the main.cpp file and CMakeList.txt files in this project they are just starting stub and their code is not needed. If need delete the stock main.cpp file.
+
+When it makes sense use ranged based for loops, all other for loop should use ndx for loop value e.g. for (int ndx == 0; etc
+
+When possible be strict with const correctness e.g. use constexpr when it makes sense
+
+For any C++ container being added to in a loop if the container size is known ahead of time use reserve and emplace_back
+
+All member variables initialized using braced initialization {}
+
+Please use my logger class for all logging the path to my logger class is cpp-snippets/headers/project_utils.hpp
+Log info using the following
+LOG_INFO_PRINT("logging string here");
+LOG_INFO_PRINT("logging string here with format {}", 5);
+
+Log warnings using the following
+LOG_WARNING_PRINT("logging string here");
+LOG_WARNING_PRINT("logging string here with format {}", 5);
+
+Log errors using the following
+LOG_ERROR_PRINT("logging string here");
+LOG_ERROR_PRINT("logging string here with format {}", 5);
+
+If you have a negative test and will print to std::error but is a successful test run please use my RAII class Logger::StderrSuppressionGuard to suppress std::error output for that specific test logging.
+
+Also create a c++ // header comment right under the #define's that give a detailed history of this pattern, how it is created, what it does. along with common usages
+
+I do not want exceptions for errors, please use std::expected and follow the Railway-Oriented Programming pattern
+
+please no same line if statements, e.g. I do not want code like this...
+if (ndx < 3) std::print(", ");
+
+I want this instead
+if (ndx < 3) {
+	std::print(", ");
+}
+
+In all example code in readmes please use  std::print not std::cout.
+
+Make sure all files have a blank newline at the end of the file.
+
+Fix all clang errors and warning to ensure file is c++ correct
+
+Please use CTest to create and integrated comprehensive test suite for this code.
+
+Please ignore the cmake-build-debug folder this is for my IDE and not for Claude.
+
+Fix all build errors or warnings.
+
+Please use Modern C++ Template Parameter Naming (2025): The most cutting-edge approach combines concept-constrained parameters with descriptive names, such as
+
+template<std::copyable ElementType>
+  instead of the traditional template<typename T>.
+
+This modern pattern emerged from C++20 concepts and represents current best practice because it provides self-documenting interfaces, significantly better compiler error messages, enables aggressive optimizations, and makes code intent crystal clear - major codebases like Google's, Microsoft's, and LLVM have adopted this approach as of 2023-2024, making concept-constrained descriptive naming the gold standard for new C++ code in 2025, though traditional T naming remains acceptable for simple generic utilities.
+
+Finally when done coding build and and run all tests to verify correctness.
+
+At the very top of the file please include these two lines
+
+// MIT License
+// Copyright (c) 2025 dbjwhs
+
+
+I need a README.md file created, the first paragraph should be a detail description of this pattern and its history. The next paragraph should be use cases and different problems this pattern fixes, the rest of the README should be examples, usage, good bad, and books that have contained this pattern. All long paragraphs should text break at column 120. This is for the mark down, not what will be visible to the reader.
+
+I would like the last two paragraphs to be the following.
+
+
+## License
+
+This code is provided under the MIT License. Feel free to use, modify, and distribute as needed.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
