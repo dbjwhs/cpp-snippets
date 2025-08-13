@@ -267,9 +267,9 @@ Null decorators can be used to create optional functionality that can be transpa
 
 ### Online Resources
 
-1. **Design Patterns Catalog** - Comprehensive pattern references
-2. **C++ Core Guidelines** - Modern C++ best practices
-3. **ISO C++ Standards** - Official language specifications and features
+1. **[Design Patterns Catalog](https://refactoring.guru/design-patterns/catalog)** - Comprehensive pattern references by Refactoring Guru
+2. **[C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)** - Modern C++ best practices
+3. **[ISO C++ Standards](https://isocpp.org/std/the-standard)** - Official language specifications and features
 
 ## Build Instructions
 
