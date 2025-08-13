@@ -3,7 +3,7 @@
 ## Missing GoF Patterns to Add
 
 ### Behavioral Patterns (to add to `behavioral/`)
-- [ ] **Null Object** - Provides a default object to avoid null references
+- [X] **Null Object** - Provides a default object to avoid null references
 - [ ] **Specification** - Business rule pattern for complex validation logic
 
 ### Creational Patterns (to add to `creational/`)
