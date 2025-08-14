@@ -67,29 +67,50 @@ void demonstrate_basic_multiton_usage() {
     LOG_INFO_PRINT("Initial state verified: registry is empty");
     
     // create first instance
-    const auto db1_result = DatabaseMultiton::get_instance("primary");
-    assert(db1_result.has_value());
-    const auto& db1 = db1_result.value();
-    assert(db1 != nullptr);
-    assert(DatabaseMultiton::get_instance_count() == 1);
-    LOG_INFO_PRINT("First instance created successfully");
+    const auto db1 = DatabaseMultiton::get_instance("primary")
+        .transform([](const auto& db) {
+            assert(db != nullptr);
+            assert(DatabaseMultiton::get_instance_count() == 1);
+            LOG_INFO_PRINT("First instance created successfully");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create first instance: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(db1.has_value());
     
     // get same instance again - should be identical
-    const auto db1_again_result = DatabaseMultiton::get_instance("primary");
-    assert(db1_again_result.has_value());
-    const auto& db1_again = db1_again_result.value();
-    assert(db1.get() == db1_again.get());
-    assert(DatabaseMultiton::get_instance_count() == 1);
-    LOG_INFO_PRINT("Same instance returned for identical key");
+    const auto db1_again = DatabaseMultiton::get_instance("primary")
+        .transform([&db1](const auto& db_again) {
+            assert(db1.value().get() == db_again.get());
+            assert(DatabaseMultiton::get_instance_count() == 1);
+            LOG_INFO_PRINT("Same instance returned for identical key");
+            return db_again;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get same instance: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(db1_again.has_value());
     
     // create second instance with different key
-    const auto db2_result = DatabaseMultiton::get_instance("secondary");
-    assert(db2_result.has_value());
-    const auto& db2 = db2_result.value();
-    assert(db2 != nullptr);
-    assert(db1.get() != db2.get());
-    assert(DatabaseMultiton::get_instance_count() == 2);
-    LOG_INFO_PRINT("Second instance created with different key");
+    const auto db2 = DatabaseMultiton::get_instance("secondary")
+        .transform([&db1](const auto& db) {
+            assert(db != nullptr);
+            assert(db1.value().get() != db.get());
+            assert(DatabaseMultiton::get_instance_count() == 2);
+            LOG_INFO_PRINT("Second instance created with different key");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create second instance: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(db2.has_value());
     
     // verify key existence
     assert(DatabaseMultiton::has_instance("primary"));
@@ -107,12 +128,18 @@ void demonstrate_basic_multiton_usage() {
                   std::format("{}, {}", keys[0], keys[1]));
     
     // remove one instance
-    const auto remove_result = DatabaseMultiton::remove_instance("secondary");
+    const auto remove_result = DatabaseMultiton::remove_instance("secondary")
+        .transform([]() {
+            assert(!DatabaseMultiton::has_instance("secondary"));
+            assert(DatabaseMultiton::get_instance_count() == 1);
+            LOG_INFO_PRINT("Instance removed successfully");
+        })
+        .or_else([](const auto& error) -> std::expected<void, MultitonError> {
+            LOG_ERROR_PRINT("Failed to remove instance: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
     assert(remove_result.has_value());
-    (void)remove_result; // suppress unused variable warning
-    assert(!DatabaseMultiton::has_instance("secondary"));
-    assert(DatabaseMultiton::get_instance_count() == 1);
-    LOG_INFO_PRINT("Instance removed successfully");
     
     LOG_INFO_PRINT("Basic multiton usage demonstration completed");
 }
@@ -151,24 +178,45 @@ void demonstrate_database_connections() {
     // create database connections for different environments
 
     for (const std::vector<std::string> environments = {"production", "staging", "development"}; const auto& env : environments) {
-        auto db_result = DatabaseMultiton::get_instance(env);
-        assert(db_result.has_value());
-        const auto& db = db_result.value();
-        
-        // perform some operations
-        db->execute_query(std::format("SELECT * FROM users WHERE environment = '{}'", env));
-        db->execute_query(std::format("UPDATE settings SET environment = '{}'", env));
-        
-        LOG_INFO_PRINT("Database operations completed for environment: {}", env);
-        std::print("  Status: {}\n", db->get_status());
+        DatabaseMultiton::get_instance(env)
+            .transform([&env](const auto& db) {
+                // perform some operations
+                db->execute_query(std::format("SELECT * FROM users WHERE environment = '{}'", env));
+                db->execute_query(std::format("UPDATE settings SET environment = '{}'", env));
+                
+                LOG_INFO_PRINT("Database operations completed for environment: {}", env);
+                std::print("  Status: {}\n", db->get_status());
+                return db;
+            })
+            .or_else([&env](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+                LOG_ERROR_PRINT("Failed to get database for environment {}: {}", env, static_cast<int>(error));
+                return std::unexpected(error);
+            });
     }
     
     // demonstrate connection reuse
-    const auto prod_db1_result = DatabaseMultiton::get_instance("production");
-    const auto prod_db2_result = DatabaseMultiton::get_instance("production");
-    assert(prod_db1_result.has_value() && prod_db2_result.has_value());
-    assert(prod_db1_result.value().get() == prod_db2_result.value().get());
-    LOG_INFO_PRINT("Connection reuse verified for production database");
+    const auto prod_db1 = DatabaseMultiton::get_instance("production")
+        .transform([](const auto& db) {
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get first production database: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    const auto prod_db2 = DatabaseMultiton::get_instance("production")
+        .transform([&prod_db1](const auto& db) {
+            assert(prod_db1.has_value());
+            assert(prod_db1.value().get() == db.get());
+            LOG_INFO_PRINT("Connection reuse verified for production database");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get second production database: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(prod_db1.has_value() && prod_db2.has_value());
     
     // iterate over all database connections
     DatabaseMultiton::for_each_instance([](const std::string& key, const std::shared_ptr<DatabaseConnection>& db) {
@@ -211,44 +259,61 @@ void demonstrate_cache_managers() {
     // create different cache types
 
     for (std::vector<std::string> cache_types = {"session_cache", "api_cache", "temp_cache"}; const auto& cache_type : cache_types) {
-        auto cache_result = CacheMultiton::get_instance(cache_type);
-        assert(cache_result.has_value());
-        const auto& cache = cache_result.value();
-        
-        // populate cache with test data
-        for (int ndx = 0; ndx < 10; ++ndx) {
-            const std::string key = std::format("{}_{}", cache_type, ndx);
-            const std::string value = std::format("cached_value_{}_{}", cache_type, ndx);
-            cache->put(key, value);
-        }
-        
-        // test cache retrieval
-        for (int ndx = 0; ndx < 5; ++ndx) {
-            const std::string key = std::format("{}_{}", cache_type, ndx);
-            auto cached_value = cache->get(key);
-            assert(cached_value.has_value());
-            LOG_INFO_PRINT("Retrieved from {}: {} = {}", cache_type, key, cached_value.value());
-        }
-        
-        // display cache statistics
-        auto [m_size, m_hit_count, m_miss_count, m_hit_ratio, m_cache_name] = cache->get_stats();
-        LOG_INFO_PRINT("Cache stats for {}: Size={}, Hits={}, Misses={}, Hit Ratio={:.2f}",
-                      m_cache_name, m_size, m_hit_count,
-                      m_miss_count, m_hit_ratio);
+        CacheMultiton::get_instance(cache_type)
+            .transform([&cache_type](const auto& cache) {
+                // populate cache with test data
+                for (int ndx = 0; ndx < 10; ++ndx) {
+                    const std::string key = std::format("{}_{}", cache_type, ndx);
+                    const std::string value = std::format("cached_value_{}_{}", cache_type, ndx);
+                    cache->put(key, value);
+                }
+                
+                // test cache retrieval
+                for (int ndx = 0; ndx < 5; ++ndx) {
+                    const std::string key = std::format("{}_{}", cache_type, ndx);
+                    auto cached_value = cache->get(key);
+                    assert(cached_value.has_value());
+                    LOG_INFO_PRINT("Retrieved from {}: {} = {}", cache_type, key, cached_value.value());
+                }
+                
+                // display cache statistics
+                auto [m_size, m_hit_count, m_miss_count, m_hit_ratio, m_cache_name] = cache->get_stats();
+                LOG_INFO_PRINT("Cache stats for {}: Size={}, Hits={}, Misses={}, Hit Ratio={:.2f}",
+                              m_cache_name, m_size, m_hit_count,
+                              m_miss_count, m_hit_ratio);
+                return cache;
+            })
+            .or_else([&cache_type](const auto& error) -> std::expected<std::shared_ptr<CacheManager<std::string>>, MultitonError> {
+                LOG_ERROR_PRINT("Failed to get cache for type {}: {}", cache_type, static_cast<int>(error));
+                return std::unexpected(error);
+            });
     }
     
     // test cache interaction
-    auto session_cache_result = CacheMultiton::get_instance("session_cache");
-    auto api_cache_result = CacheMultiton::get_instance("api_cache");
-    assert(session_cache_result.has_value() && api_cache_result.has_value());
+    const auto session_cache = CacheMultiton::get_instance("session_cache")
+        .transform([](const auto& cache) {
+            return cache;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<CacheManager<std::string>>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get session cache: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
     
-    const auto& session_cache = session_cache_result.value();
-    const auto& api_cache = api_cache_result.value();
+    const auto api_cache = CacheMultiton::get_instance("api_cache")
+        .transform([&session_cache](const auto& cache) {
+            assert(session_cache.has_value());
+            // verify different cache instances
+            assert(session_cache.value().get() != cache.get());
+            assert(session_cache.value()->get_cache_name() != cache->get_cache_name());
+            LOG_INFO_PRINT("Cache isolation verified");
+            return cache;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<CacheManager<std::string>>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get api cache: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
     
-    // verify different cache instances
-    assert(session_cache.get() != api_cache.get());
-    assert(session_cache->get_cache_name() != api_cache->get_cache_name());
-    LOG_INFO_PRINT("Cache isolation verified");
+    assert(session_cache.has_value() && api_cache.has_value());
     
     CacheMultiton::clear_factory();
     LOG_INFO_PRINT("Cache manager demonstration completed");
@@ -280,13 +345,29 @@ void demonstrate_factory_functions() {
     });
     
     // test successful factory creation
-    const auto test_db_result = DatabaseMultiton::get_instance("test_main");
-    assert(test_db_result.has_value());
-    LOG_INFO_PRINT("Test database created successfully via factory");
+    const auto test_db = DatabaseMultiton::get_instance("test_main")
+        .transform([](const auto& db) {
+            LOG_INFO_PRINT("Test database created successfully via factory");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create test database: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(test_db.has_value());
 
-    const auto prod_db_result = DatabaseMultiton::get_instance("prod_primary");
-    assert(prod_db_result.has_value());
-    LOG_INFO_PRINT("Production database created successfully via factory");
+    const auto prod_db = DatabaseMultiton::get_instance("prod_primary")
+        .transform([](const auto& db) {
+            LOG_INFO_PRINT("Production database created successfully via factory");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create production database: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(prod_db.has_value());
     
     // test factory validation failure
     auto invalid_db_result = DatabaseMultiton::get_instance("ab"); // too short
@@ -324,13 +405,16 @@ void demonstrate_thread_safety() {
                         // use thread_id to create different instances, but with some overlap
                         const std::string key = std::format("db_{}", thread_id % 3);
 
-                        if (auto db_result = DatabaseMultiton::get_instance(key); db_result.has_value()) {
-                            const auto& db = db_result.value();
-                            db->execute_query(std::format("SELECT count(*) FROM table_{}_{}", thread_id, op_id));
-                            success_count.fetch_add(1);
-                        } else {
-                            failure_count.fetch_add(1);
-                        }
+                        DatabaseMultiton::get_instance(key)
+                            .transform([thread_id, op_id, &success_count](const auto& db) {
+                                db->execute_query(std::format("SELECT count(*) FROM table_{}_{}", thread_id, op_id));
+                                success_count.fetch_add(1);
+                                return db;
+                            })
+                            .or_else([&failure_count](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+                                failure_count.fetch_add(1);
+                                return std::unexpected(error);
+                            });
 
                         // occasionally test other operations
                         if (op_id % 10 == 0) {
@@ -432,9 +516,17 @@ void demonstrate_error_handling() {
     }
     
     // test successful creation after failures
-    const auto success_result = DatabaseMultiton::get_instance("success");
+    const auto success_result = DatabaseMultiton::get_instance("success")
+        .transform([](const auto& db) {
+            LOG_INFO_PRINT("Successful creation after previous failures");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create success instance: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
     assert(success_result.has_value());
-    LOG_INFO_PRINT("Successful creation after previous failures");
     
     DatabaseMultiton::clear_factory();
     LOG_INFO_PRINT("Error handling demonstration completed");
@@ -453,8 +545,14 @@ void demonstrate_performance_characteristics() {
     
     for (int ndx = 0; ndx < num_instances; ++ndx) {
         const std::string key = std::format("perf_test_{}", ndx);
-        auto result = DatabaseMultiton::get_instance(key);
-        assert(result.has_value());
+        DatabaseMultiton::get_instance(key)
+            .transform([](const auto& db) {
+                return db;
+            })
+            .or_else([ndx](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+                LOG_ERROR_PRINT("Failed to create instance {}: {}", ndx, static_cast<int>(error));
+                return std::unexpected(error);
+            });
     }
 
     const auto creation_end = std::chrono::high_resolution_clock::now();
@@ -470,8 +568,14 @@ void demonstrate_performance_characteristics() {
     
     for (int ndx = 0; ndx < num_lookups; ++ndx) {
         const std::string key = std::format("perf_test_{}", ndx % num_instances);
-        auto result = DatabaseMultiton::get_instance(key);
-        assert(result.has_value());
+        DatabaseMultiton::get_instance(key)
+            .transform([](const auto& db) {
+                return db;
+            })
+            .or_else([ndx](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+                LOG_ERROR_PRINT("Failed to lookup instance {}: {}", ndx, static_cast<int>(error));
+                return std::unexpected(error);
+            });
     }
 
     const auto lookup_end = std::chrono::high_resolution_clock::now();
@@ -482,11 +586,28 @@ void demonstrate_performance_characteristics() {
                   static_cast<double>(lookup_duration.count()) / num_lookups);
     
     // measure memory efficiency by checking that instances are shared
-    const auto instance1_result = DatabaseMultiton::get_instance("perf_test_0");
-    const auto instance2_result = DatabaseMultiton::get_instance("perf_test_0");
-    assert(instance1_result.has_value() && instance2_result.has_value());
-    assert(instance1_result.value().get() == instance2_result.value().get());
-    LOG_INFO_PRINT("Memory efficiency verified: instances are properly shared");
+    const auto instance1 = DatabaseMultiton::get_instance("perf_test_0")
+        .transform([](const auto& db) {
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get first instance for memory test: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    const auto instance2 = DatabaseMultiton::get_instance("perf_test_0")
+        .transform([&instance1](const auto& db) {
+            assert(instance1.has_value());
+            assert(instance1.value().get() == db.get());
+            LOG_INFO_PRINT("Memory efficiency verified: instances are properly shared");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to get second instance for memory test: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
+    assert(instance1.has_value() && instance2.has_value());
     
     LOG_INFO_PRINT("Performance characteristics demonstration completed");
 }
@@ -499,10 +620,18 @@ void run_comprehensive_tests() {
     
     // test very long key names
     const std::string long_key(1000, 'a');
-    const auto long_key_result = DatabaseMultiton::get_instance(long_key);
+    const auto long_key_result = DatabaseMultiton::get_instance(long_key)
+        .transform([&long_key](const auto& db) {
+            assert(DatabaseMultiton::has_instance(long_key));
+            LOG_INFO_PRINT("Very long key (1000 characters) handled successfully");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create instance with long key: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
     assert(long_key_result.has_value());
-    assert(DatabaseMultiton::has_instance(long_key));
-    LOG_INFO_PRINT("Very long key (1000 characters) handled successfully");
     
     // test special characters in keys
     const std::vector<std::string> special_keys = {
@@ -518,9 +647,15 @@ void run_comprehensive_tests() {
     };
     
     for (const auto& key : special_keys) {
-        auto result = DatabaseMultiton::get_instance(key);
-        assert(result.has_value());
-        assert(DatabaseMultiton::has_instance(key));
+        DatabaseMultiton::get_instance(key)
+            .transform([&key](const auto& db) {
+                assert(DatabaseMultiton::has_instance(key));
+                return db;
+            })
+            .or_else([&key](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+                LOG_ERROR_PRINT("Failed to create instance with special key '{}': {}", key, static_cast<int>(error));
+                return std::unexpected(error);
+            });
     }
     LOG_INFO_PRINT("Special character keys handled successfully");
     
@@ -534,10 +669,18 @@ void run_comprehensive_tests() {
     LOG_INFO_PRINT("Complete cleanup verified");
     
     // test state after cleanup
-    const auto new_instance_result = DatabaseMultiton::get_instance("post_cleanup");
+    const auto new_instance_result = DatabaseMultiton::get_instance("post_cleanup")
+        .transform([](const auto& db) {
+            assert(DatabaseMultiton::get_instance_count() == 1);
+            LOG_INFO_PRINT("State consistency after cleanup verified");
+            return db;
+        })
+        .or_else([](const auto& error) -> std::expected<std::shared_ptr<DatabaseConnection>, MultitonError> {
+            LOG_ERROR_PRINT("Failed to create instance after cleanup: {}", static_cast<int>(error));
+            return std::unexpected(error);
+        });
+    
     assert(new_instance_result.has_value());
-    assert(DatabaseMultiton::get_instance_count() == 1);
-    LOG_INFO_PRINT("State consistency after cleanup verified");
     
     // test for_each_instance functionality
     std::atomic<int> iteration_count{0};
