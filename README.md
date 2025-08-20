@@ -61,6 +61,7 @@ Or you can elect to build everything at once.
 - [reader-writer/](concurrency/reader-writer/)
 - [shared_mutex/](concurrency/shared_mutex/)
 - [stop_token-source-callback/](concurrency/stop_token-source-callback/)
+- [thread-affinity/](concurrency/thread-affinity/)
 - [thread-local-storage/](concurrency/thread-local-storage/)
 - [thread-pool/](concurrency/thread-pool/)
 - [thread-pool-load-balance/](concurrency/thread-pool-load-balance/)
