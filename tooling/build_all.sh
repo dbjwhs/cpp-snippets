@@ -36,6 +36,9 @@ NC='\033[0m'        # No Color - resets color to terminal default
 DRY_RUN=false
 RUN_AFTER_BUILD=false
 
+# Array to store target filters
+declare -a TARGET_FILTERS=()
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -47,10 +50,34 @@ while [[ $# -gt 0 ]]; do
             RUN_AFTER_BUILD=true
             shift
             ;;
-        *)
+        --help|-h)
+            echo "Usage: $0 [--dry-run|-d] [--run|-r] [target1] [target2] ..."
+            echo ""
+            echo "Options:"
+            echo "  --dry-run, -d    Show what would be built without actually building"
+            echo "  --run, -r        Run executables after successful builds"
+            echo "  --help, -h       Show this help message"
+            echo ""
+            echo "Arguments:"
+            echo "  target           Build only projects whose path contains this target name"
+            echo "                   Multiple targets can be specified"
+            echo ""
+            echo "Examples:"
+            echo "  $0                           # Build all projects"
+            echo "  $0 hoare_logic               # Build only hoare-logic project"
+            echo "  $0 thread atomic             # Build projects containing 'thread' or 'atomic'"
+            echo "  $0 --dry-run binary-search   # Show what would be built for binary-search"
+            exit 0
+            ;;
+        -*)
             echo "Unknown option: $1"
-            echo "Usage: $0 [--dry-run|-d] [--run|-r]"
+            echo "Usage: $0 [--dry-run|-d] [--run|-r] [--help|-h] [target1] [target2] ..."
             exit 1
+            ;;
+        *)
+            # This is a target filter
+            TARGET_FILTERS+=("$1")
+            shift
             ;;
     esac
 done
@@ -72,6 +99,26 @@ log() {
     local message=$2
     local color=$3
     echo -e "${color}[$(date '+%Y-%m-%d %H:%M:%S')] [${level}] ${message}${NC}"
+}
+
+# Function to check if a project matches target filters
+matches_target_filter() {
+    local project_dir=$1
+    
+    # If no target filters are specified, match all projects
+    if [ ${#TARGET_FILTERS[@]} -eq 0 ]; then
+        return 0
+    fi
+    
+    # Check if project path matches any of the target filters
+    for filter in "${TARGET_FILTERS[@]}"; do
+        if [[ "${project_dir}" == *"${filter}"* ]]; then
+            return 0
+        fi
+    done
+    
+    # No match found
+    return 1
 }
 
 # Function to find executable name from CMakeLists.txt
@@ -184,6 +231,12 @@ while IFS= read -r -d '' cmake_file; do
         continue
     fi
 
+    # Check if project matches target filters
+    if ! matches_target_filter "${project_dir}"; then
+        log "INFO" "Skipping project (no target match): ${project_dir}" "${BLUE}"
+        continue
+    fi
+
     # Get executable name from CMakeLists.txt
     exe_name=$(find_executable_name "${cmake_file}")
 
@@ -227,6 +280,13 @@ if [ "$DRY_RUN" = true ]; then
 else
     log "SUMMARY" "Build process completed" "${GREEN}"
     log "SUMMARY" "Successful builds: ${successful_builds}" "${GREEN}"
+fi
+
+# Show target filters if any were specified
+if [ ${#TARGET_FILTERS[@]} -gt 0 ]; then
+    target_list=$(printf ", %s" "${TARGET_FILTERS[@]}")
+    target_list=${target_list:2}  # Remove leading comma and space
+    log "SUMMARY" "Target filters: ${target_list}" "${BLUE}"
 fi
 
 # Print successful builds
