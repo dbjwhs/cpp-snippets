@@ -23,7 +23,8 @@ endif()
 
 # Find Boost libraries
 # Minimum version of 1.71.0 for most recent Asio features
-find_package(Boost 1.87.0 REQUIRED COMPONENTS system thread)
+# Note: boost_system is header-only in recent versions, so only thread is needed
+find_package(Boost 1.70.0 REQUIRED COMPONENTS thread)
 
 # Find Threads package for std::thread
 find_package(Threads REQUIRED)
