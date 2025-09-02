@@ -7,6 +7,7 @@ start_time=$(date +%s.%N)
 # Directories to exclude from processing
 EXCLUDE_DIRS=(
     "../language-features/cpp20/modules"
+    "./cpp-features/cpp20/modules"
 )
 
 # ANSI Color Codes Explanation
@@ -272,15 +273,8 @@ while IFS= read -r -d '' cmake_file; do
 
 done < <(find .. -name "CMakeLists.txt" -print0)
 
-# Print summary
+# Print detailed summary
 echo
-if [ "$DRY_RUN" = true ]; then
-    log "SUMMARY" "Build process completed (DRY RUN)" "${GREEN}"
-    log "SUMMARY" "Would build ${successful_builds} projects:" "${GREEN}"
-else
-    log "SUMMARY" "Build process completed" "${GREEN}"
-    log "SUMMARY" "Successful builds: ${successful_builds}" "${GREEN}"
-fi
 
 # Show target filters if any were specified
 if [ ${#TARGET_FILTERS[@]} -gt 0 ]; then
@@ -335,6 +329,19 @@ if [ "$DRY_RUN" = false ] && ([ ${failed_builds} -gt 0 ] || [ ${failed_runs} -gt
     exit_code=1
 else
     exit_code=0
+fi
+
+# Calculate total projects attempted
+total_projects=$((successful_builds + failed_builds))
+
+# Print final summary
+echo
+if [ "$DRY_RUN" = true ]; then
+    log "SUMMARY" "Build process completed (DRY RUN)" "${GREEN}"
+    log "SUMMARY" "Would build ${successful_builds} projects" "${GREEN}"
+else
+    log "SUMMARY" "Build process completed" "${GREEN}"
+    log "SUMMARY" "Successful builds: ${successful_builds}" "${GREEN}"
 fi
 
 # Calculate and display the total execution time with millisecond precision

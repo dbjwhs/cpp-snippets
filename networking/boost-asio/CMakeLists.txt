@@ -21,6 +21,9 @@ elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
+# Set policy for modern Boost usage  
+cmake_policy(SET CMP0167 NEW)
+
 # Find Boost libraries
 # Minimum version of 1.71.0 for most recent Asio features
 # Note: boost_system is header-only in recent versions, so only thread is needed
@@ -39,13 +42,12 @@ add_executable(boost_asio ${SOURCES})
 
 # Add include directories
 target_include_directories(boost_asio PRIVATE
-        ${Boost_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/headers  # For your project_utils.hpp
 )
 
 # Link against Boost libraries and other dependencies
 target_link_libraries(boost_asio PRIVATE
-        ${Boost_LIBRARIES}
+        Boost::thread
         Threads::Threads
 )
 
@@ -64,5 +66,3 @@ endif()
 # Output information about the configuration
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 message(STATUS "Boost version: ${Boost_VERSION}")
-message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
-message(STATUS "Boost libraries: ${Boost_LIBRARIES}")

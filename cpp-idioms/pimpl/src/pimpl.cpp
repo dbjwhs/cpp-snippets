@@ -5,7 +5,7 @@
 #include <string>
 #include <cassert>
 #include <iostream>
-#include "../../../../headers/project_utils.hpp"
+#include "../../../headers/project_utils.hpp"
 
 class StringWrapper {
 public:

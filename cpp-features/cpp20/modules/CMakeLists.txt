@@ -9,11 +9,24 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Enable GCC module support
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
-
-# Explicitly disable module scanning since GCC doesn't provide a scanner mechanism yet
-set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+# Enable compiler-specific module support
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # GCC module support
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
+    # Explicitly disable module scanning since GCC doesn't provide a scanner mechanism yet
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    # Clang module support - requires very recent Clang versions
+    # For older Clang, we'll skip modules and build as regular C++
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "15.0")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -fmodules")
+    else()
+        message(WARNING "C++20 modules require Clang 15+, falling back to regular C++ compilation")
+    endif()
+elseif(MSVC)
+    # MSVC module support
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /experimental:module")
+endif()
 
 # Specify source files - note the order is important for modules
 set(SOURCES

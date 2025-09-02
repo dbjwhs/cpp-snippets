@@ -28,7 +28,7 @@
 #include <cerrno>
 #include <algorithm>
 #include <fstream>
-#include "../../../../../headers/project_utils.hpp"
+#include "../../../headers/project_utils.hpp"
 
 // Function to run tests, implemented in src/testing/tests.cpp
 void runTests();
