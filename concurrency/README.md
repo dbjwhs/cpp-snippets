@@ -158,6 +158,26 @@ void process_in_parallel(int num_threads) {
 }
 ```
 
+**Strengths:**
+- Extremely lightweight and efficient for one-time synchronization
+- Simple API with clear semantics (count_down(), wait(), arrive_and_wait())
+- No reset capability prevents accidental reuse bugs
+- Lock-free implementation on most platforms
+- Perfect for fork-join patterns
+
+**Weaknesses:**
+- Cannot be reused after reaching zero (single-use only)
+- No way to query current count or check if latch is ready without blocking
+- Cannot increase the count after construction
+- Not suitable for producer-consumer patterns or repeated synchronization
+
+**Industry-Accepted Usage:**
+- **Test synchronization**: Ensuring all test threads start simultaneously
+- **Initialization coordination**: Waiting for all worker threads to complete setup
+- **Fork-join parallelism**: Parent thread waiting for child threads to complete specific work
+- **One-time events**: Signaling that a resource is ready or an event has occurred
+- **Staged shutdown**: Coordinating multi-phase application shutdown
+
 Latches are ideal for one-time synchronization, particularly when one thread needs to wait for several others to complete a task.
 
 #### Synchronizing Test Setup
@@ -217,6 +237,28 @@ void process_in_phases(int num_threads, int num_phases) {
 }
 ```
 
+**Strengths:**
+- Reusable for multiple synchronization points (unlike latches)
+- Built-in completion callback executed after each phase
+- Efficient for iterative algorithms with regular synchronization
+- Can dynamically adjust expected thread count with arrive_and_drop()
+- Lock-free implementation on many platforms
+
+**Weaknesses:**
+- More complex API than latches
+- Overhead of resetting internal state after each use
+- All threads must participate in each phase (or explicitly drop)
+- Not suitable for producer-consumer or asymmetric patterns
+- Completion callback runs on one of the arriving threads (unpredictable which)
+
+**Industry-Accepted Usage:**
+- **Parallel simulations**: Physics simulations, cellular automata, finite element analysis
+- **Matrix operations**: Parallel matrix multiplication with phase synchronization
+- **Iterative algorithms**: Parallel implementations of iterative solvers (Jacobi, Gauss-Seidel)
+- **Game loops**: Synchronizing update and render phases across multiple subsystems
+- **Batch processing**: Processing data in synchronized batches across worker threads
+- **Machine learning**: Synchronizing gradient updates in parallel training algorithms
+
 Barriers are ideal for algorithms with multiple phases requiring synchronization between iterations.
 
 ### Futures
@@ -270,6 +312,31 @@ std::jthread t2([sf](std::stop_token st) {
 p.set_value(42); // Both threads receive 42
 ```
 
+**Strengths:**
+- Clean separation between data producer and consumer
+- Type-safe data transfer with automatic memory management
+- Exception propagation from producer to consumer
+- Can query readiness without blocking (wait_for, wait_until)
+- std::async provides easy task-based parallelism
+- shared_future enables broadcasting results to multiple consumers
+
+**Weaknesses:**
+- Single-use only (can only get() once from a future)
+- No built-in cancellation mechanism (except through exceptions)
+- std::async has implementation-defined behavior for deferred tasks
+- Overhead compared to raw synchronization primitives
+- Cannot reset or reuse for multiple values
+- Blocking get() can lead to deadlocks if not careful
+
+**Industry-Accepted Usage:**
+- **Task-based parallelism**: Offloading computations with std::async
+- **Pipeline processing**: Passing results between pipeline stages
+- **Lazy evaluation**: Deferring expensive computations until needed
+- **Asynchronous I/O**: Returning results from async file/network operations
+- **Request-response patterns**: Web servers, RPC systems, database queries
+- **Parallel algorithms**: Divide-and-conquer algorithms with result aggregation
+- **GUI applications**: Background tasks reporting results to UI thread
+
 ### Mutexes
 
 Mutexes provide mutual exclusion for protecting shared data:
@@ -305,6 +372,31 @@ void transfer(Account& from, Account& to, double amount) {
     to.balance += amount;
 }
 ```
+
+**Strengths:**
+- Simple and intuitive model for protecting shared data
+- RAII wrappers (scoped_lock, unique_lock) prevent forgetting to unlock
+- Multiple variants for different needs (mutex, recursive_mutex, timed_mutex, shared_mutex)
+- std::scoped_lock prevents deadlocks when locking multiple mutexes
+- shared_mutex enables multiple readers/single writer patterns
+- Well-understood semantics across all platforms
+
+**Weaknesses:**
+- Can cause significant contention and serialization
+- Risk of deadlocks if not used carefully (especially with multiple mutexes)
+- No priority inheritance, can cause priority inversion
+- Recursive mutexes can hide design problems
+- Overhead of OS kernel calls on some platforms
+- Can't be used in signal handlers or interrupt contexts
+
+**Industry-Accepted Usage:**
+- **Data structure protection**: Thread-safe containers, caches, registries
+- **Critical sections**: Protecting invariants during multi-step operations
+- **Resource management**: Controlling access to files, sockets, hardware
+- **Read-write patterns**: Using shared_mutex for read-heavy workloads
+- **Transaction processing**: Ensuring consistency in financial operations
+- **Logging systems**: Serializing output to prevent interleaved messages
+- **Configuration updates**: Protecting global settings and state
 
 ### Condition Variables
 
@@ -359,6 +451,31 @@ void waitForDataWithCancellation(std::stop_token st) {
 }
 ```
 
+**Strengths:**
+- Efficient waiting without busy-spinning
+- Integrates with mutexes for atomic check-and-wait
+- Can wake one (notify_one) or all (notify_all) waiting threads
+- Supports timed waits (wait_for, wait_until)
+- C++20 condition_variable_any supports stop tokens for cancellation
+- Lower CPU usage compared to polling
+
+**Weaknesses:**
+- Prone to spurious wakeups (must always use with predicate)
+- Complex to use correctly (requires mutex, predicate, proper ordering)
+- Risk of lost wakeups if notify happens before wait
+- Can cause thundering herd problem with notify_all
+- Requires unique_lock (not scoped_lock) which is less safe
+- Difficult to debug when used incorrectly
+
+**Industry-Accepted Usage:**
+- **Producer-consumer queues**: Blocking queues, thread pools, work queues
+- **Event notification**: Signaling state changes between threads
+- **Resource availability**: Waiting for resources to become available
+- **Rate limiting**: Implementing token buckets or rate limiters
+- **Synchronous handoff**: Direct hand-off between producer and consumer
+- **State machines**: Waiting for specific state transitions
+- **Message passing**: Implementing synchronous message channels
+
 ### Semaphores
 
 Semaphores represent a count of available resources:
@@ -387,6 +504,31 @@ void limitedConcurrentAccess(int maxConcurrent, int numTasks) {
 
 `std::binary_semaphore` is a specialization with a maximum count of 1 (equivalent to `std::counting_semaphore<1>`).
 
+**Strengths:**
+- Simple counting model for resource management
+- Can be used across process boundaries (with OS support)
+- Binary semaphore can replace mutex in some scenarios
+- Supports try_acquire and timed acquire operations
+- Lock-free implementation on many platforms
+- No ownership requirement (any thread can release)
+
+**Weaknesses:**
+- No ownership tracking (can lead to incorrect usage)
+- Easy to misuse (acquire/release imbalance)
+- Can't detect programming errors at compile time
+- Less type safety than higher-level abstractions
+- No RAII wrapper in standard library
+- Doesn't prevent priority inversion
+
+**Industry-Accepted Usage:**
+- **Connection pooling**: Limiting database or network connections
+- **Thread pooling**: Controlling number of active worker threads
+- **Rate limiting**: Implementing fixed-rate processing
+- **Resource allocation**: Managing limited hardware resources (GPUs, file handles)
+- **Producer-consumer**: Implementing bounded buffers
+- **Parking lots**: Managing fixed number of slots/spaces
+- **License management**: Controlling concurrent usage of licensed features
+
 ### Atomics
 
 Atomics provide low-level lock-free operations for trivially copyable types:
@@ -409,6 +551,32 @@ public:
     }
 };
 ```
+
+**Strengths:**
+- Lock-free programming for maximum performance
+- No risk of deadlocks or priority inversion
+- Fine-grained control over memory ordering
+- Suitable for high-frequency operations
+- Can work in signal handlers and interrupt contexts
+- Hardware-level atomic operations
+
+**Weaknesses:**
+- Extremely difficult to use correctly
+- Memory ordering semantics are complex and error-prone
+- Limited to trivially copyable types
+- ABA problem with pointer types
+- Platform-dependent performance characteristics
+- Debugging lock-free code is notoriously difficult
+- Can actually be slower than mutexes in some scenarios
+
+**Industry-Accepted Usage:**
+- **High-frequency counters**: Statistics, metrics, performance monitoring
+- **Lock-free data structures**: Queues, stacks, ring buffers (expert-level)
+- **State machines**: Simple state transitions without complex invariants
+- **Flags and signals**: Boolean flags for thread communication
+- **Memory management**: Reference counting, hazard pointers (expert-level)
+- **System programming**: Kernel code, device drivers, real-time systems
+- **Performance-critical paths**: When profiling shows mutex contention
 
 Atomics should be your last resort, as they're the most low-level and error-prone synchronization mechanism.
 
