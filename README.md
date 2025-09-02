@@ -43,6 +43,7 @@ Or you can elect to build everything at once.
 - [compression/](algorithms/compression/)
 - [hash-table/](algorithms/hash-table/)
 - [hyperloglog/](algorithms/hyperloglog/)
+- [longest_common_subsequence-aka-diff/](algorithms/longest_common_subsequence-aka-diff/)
 - [merkle-tree/](algorithms/merkle-tree/)
 - [quick-sort/](algorithms/quick-sort/)
 
@@ -56,6 +57,7 @@ Or you can elect to build everything at once.
 - [jthreads/](concurrency/jthreads/)
 - [latch/](concurrency/latch/)
 - [pipelining/](concurrency/pipelining/)
+- [proactor/](concurrency/proactor/)
 - [producer-consumer/](concurrency/producer-consumer/)
 - [promise-future/](concurrency/promise-future/)
 - [reader-writer/](concurrency/reader-writer/)
@@ -73,6 +75,7 @@ Or you can elect to build everything at once.
 - [flat_maps_explored/](data-structures/flat_maps_explored/)
 - [linked-list/](data-structures/linked-list/)
 - [lru-cache/](data-structures/lru-cache/)
+- [newtype-wrapper/](data-structures/newtype-wrapper/)
 
 ### Design Patterns
 
@@ -90,57 +93,62 @@ Or you can elect to build everything at once.
 - [decorator/](design-patterns/structural/decorator/)
 - [facade/](design-patterns/structural/facade/)
 - [flyweight/](design-patterns/structural/flyweight/)
-- [pimpl/](design-patterns/structural/pimpl/)
 - [proxy/](design-patterns/structural/proxy/)
 
 #### Behavioral
 - [chain-of-responsibility/](design-patterns/behavioral/chain-of-responsibility/)
 - [command/](design-patterns/behavioral/command/)
-- [fail-fast/](design-patterns/behavioral/fail-fast/)
-- [finite-state-machine/](design-patterns/behavioral/finite-state-machine/)
 - [interpreter/](design-patterns/behavioral/interpreter/)
 - [iterator/](design-patterns/behavioral/iterator/)
 - [mediator/](design-patterns/behavioral/mediator/)
 - [memento/](design-patterns/behavioral/memento/)
+- [null-object/](design-patterns/behavioral/null-object/)
 - [observer/](design-patterns/behavioral/observer/)
 - [state/](design-patterns/behavioral/state/)
 - [strategy/](design-patterns/behavioral/strategy/)
 - [template-method/](design-patterns/behavioral/template-method/)
 - [visitor/](design-patterns/behavioral/visitor/)
 
-### Language Features
+### C++ Features
 
 #### C++20 Features
-- [concepts/](language-features/cpp20/concepts/)
-- [coroutines/](language-features/cpp20/coroutines/)
-- [counting-semaphore/](language-features/cpp20/counting-semaphore/)
-- [designated-initializers/](language-features/cpp20/designated-initializers/)
-- [modules/](language-features/cpp20/modules/)
-- [ranges/](language-features/cpp20/ranges/)
-- [spaceship/](language-features/cpp20/spaceship/)
-- [test-macros/](language-features/cpp20/test-macros/)
+- [concepts/](cpp-features/cpp20/concepts/)
+- [coroutines/](cpp-features/cpp20/coroutines/)
+- [counting-semaphore/](cpp-features/cpp20/counting-semaphore/)
+- [designated-initializers/](cpp-features/cpp20/designated-initializers/)
+- [modules/](cpp-features/cpp20/modules/)
+- [ranges/](cpp-features/cpp20/ranges/)
+- [spaceship/](cpp-features/cpp20/spaceship/)
+- [test-macros/](cpp-features/cpp20/test-macros/)
 
 #### C++23 Features
-- [alias-labels/](language-features/cpp23/alias-labels/)
-- [byteswap/](language-features/cpp23/byteswap/)
-- [expected/](language-features/cpp23/expected/)
-- [if-consteval/](language-features/cpp23/if-consteval/)
-- [mdspan/](language-features/cpp23/mdspan/)
-- [multi-subscript/](language-features/cpp23/multi-subscript/)
-- [new-preprocessor/](language-features/cpp23/new-preprocessor/)
-- [print-println/](language-features/cpp23/print-println/)
-- [this/](language-features/cpp23/this/)
-- [turing-machines/](language-features/cpp23/turing-machines/)
+- [alias-labels/](cpp-features/cpp23/alias-labels/)
+- [byteswap/](cpp-features/cpp23/byteswap/)
+- [expected/](cpp-features/cpp23/expected/)
+- [if-consteval/](cpp-features/cpp23/if-consteval/)
+- [mdspan/](cpp-features/cpp23/mdspan/)
+- [multi-subscript/](cpp-features/cpp23/multi-subscript/)
+- [new-preprocessor/](cpp-features/cpp23/new-preprocessor/)
+- [print-println/](cpp-features/cpp23/print-println/)
+- [this/](cpp-features/cpp23/this/)
+- [turing-machines/](cpp-features/cpp23/turing-machines/)
 
 #### Core Language Features
-- [const-constexpr/](language-features/core/const-constexpr/)
-- [decltype/](language-features/core/decltype/)
-- [slicing/](language-features/core/slicing/)
-- [std-function/](language-features/core/std-function/)
-- [std-move/](language-features/core/std-move/)
-- [std-optional/](language-features/core/std-optional/)
-- [std-regex/](language-features/core/std-regex/)
-- [template-progression/](language-features/core/template-progression/)
+- [const-constexpr/](cpp-features/core/const-constexpr/)
+- [decltype/](cpp-features/core/decltype/)
+- [slicing/](cpp-features/core/slicing/)
+- [std-function/](cpp-features/core/std-function/)
+- [std-move/](cpp-features/core/std-move/)
+- [std-optional/](cpp-features/core/std-optional/)
+- [std-regex/](cpp-features/core/std-regex/)
+- [template-progression/](cpp-features/core/template-progression/)
+
+### C++ Idioms
+- [pimpl/](cpp-idioms/pimpl/)
+
+### Programming Techniques
+- [fail-fast/](programming-techniques/fail-fast/)
+- [finite-state-machine/](programming-techniques/finite-state-machine/)
 
 ### Networking
 - [boost-asio/](networking/boost-asio/)
