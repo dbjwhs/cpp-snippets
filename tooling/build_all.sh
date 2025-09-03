@@ -335,7 +335,6 @@ fi
 total_projects=$((successful_builds + failed_builds))
 
 # Print final summary
-echo
 if [ "$DRY_RUN" = true ]; then
     log "SUMMARY" "Build process completed (DRY RUN)" "${GREEN}"
     log "SUMMARY" "Would build ${successful_builds} projects" "${GREEN}"
