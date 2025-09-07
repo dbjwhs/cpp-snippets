@@ -145,6 +145,7 @@ Or you can elect to build everything at once.
 
 ### C++ Idioms
 - [pimpl/](cpp-idioms/pimpl/)
+- [rule-of-five/](cpp-idioms/rule-of-five/)
 
 ### Programming Techniques
 - [fail-fast/](programming-techniques/fail-fast/)
