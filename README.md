@@ -53,6 +53,7 @@ Or you can elect to build everything at once.
 - [barrier-example/](concurrency/barrier-example/)
 - [cpp20-latch/](concurrency/cpp20-latch/)
 - [dining-philosophers/](concurrency/dining-philosophers/)
+- [happens-before/](concurrency/happens-before/)
 - [jthread-test/](concurrency/jthread-test/)
 - [jthreads/](concurrency/jthreads/)
 - [latch/](concurrency/latch/)
