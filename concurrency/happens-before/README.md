@@ -6,9 +6,43 @@ ordering between operations, ensuring that when operation A happens-before opera
 visible to B.
 
 The happens-before relationship emerged from decades of research into weak memory models and was heavily influenced by Java's
-JSR-133 memory model specification. Key contributors include Hans Boehm, whose seminal work "Threads Cannot Be Implemented as a
-Library" demonstrated the necessity of language-level threading support. Before C++11, threading was entirely platform-specific
-(POSIX threads, Windows threads), with no standardized memory model, making portable multithreaded code nearly impossible.
+JSR-133 memory model specification. Key contributors include Hans Boehm, whose seminal work ["Threads Cannot Be Implemented as a
+Library"](docs/boehm2005-threads-cannot-be-implemented-as-library.pdf) (PLDI 2005) demonstrated the necessity of language-level
+threading support. Before C++11, threading was entirely platform-specific (POSIX threads, Windows threads), with no standardized
+memory model, making portable multithreaded code nearly impossible.
+
+Boehm's paper fundamentally changed how we think about threading in programming languages by revealing a devastating problem: you
+cannot simply bolt threading onto a language designed without thread awareness because the compiler has no knowledge of concurrent
+execution. This creates profound correctness issues that cannot be solved at the library level. Consider a classic compiler
+optimization—dead store elimination. A compiler observing `x = 1; x = 2;` in single-threaded code will optimize this to just
+`x = 2;`, eliminating the "dead" first assignment. However, if another thread reads `x` between those writes, the program logic
+might crucially depend on `x` temporarily holding the value 1. Without a language-level memory model, the compiler performs this
+optimization in complete ignorance of threading, causing the other thread to never observe the intermediate value. This isn't a
+bug in the compiler—it's correctly optimizing according to the single-threaded semantics it was designed for.
+
+The problems extend far beyond compiler optimizations. Modern CPUs perform aggressive instruction reordering to maximize
+performance, with store buffers, out-of-order execution, and speculative execution all potentially changing the order in which
+memory operations become visible to other cores. Hardware caches introduce additional complexity—writes may sit in one core's
+cache for an unbounded time before becoming visible to other cores. Register promotion (keeping variables in registers instead of
+memory) means writes may never reach memory at all from one thread's perspective. Even the fundamental concept of "atomic" lacks
+formal semantics without language support—what does it mean for an operation to be atomic when the compiler might split it into
+multiple instructions, and the hardware might reorder those instructions relative to other operations?
+
+Before Boehm's work and the subsequent C++11 standard, concurrent C and C++ programming existed in a state of undefined behavior
+chaos. Programmers used platform-specific threading libraries (POSIX pthreads on Unix, Windows threads on Windows) and relied on
+folklore, empirical testing, and architecture-specific knowledge. Code that worked correctly on x86 (with its relatively strong
+memory model) would mysteriously fail on ARM or PowerPC (with weaker memory models). Even experts could not reliably predict
+program behavior because there was no formal specification of how threads interacted with memory. The language standards explicitly
+disclaimed any knowledge of threads—the C and C++ specifications assumed single-threaded execution, making any multithreaded
+program technically undefined behavior.
+
+Boehm argued (successfully) that languages must provide three critical components for correct concurrent programming: a
+language-level memory model defining the semantics of concurrent memory access, happens-before relationships establishing formal
+ordering guarantees between operations, and compiler awareness of atomics and memory barriers so optimizations preserve concurrent
+semantics. This revolutionary approach led directly to C++11's threading model and memory model, fundamentally changing how we
+write concurrent code. The happens-before relationship is the cornerstone of this model, providing the formal framework that makes
+concurrent programming definable, portable, and—with careful attention—correct. What you're implementing in this demonstration are
+the very concepts that Boehm's paper argued for, representing the foundation of all modern concurrent programming in C and C++.
 
 The C++ memory model defines happens-before through three primary mechanisms: (1) sequenced-before relationships within a single
 thread (program order), (2) synchronizes-with relationships between threads (via mutexes, atomics, and other synchronization
@@ -66,8 +100,14 @@ int r1 = y.load(std::memory_order_seq_cst);
 y.store(1, std::memory_order_seq_cst);
 int r2 = x.load(std::memory_order_seq_cst);
 
-// With seq_cst, it's impossible for both r1 and r2 to be 0
-// because there must be a global total order
+// Possible outcomes with seq_cst:
+// r1 = 0, r2 = 1  ✓ (Thread 1 executes completely before Thread 2)
+// r1 = 1, r2 = 0  ✓ (Thread 2 executes completely before Thread 1)
+// r1 = 1, r2 = 1  ✓ (Stores happen before both loads)
+// r1 = 0, r2 = 0  ✗ IMPOSSIBLE - would violate global total order
+//
+// The key guarantee: it's impossible for both r1 and r2 to be 0 simultaneously
+// because there must be a single global ordering all threads observe
 ```
 
 **When to use**: Default choice when correctness is paramount and performance profiling hasn't identified memory ordering as a
@@ -91,6 +131,15 @@ while (!ready.load(std::memory_order_acquire)) {  // Acquire: see all writes bef
     std::this_thread::yield();
 }
 int value = data.load(std::memory_order_relaxed);  // Safe to read, guaranteed to see 42
+
+// Execution guarantees:
+// 1. If acquire load sees ready == true, then data.store(42) happened-before the data.load()
+// 2. The consumer is guaranteed to see value == 42 (not 0, not some garbage value)
+// 3. All writes before the release (including data.store) are visible after the acquire
+// 4. Without release-acquire, consumer might see ready == true but data == 0 (data race!)
+//
+// The happens-before chain: data.store(42) → ready.store(true) [release]
+//                           synchronizes-with ready.load(true) [acquire] → data.load()
 ```
 
 **When to use**: Most common synchronization pattern. Ideal for producer-consumer queues, message passing, and publishing data
@@ -123,6 +172,20 @@ std::atomic<int> value{0};
 // Read-modify-write with acq_rel
 int old_value = value.fetch_add(1, std::memory_order_acq_rel);
 // Acquires all previous modifications, releases this modification
+
+// Execution guarantees:
+// 1. Acquire part: This operation sees all writes that happened-before previous acq_rel operations
+// 2. Release part: All writes before this operation are visible to subsequent acq_rel operations
+// 3. Creates a chain: Thread A's fetch_add happens-before Thread B's fetch_add happens-before Thread C's...
+//
+// Example use case: Lock-free stack where each push must:
+// - See all previous pushes to the stack (acquire semantics)
+// - Make this push visible to all future operations (release semantics)
+//
+// Why acq_rel instead of just acquire or release?
+// - Just acquire: Future operations wouldn't see our modification
+// - Just release: We wouldn't see previous modifications
+// - Both needed: Build a synchronized chain of read-modify-write operations
 ```
 
 **When to use**: Read-modify-write operations in lock-free algorithms, fetch-and-add operations where both reading and writing
