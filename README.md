@@ -2,6 +2,23 @@
 
 A collection of self-contained C++ code snippets, examples, and mini-projects. Each snippet is independently buildable and includes its own CMake configuration.
 
+## Highlights
+
+These are the pieces worth reading first — they demonstrate depth beyond tutorial-level C++:
+
+| Snippet | Lines | What It Demonstrates |
+|---------|-------|---------------------|
+| [`concurrency/happens-before/`](concurrency/happens-before/) | ~1,845 | C++ memory model deep-dive with stress tests across all 6 memory orderings |
+| [`concurrency/proactor/`](concurrency/proactor/) | ~3,705 | POSA2 async I/O pattern — complete proactor implementation |
+| [`cpp-features/cpp20/coroutines/`](cpp-features/cpp20/coroutines/) | ~1,354 | Complete generator with `promise_type`, `co_await`, `co_yield` |
+| [`cpp-features/cpp23/turing-machines/`](cpp-features/cpp23/turing-machines/) | ~5,613 | 5 Turing machines culminating in a Universal TM |
+| [`algorithms/bloom-filter/`](algorithms/bloom-filter/) | ~1,149 | Production-quality Bloom filter with VMware VADP context |
+| [`algorithms/hyperloglog/`](algorithms/hyperloglog/) | ~1,186 | Cardinality estimation based on Flajolet et al. |
+| [`concurrency/atomic/`](concurrency/atomic/) | ~1,000+ | All memory orderings with lock-free producer-consumer |
+| [`cpp-idioms/rule-of-five/`](cpp-idioms/rule-of-five/) | ~800+ | Railway-oriented programming with C++23 `std::expected` |
+| [`cpp-features/cpp23/expected/`](cpp-features/cpp23/expected/) | ~600+ | Modern error handling patterns |
+| [`design-patterns/`](design-patterns/) | 22 patterns | Complete GoF coverage (creational, structural, behavioral) |
+
 ## Building the Snippets
 
 Each snippet is contained in its own directory with a CMakeLists.txt file. To build a specific snippet:
@@ -72,7 +89,6 @@ Or you can elect to build everything at once.
 - [timed_mutex/](concurrency/timed_mutex/)
 
 ### Data Structures
-- [binary-tree/](data-structures/binary-tree/)
 - [flat_maps_explored/](data-structures/flat_maps_explored/)
 - [linked-list/](data-structures/linked-list/)
 - [lru-cache/](data-structures/lru-cache/)
@@ -174,7 +190,6 @@ Or you can elect to build everything at once.
 ### Examples
 - [hoare-logic/](examples/hoare-logic/)
 - [pagination/](examples/pagination/)
-- [phone-number-to-char/](examples/phone-number-to-char/)
 
 ## Contributing
 
