@@ -17,7 +17,7 @@ These are the pieces worth reading first — they demonstrate depth beyond tutor
 | [`concurrency/atomic/`](concurrency/atomic/) | ~1,000+ | All memory orderings with lock-free producer-consumer |
 | [`cpp-idioms/rule-of-five/`](cpp-idioms/rule-of-five/) | ~800+ | Railway-oriented programming with C++23 `std::expected` |
 | [`cpp-features/cpp23/expected/`](cpp-features/cpp23/expected/) | ~600+ | Modern error handling patterns |
-| [`design-patterns/`](design-patterns/) | 22 patterns | Complete GoF coverage (creational, structural, behavioral) |
+| [`design-patterns/`](design-patterns/) | 23+ patterns | Complete GoF coverage plus C++-specific patterns (CRTP, etc.) |
 
 ## Building the Snippets
 
@@ -100,6 +100,7 @@ Or you can elect to build everything at once.
 - [abstract-factory/](design-patterns/creational/abstract-factory/)
 - [builder/](design-patterns/creational/builder/)
 - [factory/](design-patterns/creational/factory/)
+- [multiton/](design-patterns/creational/multiton/)
 - [prototype/](design-patterns/creational/prototype/)
 - [singleton/](design-patterns/creational/singleton/)
 
@@ -125,6 +126,9 @@ Or you can elect to build everything at once.
 - [strategy/](design-patterns/behavioral/strategy/)
 - [template-method/](design-patterns/behavioral/template-method/)
 - [visitor/](design-patterns/behavioral/visitor/)
+
+#### C++-Specific
+- [crtp/](design-patterns/cpp-specific/crtp/) — Static polymorphism, mixin classes, object counting, compile-time interface enforcement
 
 ### C++ Features
 

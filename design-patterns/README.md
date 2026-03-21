@@ -1,6 +1,6 @@
 # C++ Design Patterns Implementation
 
-A comprehensive collection of **26 design patterns** implemented using modern **C++23** features, demonstrating production-ready code with advanced language capabilities, comprehensive testing, and detailed documentation.
+A comprehensive collection of **27 design patterns** implemented using modern **C++23** features, demonstrating production-ready code with advanced language capabilities, comprehensive testing, and detailed documentation.
 
 ## 📚 Pattern Categories
 
@@ -46,6 +46,13 @@ A comprehensive collection of **26 design patterns** implemented using modern **
 | [Facade](./structural/facade/) | Provides unified interface to subsystem with simplified access | Game engines, multimedia frameworks, enterprise service layers | Simplified interface, subsystem decoupling | Hidden complexity, potential oversimplification |
 | [Flyweight](./structural/flyweight/) | Minimizes memory usage by sharing common state efficiently | Game particles, text rendering, icon systems | Memory optimization, shared state management | Complexity increase, state management challenges |
 | [Proxy](./structural/proxy/) | Provides placeholder controlling access to expensive objects | Virtual objects, access control, caching, logging | Access control, lazy loading, additional functionality | Indirection complexity, potential performance impact |
+
+### 🔧 [C++-Specific Patterns](./cpp-specific/)
+*Idioms and patterns unique to C++ templates and metaprogramming*
+
+| Pattern | Description | Industry Problems Solved | ✅ Pros | ❌ Cons |
+|---------|-------------|-------------------------|---------|---------|
+| [CRTP](./cpp-specific/crtp/) | Compile-time polymorphism via derived class as template parameter | Static dispatch, mixin composition, object counting, interface enforcement | Zero-overhead abstraction, full inlining, no vtable | No heterogeneous containers, template bloat, harder to read |
 
 ### 🏛️ [Architectural Patterns](./architectural/)
 *High-level system organization and structure*
@@ -110,6 +117,8 @@ design-patterns/
 │   ├── facade/
 │   ├── flyweight/
 │   └── proxy/
+├── cpp-specific/         # C++-specific patterns
+│   └── crtp/
 └── architectural/        # 3 architectural patterns (planned)
     ├── distributed/
     ├── integration/
