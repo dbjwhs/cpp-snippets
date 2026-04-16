@@ -56,7 +56,7 @@ public:
         std::string threadName = std::format("{} {} | {}",
                                              ThreadUtility::IsMainThread() ? "Main  " : "Thread",
                                              currentCount,
-                                             std::this_thread::get_id()
+                                             threadIdToString()
         );
 
         // Map operations still need mutex protection for thread safety
@@ -81,7 +81,7 @@ public:
             return it->second;
         } else {
             // Thread not found in cache - this shouldn't happen if AddThreadName was called
-            std::string fallbackStr = std::format("Unknown Thread | {}", currentThreadId);
+            std::string fallbackStr = std::format("Unknown Thread | {}", threadIdToString(currentThreadId));
             LOG_WARNING("Thread not found in name cache, using fallback: ", fallbackStr);
             return fallbackStr;
         }
@@ -163,7 +163,7 @@ public:
         threadStates[threadId] = ThreadLifeCycleState::RUNNING;
         threadStartTimes[threadId] = startTime;
         
-        LOG_INFO(std::format("Thread lifecycle started for thread {}", threadId));
+        LOG_INFO(std::format("Thread lifecycle started for thread {}", threadIdToString(threadId)));
     }
     
     ~ThreadLifeCycleManager() {
@@ -190,8 +190,8 @@ public:
             threadStartTimes.erase(threadId);
             
             const char* stateStr = (state == ThreadLifeCycleState::COMPLETED) ? "COMPLETED" : "FAILED";
-            LOG_INFO(std::format("Thread lifecycle ended for thread {} - State: {} - Duration: {}ms", 
-                threadId, stateStr, duration.count()));
+            LOG_INFO(std::format("Thread lifecycle ended for thread {} - State: {} - Duration: {}ms",
+                threadIdToString(threadId), stateStr, duration.count()));
                 
         } catch (...) {
             // Ensure cleanup continues even if logging fails - comprehensive fallback cleanup

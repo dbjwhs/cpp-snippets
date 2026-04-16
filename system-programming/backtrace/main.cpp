@@ -251,6 +251,7 @@ int main() {
 
 #ifdef ENABLE_TESTS
 #include <cassert>
+#include <cstring>
 
 // my test function to verify demangling works
 void test_demangling() {

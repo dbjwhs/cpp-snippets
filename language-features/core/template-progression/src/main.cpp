@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <memory>
 #include <cassert>
+#include <cstring>
 #include "../../../../headers/project_utils.hpp"
 
 #define TEMPLATE_VERSION "1.0.0"

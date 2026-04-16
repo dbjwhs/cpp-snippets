@@ -8,7 +8,9 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#ifdef __cpp_lib_print
 #include <print>
+#endif
 #include <ranges>
 #include <sstream>
 
