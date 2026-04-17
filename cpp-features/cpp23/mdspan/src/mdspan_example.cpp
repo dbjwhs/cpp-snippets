@@ -6,7 +6,9 @@
 #include <numeric>
 #include <chrono>
 #include <cassert>
+#ifdef __cpp_lib_print
 #include <print>
+#endif
 
 // For external mdspan library compatibility
 #ifdef MDSPAN_HAS_CXX_17

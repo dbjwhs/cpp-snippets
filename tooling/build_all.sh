@@ -4,10 +4,15 @@
 TIMEFORMAT=%R
 start_time=$(date +%s.%N)
 
+# Resolve the repo root relative to this script's location,
+# so the script works regardless of the caller's working directory.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 # Directories to exclude from processing
 EXCLUDE_DIRS=(
-    "../language-features/cpp20/modules"
-    "./cpp-features/cpp20/modules"
+    "${REPO_ROOT}/language-features/cpp20/modules"
+    "${REPO_ROOT}/cpp-features/cpp20/modules"
 )
 
 # ANSI Color Codes Explanation
@@ -271,7 +276,7 @@ while IFS= read -r -d '' cmake_file; do
     # Return to original directory
     popd > /dev/null
 
-done < <(find .. -name "CMakeLists.txt" -print0)
+done < <(find "${REPO_ROOT}" -name "CMakeLists.txt" -print0)
 
 # Print detailed summary
 echo

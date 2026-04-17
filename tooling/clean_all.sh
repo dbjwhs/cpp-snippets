@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Resolve the repo root relative to this script's location,
+# so the script works regardless of the caller's working directory.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 # ANSI Color Codes Explanation
 # ---------------------------
 # These variables contain ANSI escape codes for text coloring in the terminal
@@ -101,7 +106,7 @@ while IFS= read -r -d '' cmake_file; do
     else
         ((failed_count++))
     fi
-done < <(find .. -name "CMakeLists.txt" -print0)
+done < <(find "${REPO_ROOT}" -name "CMakeLists.txt" -print0)
 
 # Print summary
 echo
